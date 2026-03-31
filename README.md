@@ -38,3 +38,18 @@ Then visit `http://localhost:8000`.
 
 - Progress is saved only in the current browser.
 - No build step or external dependency is required.
+
+## Deploy To GitHub Pages
+
+This repository now includes a GitHub Actions workflow for GitHub Pages in
+`.github/workflows/deploy-pages.yml`.
+
+To publish:
+
+1. Push this project to a GitHub repository.
+2. In GitHub, open `Settings` -> `Pages`.
+3. Under `Build and deployment`, set `Source` to `GitHub Actions`.
+4. Push to the `main` branch, or run the workflow manually from the `Actions` tab.
+
+The site is deployed directly from the repository root, so no build step is
+needed.
