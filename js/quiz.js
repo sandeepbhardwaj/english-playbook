@@ -2,54 +2,60 @@
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
   const lessonId = app.getQueryParam("lesson") || app.allLessons[0].id;
+  const mode = app.getQueryParam("mode") === "advanced" ? "advanced" : "standard";
+  const isAdvanced = mode === "advanced";
   const lesson = app.getLesson(lessonId);
   const module = app.getModule(lesson.moduleId);
-  const questions = quizBank.getQuiz(lesson.id);
-  const pageSize = 10;
+  const questions = quizBank.getQuiz(lesson.id, mode);
+  const pageSize = 8;
   let pageIndex = 0;
   const answers = new Array(questions.length).fill(null);
   let submitted = false;
 
-  document.title = `Grammar Atlas | Quiz | ${lesson.title}`;
+  document.title = `Grammar Atlas | ${isAdvanced ? "Advanced Quiz" : "Quiz"} | ${lesson.title}`;
 
   document.getElementById("quiz-breadcrumb").innerHTML = `
     <a href="curriculum.html">Curriculum</a>
     <span>/</span>
     <a href="lesson.html?lesson=${lesson.id}">${lesson.title}</a>
     <span>/</span>
-    <span>Quiz</span>
+    <span>${isAdvanced ? "Advanced Quiz" : "Quiz"}</span>
   `;
 
   document.getElementById("quiz-hero").innerHTML = `
     <p class="eyebrow">${module.title}</p>
-    <h1>${lesson.title} Quiz</h1>
+    <h1>${lesson.title} ${isAdvanced ? "Advanced Quiz" : "Quiz"}</h1>
     <p class="hero-text">
-      This assessment contains ${questions.length} questions. Work in batches of
-      ten, then submit to see your score and explanations.
+      This assessment contains ${questions.length} ${isAdvanced ? "advanced challenge" : "focused"} questions.
+      Work in short batches, then submit to see your score and explanations.
     </p>
     <div class="quiz-metrics">
       <span class="chip">${module.level}</span>
       <span class="chip">${lesson.duration}</span>
       <span class="chip">${questions.length} questions</span>
+      <span class="chip">${isAdvanced ? "Advanced" : "Standard"}</span>
     </div>
   `;
 
   document.getElementById("quiz-sidebar").innerHTML = `
     <h3>Quiz Notes</h3>
     <ul>
-      <li>Questions are generated from lesson-specific patterns, not copied from a tiny fixed set.</li>
+      <li>${isAdvanced ? "Advanced quizzes emphasize explanation, distinction, and transfer." : "Standard quizzes keep coverage broad and practice-focused."}</li>
       <li>Use the lesson page first if you want the full explanation and story context.</li>
-      <li>Your best score is saved in this browser after submission.</li>
+      <li>Your best ${isAdvanced ? "advanced" : "standard"} score is saved in this browser after submission.</li>
     </ul>
     <div class="lesson-actions">
       <a class="button button-secondary" href="lesson.html?lesson=${lesson.id}">Back to Lesson</a>
+      <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${isAdvanced ? "standard" : "advanced"}">
+        ${isAdvanced ? "Switch to Standard Quiz" : "Try Advanced Quiz"}
+      </a>
       <a class="button button-secondary" href="curriculum.html">Back to Curriculum</a>
     </div>
   `;
 
   function renderProgress() {
     const answered = answers.filter((answer) => answer !== null).length;
-    const savedScore = app.getQuizScores()[lesson.id];
+    const savedScore = app.getQuizScore(lesson.id, mode);
     document.getElementById("quiz-progress").innerHTML = `
       <article class="progress-card">
         <strong>Progress</strong>
@@ -60,7 +66,7 @@
         <p class="progress-copy">${pageIndex + 1} of ${Math.ceil(questions.length / pageSize)}</p>
       </article>
       <article class="progress-card">
-        <strong>Best Saved Score</strong>
+        <strong>Best Saved ${isAdvanced ? "Advanced " : ""}Score</strong>
         <p class="progress-copy">${savedScore ? app.formatPercent(savedScore.percent) : "No saved score yet"}</p>
       </article>
     `;
@@ -140,16 +146,16 @@
       total: questions.length,
       percent,
       updatedAt: new Date().toISOString(),
-    });
+    }, mode);
 
     document.getElementById("quiz-results").innerHTML = `
       <div class="results-card">
-        <h3>Quiz Complete</h3>
+        <h3>${isAdvanced ? "Advanced Quiz Complete" : "Quiz Complete"}</h3>
         <p class="quiz-note">You answered ${correct} of ${questions.length} questions correctly.</p>
         <p class="quiz-note">Final score: <strong>${app.formatPercent(percent)}</strong></p>
         <div class="card-actions">
           <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Return to Lesson</a>
-          <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Retake Quiz</a>
+          <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${mode}">Retake ${isAdvanced ? "Advanced Quiz" : "Quiz"}</a>
         </div>
       </div>
     `;

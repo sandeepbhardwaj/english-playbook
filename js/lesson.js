@@ -1,12 +1,18 @@
 (function () {
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
+  const enhancements = window.GrammarAtlasEnhancements || {};
   const lessonId = app.getQueryParam("lesson") || app.allLessons[0].id;
   const lesson = app.getLesson(lessonId);
   const module = app.getModule(lesson.moduleId);
   const completed = app.getCompletedLessons();
-  const quizScores = app.getQuizScores();
-  const quizScore = quizScores[lesson.id];
+  const quizScore = app.getQuizScore(lesson.id);
+  const advancedQuizScore = app.getQuizScore(lesson.id, "advanced");
+  const contrastPairs = enhancements.contrastPairs?.[lesson.id] || [];
+  const contextBlock = enhancements.contextBlocks?.[lesson.id];
+  const moduleRubric = enhancements.moduleRubrics?.[module.id] || [];
+  const standardQuizCount = quizBank.getQuiz(lesson.id).length;
+  const advancedQuizCount = quizBank.getQuiz(lesson.id, "advanced").length;
 
   document.title = `Grammar Atlas | ${lesson.title}`;
 
@@ -25,9 +31,11 @@
     <div class="lesson-meta">
       <span class="chip">${module.level}</span>
       <span class="chip">${lesson.duration}</span>
-      <span class="chip">${quizBank.getQuiz(lesson.id).length} question quiz</span>
+      <span class="chip">${standardQuizCount} standard questions</span>
+      <span class="chip">${advancedQuizCount} advanced questions</span>
       <span class="chip">${completed.has(lesson.id) ? "Completed" : "In progress"}</span>
-      <span class="chip">${quizScore ? `Best score ${app.formatPercent(quizScore.percent)}` : "No quiz score yet"}</span>
+      <span class="chip">${quizScore ? `Best score ${app.formatPercent(quizScore.percent)}` : "No score yet"}</span>
+      <span class="chip">${advancedQuizScore ? `Advanced ${app.formatPercent(advancedQuizScore.percent)}` : "No advanced score yet"}</span>
     </div>
   `;
 
@@ -41,8 +49,16 @@
         ${completed.has(lesson.id) ? "Mark as Not Completed" : "Mark Lesson as Completed"}
       </button>
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Take Quiz</a>
+      <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
       <a class="button button-secondary" href="lesson.html?lesson=${app.previousLesson(lesson.id).id}">Previous Lesson</a>
       <a class="button button-secondary" href="lesson.html?lesson=${app.nextLesson(lesson.id).id}">Next Lesson</a>
+    </div>
+    <div class="portfolio-panel">
+      <h3>Portfolio Connection</h3>
+      <p class="lesson-note">${module.portfolioTask}</p>
+      <ul>
+        ${moduleRubric.map((item) => `<li>${item}</li>`).join("")}
+      </ul>
     </div>
   `;
 
@@ -60,6 +76,35 @@
       `
     )
     .join("");
+
+  const contrastMarkup = contrastPairs.length
+    ? `
+      <section class="summary-card">
+        <div class="summary-topline">
+          <h3>Watch the Contrast</h3>
+          <span class="chip">${contrastPairs.length} focus pairs</span>
+        </div>
+        <div class="contrast-grid">
+          ${contrastPairs
+            .map(
+              (pair) => `
+                <article class="contrast-card">
+                  <h4>${pair.title}</h4>
+                  <div class="contrast-example contrast-example-good">
+                    <strong>Use:</strong> ${pair.use}
+                  </div>
+                  <div class="contrast-example contrast-example-bad">
+                    <strong>Avoid:</strong> ${pair.avoid}
+                  </div>
+                  <p class="lesson-note">${pair.note}</p>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+    `
+    : "";
 
   const storyMarkup = lesson.story
     ? `
@@ -89,6 +134,21 @@
     `
     : "";
 
+  const contextMarkup = contextBlock
+    ? `
+      <section class="summary-card">
+        <div class="summary-topline">
+          <h3>${contextBlock.title}</h3>
+          <span class="chip">Guided Context</span>
+        </div>
+        <p class="story-text">${contextBlock.passage}</p>
+        <ul class="bullet-list context-prompts">
+          ${contextBlock.prompts.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
+      </section>
+    `
+    : "";
+
   document.getElementById("lesson-main").innerHTML = `
     <section class="summary-card">
       <div class="summary-topline">
@@ -108,6 +168,10 @@
     <section class="card-grid">
       ${examplesMarkup}
     </section>
+
+    ${contrastMarkup}
+
+    ${contextMarkup}
 
     ${storyMarkup}
 

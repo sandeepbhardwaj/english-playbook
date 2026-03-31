@@ -793,7 +793,7 @@
       tasks: [
         "Study Parts of Speech.",
         "Label words in ten original sentences.",
-        "Take the 60-question lesson quiz.",
+        "Take the lesson quiz and review your explanations.",
       ],
     },
     {
@@ -893,7 +893,7 @@
       tasks: [
         "Study Error Correction Drills.",
         "Study Transformations and Cloze Practice.",
-        "Complete two 60-question quizzes under time pressure.",
+        "Complete two focused lesson quizzes under time pressure.",
       ],
     },
     {
@@ -911,6 +911,6 @@
   window.GrammarAtlasData = {
     curriculum,
     roadmap,
-    quizSize: 60,
+    quizSize: 24,
   };
 })();

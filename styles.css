@@ -35,6 +35,10 @@ body {
     linear-gradient(140deg, #fbf6ec 0%, #eee0ca 48%, #f7f1e7 100%);
 }
 
+body.has-modal-open {
+  overflow: hidden;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -144,6 +148,56 @@ p {
   min-height: 42px;
   padding: 0 16px;
   white-space: nowrap;
+}
+
+.app-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.app-modal.is-open {
+  display: flex;
+}
+
+.app-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 35, 63, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.app-modal-dialog {
+  position: relative;
+  width: min(100%, 520px);
+}
+
+.app-modal-content {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 28px;
+  border-radius: var(--radius-xl);
+  background: var(--panel-strong);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow: var(--shadow);
+}
+
+.app-modal-copy {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.app-modal-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 6px;
 }
 
 body[data-page="home"] .nav-links a[href="index.html"],
@@ -404,6 +458,10 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   border: 1px solid var(--line);
 }
 
+.lesson-tile .card-actions {
+  margin-top: 16px;
+}
+
 .lesson-layout {
   grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1.45fr);
   align-items: start;
@@ -458,6 +516,12 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
 
 .lesson-actions {
   margin-top: 8px;
+}
+
+.portfolio-panel {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
 }
 
 .lesson-sidebar h3,
@@ -528,6 +592,42 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   background: rgba(16, 35, 63, 0.06);
 }
 
+.contrast-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 18px;
+}
+
+.contrast-card {
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+}
+
+.contrast-card h4 {
+  font-size: 1.1rem;
+}
+
+.contrast-example {
+  padding: 12px 14px;
+  border-radius: 14px;
+  line-height: 1.6;
+}
+
+.contrast-example-good {
+  background: rgba(107, 138, 115, 0.12);
+  border: 1px solid rgba(107, 138, 115, 0.3);
+}
+
+.contrast-example-bad {
+  background: rgba(210, 105, 60, 0.1);
+  border: 1px solid rgba(210, 105, 60, 0.24);
+}
+
 .quiz-controls {
   justify-content: space-between;
 }
@@ -541,6 +641,10 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, rgba(107, 138, 115, 0.18), rgba(207, 157, 59, 0.18));
   border: 1px solid rgba(16, 35, 63, 0.1);
+}
+
+.context-prompts {
+  margin-top: 16px;
 }
 
 .roadmap-grid {
@@ -563,6 +667,7 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   .stats-grid,
   .trio-grid,
   .card-grid,
+  .contrast-grid,
   .roadmap-grid {
     grid-template-columns: 1fr;
   }
@@ -617,11 +722,16 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   .hero-actions,
   .card-actions,
   .lesson-actions,
-  .quiz-controls {
+  .quiz-controls,
+  .app-modal-actions {
     flex-direction: column;
   }
 
   .button {
     width: 100%;
+  }
+
+  .app-modal-content {
+    padding: 20px;
   }
 }

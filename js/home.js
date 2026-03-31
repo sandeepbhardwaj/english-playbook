@@ -1,8 +1,35 @@
 (function () {
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
+  const enhancements = window.GrammarAtlasEnhancements || {};
 
   app.renderStats("home-stats");
+
+  const startHerePanel = document.getElementById("start-here-panel");
+  const startHere = enhancements.startHere || [];
+  startHerePanel.innerHTML = `
+    <div class="section-heading">
+      <p class="eyebrow">Start Here</p>
+      <h2>Choose the path that fits your goal</h2>
+    </div>
+    <div class="card-grid">
+      ${startHere
+        .map(
+          (item) => `
+            <article class="summary-card">
+              <div class="summary-topline">
+                <h3>${item.title}</h3>
+                <span class="chip">Path</span>
+              </div>
+              <p class="lesson-note"><strong>${item.path}</strong></p>
+              <p class="lesson-summary">${item.detail}</p>
+              <p class="lesson-note">${item.action}</p>
+            </article>
+          `
+        )
+        .join("")}
+    </div>
+  `;
 
   const moduleGrid = document.getElementById("home-module-grid");
   moduleGrid.innerHTML = app.curriculum
@@ -50,9 +77,12 @@
           ${tenseLesson.story.analysis.map((item) => `<li>${item}</li>`).join("")}
         </ul>
         <div class="card-actions">
-          <a class="button button-primary" href="lesson.html?lesson=${tenseLesson.id}">Open Story Lesson</a>
+          <a class="button button-primary" href="lesson.html?lesson=${tenseLesson.id}">Explore Story Lesson</a>
           <a class="button button-secondary" href="quiz.html?lesson=${tenseLesson.id}">
             Take ${quizBank.getQuiz(tenseLesson.id).length}-Question Quiz
+          </a>
+          <a class="button button-secondary" href="quiz.html?lesson=${tenseLesson.id}&mode=advanced">
+            Try ${quizBank.getQuiz(tenseLesson.id, "advanced").length}-Question Advanced Quiz
           </a>
         </div>
       </article>
