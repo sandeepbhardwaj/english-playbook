@@ -5,7 +5,7 @@ Grammar Atlas is a multi-page English grammar learning program built as a static
 - 6 structured modules
 - 18 lesson pages
 - Story-based tense instruction
-- 60-question quiz banks for every lesson
+- Focused quiz banks for every lesson
 - Curriculum, lesson, quiz, and roadmap pages
 - Browser-based lesson completion and quiz score tracking with `localStorage`
 
@@ -30,7 +30,8 @@ Then visit `http://localhost:8000`.
 - `roadmap.html` contains the 12-week study plan.
 - `styles.css` contains the shared responsive design.
 - `js/program-data.js` stores modules, lessons, and roadmap content.
-- `js/quiz-generators.js` builds the 60-question banks for each lesson.
+- `js/lesson-enhancements.js` stores contrast teaching, guided practice, rubrics, and onboarding support content.
+- `js/quiz-generators.js` builds the lesson quiz banks.
 - `js/common.js` contains shared utilities and local storage helpers.
 - `js/home.js`, `js/curriculum.js`, `js/lesson.js`, `js/quiz.js`, and `js/roadmap.js` power each page.
 

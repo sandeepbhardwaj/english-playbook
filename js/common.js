@@ -69,9 +69,17 @@
     return readJson(quizStorageKey, {});
   }
 
-  function saveQuizScore(lessonId, payload) {
+  function getQuizScoreKey(lessonId, mode = "standard") {
+    return mode === "advanced" ? `${lessonId}::advanced` : lessonId;
+  }
+
+  function getQuizScore(lessonId, mode = "standard") {
+    return getQuizScores()[getQuizScoreKey(lessonId, mode)] || null;
+  }
+
+  function saveQuizScore(lessonId, payload, mode = "standard") {
     const current = getQuizScores();
-    current[lessonId] = payload;
+    current[getQuizScoreKey(lessonId, mode)] = payload;
     saveJson(quizStorageKey, current);
   }
 
@@ -114,8 +122,8 @@
     const stats = [
       { label: "Modules", value: curriculum.length },
       { label: "Lessons", value: allLessons.length },
-      { label: "Quiz Size", value: `${quizSize} Q` },
-      { label: "Average Quiz", value: Object.values(quizScores).length ? formatPercent(averageQuiz) : "New" },
+      { label: "Standard Quiz", value: `${quizSize} Q` },
+      { label: "Average Quiz", value: Object.values(quizScores).length ? formatPercent(averageQuiz) : "No scores yet" },
       { label: "Completed Lessons", value: completed.size },
       { label: "Roadmap Weeks", value: roadmap.length },
     ];
@@ -137,6 +145,103 @@
       .join("");
   }
 
+  function attachResetProgressModal() {
+    if (document.getElementById("reset-progress-modal")) {
+      return;
+    }
+
+    const modal = document.createElement("div");
+    modal.id = "reset-progress-modal";
+    modal.className = "app-modal";
+    modal.setAttribute("aria-hidden", "true");
+    modal.innerHTML = `
+      <div class="app-modal-backdrop" data-modal-close="true"></div>
+      <div class="app-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="reset-progress-title">
+        <div class="app-modal-content">
+          <p class="eyebrow">Progress Reset</p>
+          <h2 id="reset-progress-title">Reset your saved progress?</h2>
+          <p class="app-modal-copy" id="reset-progress-message">
+            This will clear all completed lessons and saved quiz scores in this browser.
+          </p>
+          <div class="app-modal-actions">
+            <button class="button button-secondary" type="button" id="reset-progress-cancel">Cancel</button>
+            <button class="button button-primary" type="button" id="reset-progress-confirm">Reset Progress</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const cancelButton = modal.querySelector("#reset-progress-cancel");
+    const confirmButton = modal.querySelector("#reset-progress-confirm");
+    const title = modal.querySelector("#reset-progress-title");
+    const message = modal.querySelector("#reset-progress-message");
+    let mode = "confirm";
+
+    function closeModal() {
+      modal.classList.remove("is-open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("has-modal-open");
+    }
+
+    function openModal() {
+      mode = "confirm";
+      title.textContent = "Reset your saved progress?";
+      message.textContent = "This will clear all completed lessons and saved quiz scores in this browser.";
+      confirmButton.textContent = "Reset Progress";
+      cancelButton.textContent = "Cancel";
+      cancelButton.hidden = false;
+
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("has-modal-open");
+      confirmButton.focus();
+    }
+
+    function showErrorState() {
+      mode = "error";
+      title.textContent = "Progress could not be reset";
+      message.textContent = "This browser did not allow the saved progress to be cleared. Please try again.";
+      confirmButton.textContent = "Close";
+      cancelButton.hidden = true;
+      confirmButton.focus();
+    }
+
+    modal.addEventListener("click", (event) => {
+      if (event.target instanceof HTMLElement && event.target.dataset.modalClose === "true") {
+        closeModal();
+      }
+    });
+
+    cancelButton.addEventListener("click", closeModal);
+
+    confirmButton.addEventListener("click", () => {
+      if (mode === "error") {
+        closeModal();
+        return;
+      }
+
+      const didReset = resetProgress();
+      if (!didReset) {
+        showErrorState();
+        return;
+      }
+
+      window.location.reload();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.classList.contains("is-open")) {
+        closeModal();
+      }
+    });
+
+    return {
+      openModal,
+    };
+  }
+
   function attachResetProgressButton() {
     const siteNav = document.querySelector(".site-nav");
     if (!siteNav || document.getElementById("reset-progress-button")) {
@@ -152,22 +257,10 @@
     button.className = "button button-secondary nav-reset-button";
     button.textContent = "Reset Progress";
 
+    const modalControls = attachResetProgressModal();
+
     button.addEventListener("click", () => {
-      const shouldReset = window.confirm(
-        "Reset all completed lessons and saved quiz scores for this browser?"
-      );
-
-      if (!shouldReset) {
-        return;
-      }
-
-      const didReset = resetProgress();
-      if (!didReset) {
-        window.alert("Progress could not be reset in this browser.");
-        return;
-      }
-
-      window.location.reload();
+      modalControls?.openModal();
     });
 
     actionGroup.appendChild(button);
@@ -189,6 +282,7 @@
     getCompletedLessons,
     toggleLessonComplete,
     getQuizScores,
+    getQuizScore,
     saveQuizScore,
     resetProgress,
     getQueryParam,

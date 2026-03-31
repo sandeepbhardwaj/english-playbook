@@ -2,7 +2,6 @@
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
   const completed = app.getCompletedLessons();
-  const quizScores = app.getQuizScores();
 
   app.renderStats("curriculum-stats");
 
@@ -11,8 +10,10 @@
     .map((module) => {
       const lessonTiles = module.lessons
         .map((lesson) => {
-          const score = quizScores[lesson.id];
+          const score = app.getQuizScore(lesson.id);
+          const advancedScore = app.getQuizScore(lesson.id, "advanced");
           const questionCount = quizBank.getQuiz(lesson.id).length;
+          const advancedQuestionCount = quizBank.getQuiz(lesson.id, "advanced").length;
           return `
             <article class="lesson-tile">
               <div class="lesson-topline">
@@ -21,13 +22,16 @@
               </div>
               <p class="lesson-summary">${lesson.summary}</p>
               <div class="chip-row">
-                <span class="chip">${questionCount} questions</span>
-                <span class="chip">${completed.has(lesson.id) ? "Completed" : "Not completed"}</span>
-                <span class="chip">${score ? `${app.formatPercent(score.percent)} best score` : "No quiz score yet"}</span>
+                <span class="chip">${questionCount} standard</span>
+                <span class="chip">${advancedQuestionCount} advanced</span>
+                <span class="chip">${completed.has(lesson.id) ? "Completed" : "To do"}</span>
+                <span class="chip">${score ? `${app.formatPercent(score.percent)} best score` : "No score yet"}</span>
+                <span class="chip">${advancedScore ? `${app.formatPercent(advancedScore.percent)} advanced` : "No advanced score yet"}</span>
               </div>
               <div class="card-actions">
-                <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Open Lesson</a>
+                <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Start Lesson</a>
                 <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Take Quiz</a>
+                <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
               </div>
             </article>
           `;

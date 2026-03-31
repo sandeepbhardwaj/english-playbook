@@ -1,5 +1,25 @@
 (function () {
-  const quizSize = window.GrammarAtlasData.quizSize;
+  const { quizSize, curriculum } = window.GrammarAtlasData;
+  const advancedQuizSize = 12;
+
+  const allLessons = curriculum.flatMap((module) =>
+    module.lessons.map((lesson) => ({
+      ...lesson,
+      moduleId: module.id,
+      moduleTitle: module.title,
+      moduleLevel: module.level,
+      modulePortfolioTask: module.portfolioTask,
+      moduleDescription: module.description,
+    }))
+  );
+
+  function getLessonData(lessonId) {
+    return allLessons.find((lesson) => lesson.id === lessonId) || allLessons[0];
+  }
+
+  function getModuleData(moduleId) {
+    return curriculum.find((module) => module.id === moduleId) || curriculum[0];
+  }
 
   function rotateOptions(options, shift) {
     const offset = shift % options.length;
@@ -17,8 +37,176 @@
     };
   }
 
-  function padToSize(questions) {
-    return questions.slice(0, quizSize);
+  function pickAlternatives(pool, correct, count = 3) {
+    return pool.filter((item) => item !== correct).slice(0, count);
+  }
+
+  function uniqueStrings(items) {
+    return [...new Set(items.filter(Boolean))];
+  }
+
+  function buildAdvancedQuestionSet(lessonId) {
+    const lesson = getLessonData(lessonId);
+    const module = getModuleData(lesson.moduleId);
+    const standardBuilder = builderMap[lessonId];
+    const standardQuestions = standardBuilder ? standardBuilder() : buildMixedReview();
+    const advancedCandidates = standardQuestions.filter((item) =>
+      /(best|revision|editing|meaning|explanation|grammatical|correct|rewrite|transformation|analysis|reasoning|standard)/i.test(
+        `${item.prompt} ${item.tag}`
+      )
+    );
+
+    const selected = [];
+    const seenPrompts = new Set();
+
+    function pushQuestion(item) {
+      if (!item || seenPrompts.has(item.prompt)) {
+        return;
+      }
+      seenPrompts.add(item.prompt);
+      selected.push(item);
+    }
+
+    advancedCandidates.slice(0, 6).forEach(pushQuestion);
+
+    const focusPool = uniqueStrings(allLessons.map((item) => item.focus));
+    const rulePool = uniqueStrings(allLessons.flatMap((item) => item.rules || []));
+    const pitfallPool = uniqueStrings(allLessons.flatMap((item) => item.pitfalls || []));
+    const practicePool = uniqueStrings(allLessons.flatMap((item) => item.practicePlan || []));
+    const objectivePool = uniqueStrings(allLessons.flatMap((item) => item.objectives || []));
+    const exampleNotePool = uniqueStrings(
+      allLessons.flatMap((item) => (item.examples || []).map((example) => example.note))
+    );
+    const moduleTaskPool = uniqueStrings(curriculum.map((item) => item.portfolioTask));
+    const moduleDescriptionPool = uniqueStrings(curriculum.map((item) => item.description));
+    const storyAnalysisPool = uniqueStrings(
+      allLessons.flatMap((item) => (item.story?.analysis || []))
+    );
+
+    pushQuestion(
+      question(
+        `Which focus best matches the main learning challenge in "${lesson.title}"?`,
+        lesson.focus,
+        pickAlternatives(focusPool, lesson.focus),
+        `The focus of this lesson is: ${lesson.focus}`,
+        "Advanced focus",
+        101
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which rule belongs most directly to "${lesson.title}"?`,
+        lesson.rules[0],
+        pickAlternatives(rulePool, lesson.rules[0]),
+        lesson.rules[0],
+        "Rule distinction",
+        102
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which editing warning is most important to remember in "${lesson.title}"?`,
+        lesson.pitfalls[0],
+        pickAlternatives(pitfallPool, lesson.pitfalls[0]),
+        lesson.pitfalls[0],
+        "Pitfall check",
+        103
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which practice move best extends the lesson after you finish the core explanation?`,
+        lesson.practicePlan[0],
+        pickAlternatives(practicePool, lesson.practicePlan[0]),
+        lesson.practicePlan[0],
+        "Practice transfer",
+        104
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which explanation best matches this model sentence from "${lesson.title}"? "${lesson.examples[0].sentence}"`,
+        lesson.examples[0].note,
+        pickAlternatives(exampleNotePool, lesson.examples[0].note),
+        lesson.examples[0].note,
+        "Example analysis",
+        105
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which objective belongs to "${lesson.title}"?`,
+        lesson.objectives[0],
+        pickAlternatives(objectivePool, lesson.objectives[0]),
+        lesson.objectives[0],
+        "Objective check",
+        106
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which portfolio task best fits the module that contains "${lesson.title}"?`,
+        module.portfolioTask,
+        pickAlternatives(moduleTaskPool, module.portfolioTask),
+        module.portfolioTask,
+        "Portfolio transfer",
+        107
+      )
+    );
+
+    pushQuestion(
+      question(
+        `Which module description best fits the context of "${lesson.title}"?`,
+        module.description,
+        pickAlternatives(moduleDescriptionPool, module.description),
+        module.description,
+        "Module alignment",
+        108
+      )
+    );
+
+    if (lesson.story?.analysis?.[0]) {
+      pushQuestion(
+        question(
+          `Which reading insight best matches the story work in "${lesson.title}"?`,
+          lesson.story.analysis[0],
+          pickAlternatives(storyAnalysisPool, lesson.story.analysis[0]),
+          lesson.story.analysis[0],
+          "Story analysis",
+          109
+        )
+      );
+    }
+
+    standardQuestions.forEach(pushQuestion);
+
+    return selected.slice(0, advancedQuizSize);
+  }
+
+  function padToSize(questions, variantsPerItem = 10) {
+    if (questions.length <= quizSize || variantsPerItem <= 1) {
+      return questions.slice(0, quizSize);
+    }
+
+    const itemCount = Math.floor(questions.length / variantsPerItem);
+    const interleaved = [];
+
+    for (let variantIndex = 0; variantIndex < variantsPerItem; variantIndex += 1) {
+      for (let itemIndex = 0; itemIndex < itemCount; itemIndex += 1) {
+        const questionIndex = itemIndex * variantsPerItem + variantIndex;
+        if (questions[questionIndex]) {
+          interleaved.push(questions[questionIndex]);
+        }
+      }
+    }
+
+    return interleaved.slice(0, quizSize);
   }
 
   function buildPartsOfSpeech() {
@@ -139,9 +327,9 @@
       questions.push(question(`What is the main issue, if any, in "${item.text}"?`, item.correct, item.distractors, item.note, "Error type", index + 4));
       questions.push(question(`If you were checking sentence completeness, how would you mark "${item.text}"?`, item.correct, item.distractors, item.note, "Sentence check", index + 5));
       questions.push(question(`Which revision best handles "${item.text}"?`, item.repair, ["Leave it as it is", "Add another comma only", "Remove the verb"], item.note, "Revision", index + 6));
-      questions.push(question(`Choose the best grammatical response to "${item.text}"`, item.repair, ["Delete the subject", "Use no verb at all", "Replace it with a list"], item.note, "Revision", index + 7));
-      questions.push(question(`What would make "${item.text}" acceptable if it is not already?`, item.repair, ["A random adjective", "A second comma with no conjunction", "No change is ever possible"], item.note, "Repair", index + 8));
-      questions.push(question(`Which explanation is accurate for "${item.text}"?`, item.note, ["It contains only a noun phrase.", "It is correct because it has a capital letter.", "It is acceptable because it sounds long."], item.note, "Reasoning", index + 9));
+      questions.push(question(`Choose the best grammatical response to "${item.text}"`, item.repair, ["Leave a dependent clause on its own", "Join ideas with only a comma", "Remove the main verb entirely"], item.note, "Revision", index + 7));
+      questions.push(question(`What would make "${item.text}" acceptable if it is not already?`, item.repair, ["Add only another comma", "Keep the clause incomplete", "Change one word but keep the structure broken"], item.note, "Repair", index + 8));
+      questions.push(question(`Which explanation is accurate for "${item.text}"?`, item.note, ["Length alone makes a sentence complete.", "A capital letter and period are enough to make it correct.", "Any clause beginning with because can stand alone."], item.note, "Reasoning", index + 9));
     });
 
     return padToSize(questions);
@@ -182,7 +370,7 @@
       {
         prompt: "The lab needs __ equipment before Monday.",
         correct: "some",
-        distractors: ["an", "a", "many an"],
+        distractors: ["an", "a", "many"],
         note: "Equipment is a noncount noun.",
       },
     ];
@@ -424,7 +612,16 @@
       questions.push(question(`Choose the best form for an evidence-based prediction: "${item.subject} ___ because the sky is dark."`, item.planForm, [item.willForm, item.arrangedForm, item.base], item.note, "Prediction", index + 1));
       questions.push(question(`Choose the best form for a fixed arrangement: "${item.subject} ___ the tutor on Friday."`, item.arrangedForm, [item.willForm, item.planForm, item.base], item.note, "Arrangement", index + 2));
       questions.push(question(`Choose the best future perfect form: "By 8 p.m., ${item.subject.toLowerCase()} ___ the task."`, item.perfectForm, [item.willForm, item.planForm, item.base], item.note, "Future perfect", index + 3));
-      questions.push(question(`Which modal best expresses the meaning in this lesson set?`, item.modal, ["should to", "will maybe", "has to not"], item.note, "Modal meaning", index + 4));
+      questions.push(
+        question(
+          `Which modal best expresses the meaning in this lesson set?`,
+          item.modal,
+          pickAlternatives(["can", "should", "must", "might", "do not have to", "must not"], item.modal),
+          item.note,
+          "Modal meaning",
+          index + 4
+        )
+      );
       questions.push(question(`Which sentence sounds correct in standard English?`, `${item.subject} ${item.modal} revise the instructions.`, [`${item.subject} ${item.modal} to revise the instructions.`, `${item.subject} ${item.modal} revises the instructions.`, `${item.subject} ${item.modal} revising the instructions.`], item.note, "Modal structure", index + 5));
       questions.push(question(`Which answer follows the rule for future planning?`, item.planForm, [item.willForm, item.base, item.perfectForm], item.note, "Planning", index + 6));
       questions.push(question(`Which answer follows the rule for future arrangement?`, item.arrangedForm, [item.willForm, item.planForm, item.perfectForm], item.note, "Arrangement", index + 7));
@@ -564,10 +761,10 @@
         note: "Interested pairs with in.",
       },
       {
-        prompt: "Driving to class, ___ started suddenly.",
-        correct: "the rain started suddenly -> rewrite needed",
+        prompt: "Driving to class, ___ noticed the rain starting suddenly.",
+        correct: "I",
         distractors: ["the rain", "the car", "the road"],
-        note: "The original sentence contains a dangling modifier and needs a human subject.",
+        note: "The subject after the comma should be the one doing the driving.",
       },
       {
         prompt: "He is responsible ___ the final report.",
@@ -623,8 +820,8 @@
         correct: "Although the task was difficult, the class finished on time.",
         distractors: [
           "Because the task was difficult, the class finished on time.",
-          "The task although was difficult, the class finished on time.",
-          "Although the task was difficult the class finished on time because.",
+          "Although the task was difficult, but the class finished on time.",
+          "Although was the task difficult, the class finished on time.",
         ],
         note: "Although introduces contrast.",
       },
@@ -652,9 +849,9 @@
         base: "The rain stopped. We went outside.",
         correct: "When the rain stopped, we went outside.",
         distractors: [
-          "When the rain stopped we went outside because.",
-          "Because the rain stopped, contrast we went outside.",
-          "The rain stopped, while we went outside.",
+          "When the rain stopped we went outside.",
+          "Because the rain stopped, we went outside when.",
+          "The rain stopped, when we went outside.",
         ],
         note: "When is a natural subordinator for time sequence.",
       },
@@ -761,13 +958,13 @@
       {
         direct: "We will finish tomorrow.",
         correct: "They said that they would finish the next day.",
-        distractors: ["They said that they will finish tomorrow.", "They told that they would finish the next day.", "They said they would finish tomorrow yesterday."],
+        distractors: ["They said that they will finish tomorrow.", "They told that they would finish the next day.", "They said that would they finish the next day."],
         note: "Will shifts to would, and tomorrow often shifts to the next day.",
       },
       {
         direct: "Please sit down.",
         correct: "The teacher told us to sit down.",
-        distractors: ["The teacher said us to sit down.", "The teacher asked where sit down.", "The teacher told that sit down."],
+        distractors: ["The teacher said us to sit down.", "The teacher asked us sit down.", "The teacher told us sit down."],
         note: "Tell plus object plus infinitive works well for commands.",
       },
       {
@@ -806,7 +1003,7 @@
       {
         prompt: "The lesson was difficult, we asked extra questions.",
         correct: "The lesson was difficult, so we asked extra questions.",
-        distractors: ["The lesson was difficult we asked extra questions.", "The lesson was difficult: we asked extra questions because.", "The lesson was difficult, and because."],
+        distractors: ["The lesson was difficult we asked extra questions.", "The lesson was difficult; because we asked extra questions.", "The lesson was difficult, because we asked extra questions."],
         note: "The original is a comma splice and needs a better link.",
       },
       {
@@ -875,7 +1072,7 @@
       {
         prompt: "Riya's essays are stronger than the class.",
         correct: "Riya's essays are stronger than the class's essays.",
-        distractors: ["Riya's essays are stronger than the class are.", "Riya's essays are stronger than the class writing.", "Riya's essays are stronger than of the class."],
+        distractors: ["Riya's essays are stronger than the class are.", "Riya's essays are stronger than the class.", "Riya's essays are stronger than the essays of class."],
         note: "Compare like with like: essays with essays.",
       },
       {
@@ -926,7 +1123,7 @@
       {
         prompt: "The reason is because the schedule changed.",
         correct: "The reason is that the schedule changed.",
-        distractors: ["The reason because the schedule changed is because.", "The reason is because of that the schedule changed.", "Because the reason is the schedule changed."],
+        distractors: ["The reason is because the schedule changed.", "The reason for the schedule changed is that.", "Because the schedule changed is the reason."],
         note: "Reason and because together create redundancy.",
       },
       {
@@ -938,19 +1135,19 @@
       {
         prompt: "There are many students who are in need of support.",
         correct: "Many students need support.",
-        distractors: ["There are many students support need.", "Many students are being in need of support.", "Students support need many."],
+        distractors: ["There are many students in need of support.", "Many students are in need of support.", "There are many students who need support."],
         note: "Cut empty openers and choose stronger verbs.",
       },
       {
         prompt: "Basically, the report is actually really important.",
         correct: "The report is important.",
-        distractors: ["Basically the report is really actually important.", "The report is basically actually of importance really.", "Actually the important report basically is."],
+        distractors: ["The report is really important.", "Basically, the report is important.", "The report is actually very important."],
         note: "Remove stacked fillers unless they serve a real rhetorical purpose.",
       },
       {
         prompt: "In my opinion, I think the policy should change.",
         correct: "I think the policy should change.",
-        distractors: ["In my opinion I think in my thought the policy should change.", "The policy should opinion change I think.", "I opinion think the policy should change."],
+        distractors: ["In my opinion, I believe the policy should change.", "It is my opinion that the policy should change.", "I think, in my opinion, the policy should change."],
         note: "The sentence repeats the same stance marker twice.",
       },
     ];
@@ -989,7 +1186,7 @@
       {
         prompt: "He suggested me to rewrite the introduction.",
         correct: "He suggested rewriting the introduction.",
-        distractors: ["He suggested me rewrite the introduction.", "He suggested to rewrite the introduction me.", "He suggested that to rewrite the introduction."],
+        distractors: ["He suggested me rewrite the introduction.", "He suggested to rewrite the introduction.", "He suggested that rewrite the introduction."],
         note: "Suggest is not followed by object plus infinitive.",
       },
       {
@@ -1034,7 +1231,7 @@
       {
         prompt: "It is not necessary to arrive early.",
         correct: "You do not have to arrive early.",
-        distractors: ["You must not arrive early.", "You should not maybe arrive early.", "You are arriving not early."],
+        distractors: ["You must not arrive early.", "You should not arrive early.", "You are not arriving early."],
         note: "Do not have to expresses lack of necessity, not prohibition.",
       },
       {
@@ -1050,15 +1247,19 @@
         note: "The comparative transformation keeps the original meaning.",
       },
       {
-        prompt: "If I had enough time, I would join the workshop.",
-        correct: "This is a second conditional sentence.",
-        distractors: ["This is a first conditional sentence.", "This is a zero conditional sentence.", "This is reported speech."],
-        note: "Past form in the if-clause plus would marks second conditional meaning.",
+        prompt: "I do not have enough time, so I cannot join the workshop.",
+        correct: "If I had enough time, I would join the workshop.",
+        distractors: [
+          "If I have enough time, I would join the workshop.",
+          "If I had enough time, I will join the workshop.",
+          "If I would have enough time, I joined the workshop.",
+        ],
+        note: "Use the second conditional for unreal present situations.",
       },
       {
         prompt: "You must not park here.",
         correct: "You are not allowed to park here.",
-        distractors: ["You do not have to park here.", "You might not park here.", "You can not maybe park here."],
+        distractors: ["You do not have to park here.", "You might not park here.", "Parking here is not necessary."],
         note: "Must not expresses prohibition.",
       },
       {
@@ -1110,9 +1311,38 @@
     const generators = builderMap;
     const mixed = [];
     lessonOrder.forEach((lessonId) => {
-      mixed.push(...generators[lessonId]().slice(0, 4));
+      mixed.push(...generators[lessonId]().slice(0, 2));
     });
-    return padToSize(mixed);
+    return padToSize(mixed, 2);
+  }
+
+  function buildAdvancedMixedReview() {
+    const lessonOrder = [
+      "parts-of-speech",
+      "sentence-structure",
+      "articles-nouns",
+      "present-family",
+      "past-and-present-perfect",
+      "future-perfect-modals",
+      "subject-verb-agreement",
+      "pronouns-questions-negatives",
+      "prepositions-modifiers",
+      "clauses-and-relatives",
+      "conditionals",
+      "reported-speech",
+      "punctuation-clarity",
+      "parallelism-comparison",
+      "concision-formal-tone",
+      "editing-drills",
+      "transformations-and-cloze",
+    ];
+
+    const mixed = [];
+    lessonOrder.forEach((lessonId) => {
+      mixed.push(...buildAdvancedQuestionSet(lessonId).slice(0, 1));
+    });
+
+    return mixed.slice(0, advancedQuizSize);
   }
 
   const builderMap = {
@@ -1137,7 +1367,10 @@
   };
 
   window.GrammarAtlasQuizBank = {
-    getQuiz(lessonId) {
+    getQuiz(lessonId, mode = "standard") {
+      if (mode === "advanced") {
+        return lessonId === "final-review" ? buildAdvancedMixedReview() : buildAdvancedQuestionSet(lessonId);
+      }
       const builder = builderMap[lessonId];
       return builder ? builder() : buildMixedReview();
     },
