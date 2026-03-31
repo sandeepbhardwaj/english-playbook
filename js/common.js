@@ -75,6 +75,16 @@
     saveJson(quizStorageKey, current);
   }
 
+  function resetProgress() {
+    try {
+      localStorage.removeItem(lessonStorageKey);
+      localStorage.removeItem(quizStorageKey);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   function getQueryParam(name) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name);
@@ -127,6 +137,45 @@
       .join("");
   }
 
+  function attachResetProgressButton() {
+    const siteNav = document.querySelector(".site-nav");
+    if (!siteNav || document.getElementById("reset-progress-button")) {
+      return;
+    }
+
+    const actionGroup = document.createElement("div");
+    actionGroup.className = "nav-actions";
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "reset-progress-button";
+    button.className = "button button-secondary nav-reset-button";
+    button.textContent = "Reset Progress";
+
+    button.addEventListener("click", () => {
+      const shouldReset = window.confirm(
+        "Reset all completed lessons and saved quiz scores for this browser?"
+      );
+
+      if (!shouldReset) {
+        return;
+      }
+
+      const didReset = resetProgress();
+      if (!didReset) {
+        window.alert("Progress could not be reset in this browser.");
+        return;
+      }
+
+      window.location.reload();
+    });
+
+    actionGroup.appendChild(button);
+    siteNav.appendChild(actionGroup);
+  }
+
+  attachResetProgressButton();
+
   window.GrammarAtlasApp = {
     curriculum,
     roadmap,
@@ -141,6 +190,7 @@
     toggleLessonComplete,
     getQuizScores,
     saveQuizScore,
+    resetProgress,
     getQueryParam,
     renderStats,
     formatPercent,

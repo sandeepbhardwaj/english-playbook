@@ -125,12 +125,25 @@ p {
   gap: 10px;
 }
 
+.nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
 .nav-links a {
   padding: 10px 14px;
   text-decoration: none;
   border-radius: 999px;
   color: var(--muted);
   font-weight: 700;
+}
+
+.nav-reset-button {
+  min-height: 42px;
+  padding: 0 16px;
+  white-space: nowrap;
 }
 
 body[data-page="home"] .nav-links a[href="index.html"],
@@ -589,6 +602,11 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
     border-radius: 24px;
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .nav-actions {
+    width: 100%;
+    margin-left: 0;
   }
 
   .hero-copy h1,
