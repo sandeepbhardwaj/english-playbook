@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar Atlas | Home</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="home">
+    <div class="site-shell">
+      <header class="site-nav">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">GA</span>
+          <span>Grammar Atlas</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="curriculum.html">Curriculum</a>
+          <a href="roadmap.html">Roadmap</a>
+        </nav>
+      </header>
+
+      <main class="page-shell">
+        <section class="hero-block">
+          <div class="hero-copy">
+            <p class="eyebrow">Advanced English Grammar Program</p>
+            <h1>Learn grammar through structure, story, and deep practice.</h1>
+            <p class="hero-text">
+              Grammar Atlas is now organized as a multi-page learning program
+              with detailed lessons, story-based tense teaching, and 60-question
+              quizzes for every lesson.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="curriculum.html">Open Curriculum</a>
+              <a class="button button-secondary" href="lesson.html?lesson=present-family">See the Tense Story Lab</a>
+            </div>
+          </div>
+          <aside class="hero-aside">
+            <h2>What Changed</h2>
+            <ul class="feature-list">
+              <li>Dedicated lesson pages instead of one long screen.</li>
+              <li>Large quiz banks with paginated assessment flow.</li>
+              <li>Story-based tense instruction for better retention.</li>
+              <li>Local progress tracking for lessons and quiz results.</li>
+            </ul>
+          </aside>
+        </section>
+
+        <section class="stats-grid" id="home-stats" aria-label="Program statistics"></section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Program Shape</p>
+            <h2>How the course works</h2>
+          </div>
+          <div class="card-grid trio-grid">
+            <article class="info-card">
+              <h3>Learn</h3>
+              <p>
+                Each lesson page gives you goals, explanations, rules,
+                pitfalls, examples, and an applied study sequence.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>See it in context</h3>
+              <p>
+                Tense lessons use story-based passages so learners notice how
+                grammar shapes time, sequence, and meaning in real text.
+              </p>
+            </article>
+            <article class="info-card">
+              <h3>Practice at scale</h3>
+              <p>
+                Every lesson links to a 60-question quiz with progress memory,
+                answer review, and score tracking.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="section-heading">
+            <p class="eyebrow">Module Snapshot</p>
+            <h2>Curriculum at a glance</h2>
+          </div>
+          <div class="card-grid" id="home-module-grid"></div>
+        </section>
+
+        <section class="panel spotlight-panel" id="story-spotlight"></section>
+      </main>
+    </div>
+
+    <script src="js/program-data.js"></script>
+    <script src="js/quiz-generators.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/home.js"></script>
+  </body>
+</html>
