@@ -25,6 +25,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build and minify assets
+        run: npm run build
+
+      - name: Copy built files to root for deployment
+        run: |
+          cp dist/program-data.js js/program-data.js
+          cp dist/lesson-enhancements.js js/lesson-enhancements.js
+          cp dist/quiz-generators.js js/quiz-generators.js
+          cp dist/common.js js/common.js
+          cp dist/home.js js/home.js
+          cp dist/curriculum.js js/curriculum.js
+          cp dist/lesson.js js/lesson.js
+          cp dist/quiz.js js/quiz.js
+          cp dist/roadmap.js js/roadmap.js
+          cp dist/styles.css styles.css
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 

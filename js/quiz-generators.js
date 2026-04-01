@@ -1,17 +1,6 @@
 (function () {
-  const { quizSize, curriculum } = window.GrammarAtlasData;
+  const { quizSize, curriculum, allLessons } = window.GrammarAtlasApp;
   const advancedQuizSize = 20;
-
-  const allLessons = curriculum.flatMap((module) =>
-    module.lessons.map((lesson) => ({
-      ...lesson,
-      moduleId: module.id,
-      moduleTitle: module.title,
-      moduleLevel: module.level,
-      modulePortfolioTask: module.portfolioTask,
-      moduleDescription: module.description,
-    }))
-  );
 
   function getLessonData(lessonId) {
     return allLessons.find((lesson) => lesson.id === lessonId) || allLessons[0];
