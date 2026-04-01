@@ -8,6 +8,7 @@ Secondary reference docs live here so the repo root stays focused on the app and
 - [QUICKSTART.md](QUICKSTART.md) - Fast onboarding for local development
 - [STYLE_GUIDE.md](STYLE_GUIDE.md) - Code conventions and implementation standards
 - [CURRICULUM_EXPANSION.md](CURRICULUM_EXPANSION.md) - Content and lesson expansion workflow
+- [CURRICULUM_GAP_ROADMAP.md](CURRICULUM_GAP_ROADMAP.md) - Recommended next curriculum additions and 14-week expansion plan
 
 ## Related Root Docs
 
