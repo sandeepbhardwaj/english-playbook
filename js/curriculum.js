@@ -1,9 +1,36 @@
 (function () {
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
+  const enhancements = window.GrammarAtlasEnhancements || {};
   const completed = app.getCompletedLessons();
 
   app.renderStats("curriculum-stats");
+
+  const blueprint = enhancements.portalBlueprint;
+  const blueprintPanel = document.getElementById("curriculum-blueprint");
+  if (blueprintPanel && blueprint) {
+    blueprintPanel.innerHTML = `
+      <div class="section-heading">
+        <p class="eyebrow">Portal Blueprint</p>
+        <h2>${blueprint.title}</h2>
+      </div>
+      <div class="card-grid">
+        ${blueprint.pillars
+          .map(
+            (item) => `
+              <article class="summary-card">
+                <div class="summary-topline">
+                  <h3>${item.title}</h3>
+                  <span class="chip">Design</span>
+                </div>
+                <p class="lesson-summary">${item.detail}</p>
+              </article>
+            `
+          )
+          .join("")}
+      </div>
+    `;
+  }
 
   const stack = document.getElementById("curriculum-stack");
   stack.innerHTML = app.curriculum
@@ -22,8 +49,8 @@
               </div>
               <p class="lesson-summary">${lesson.summary}</p>
               <div class="chip-row">
-                <span class="chip">${questionCount} standard</span>
-                <span class="chip">${advancedQuestionCount} advanced</span>
+                <span class="chip">${questionCount} core bank</span>
+                <span class="chip">${advancedQuestionCount} challenge</span>
                 <span class="chip">${completed.has(lesson.id) ? "Completed" : "To do"}</span>
                 <span class="chip">${score ? `${app.formatPercent(score.percent)} best score` : "No score yet"}</span>
                 <span class="chip">${advancedScore ? `${app.formatPercent(advancedScore.percent)} advanced` : "No advanced score yet"}</span>

@@ -7,7 +7,12 @@
   const lesson = app.getLesson(lessonId);
   const module = app.getModule(lesson.moduleId);
   const questions = quizBank.getQuiz(lesson.id, mode);
-  const pageSize = 8;
+  const pageSize = isAdvanced ? 5 : 6;
+  const difficultyCounts = questions.reduce((counts, question) => {
+    const key = question.difficulty || (isAdvanced ? "Review Challenge" : "Mixed");
+    counts[key] = (counts[key] || 0) + 1;
+    return counts;
+  }, {});
   let pageIndex = 0;
   const answers = new Array(questions.length).fill(null);
   let submitted = false;
@@ -26,14 +31,18 @@
     <p class="eyebrow">${module.title}</p>
     <h1>${lesson.title} ${isAdvanced ? "Advanced Quiz" : "Quiz"}</h1>
     <p class="hero-text">
-      This assessment contains ${questions.length} ${isAdvanced ? "advanced challenge" : "focused"} questions.
+      ${
+        isAdvanced
+          ? `This review challenge contains ${questions.length} explanation-heavy questions designed to test transfer, contrast, and reasoning.`
+          : `This core quiz contains ${questions.length} questions split into Basic, Intermediate, and Advanced bands so you can move from recognition to real control.`
+      }
       Work in short batches, then submit to see your score and explanations.
     </p>
     <div class="quiz-metrics">
       <span class="chip">${module.level}</span>
       <span class="chip">${lesson.duration}</span>
       <span class="chip">${questions.length} questions</span>
-      <span class="chip">${isAdvanced ? "Advanced" : "Standard"}</span>
+      <span class="chip">${isAdvanced ? "Review Challenge" : "Core Quiz Bank"}</span>
     </div>
   `;
 
@@ -44,6 +53,14 @@
       <li>Use the lesson page first if you want the full explanation and story context.</li>
       <li>Your best ${isAdvanced ? "advanced" : "standard"} score is saved in this browser after submission.</li>
     </ul>
+    <div class="portfolio-panel">
+      <h3>${isAdvanced ? "Challenge Layout" : "Difficulty Layout"}</h3>
+      <ul>
+        ${Object.entries(difficultyCounts)
+          .map(([label, count]) => `<li>${label}: ${count} questions</li>`)
+          .join("")}
+      </ul>
+    </div>
     <div class="lesson-actions">
       <a class="button button-secondary" href="lesson.html?lesson=${lesson.id}">Back to Lesson</a>
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${isAdvanced ? "standard" : "advanced"}">
@@ -56,6 +73,9 @@
   function renderProgress() {
     const answered = answers.filter((answer) => answer !== null).length;
     const savedScore = app.getQuizScore(lesson.id, mode);
+    const start = pageIndex * pageSize;
+    const currentSlice = questions.slice(start, start + pageSize);
+    const bandLabel = [...new Set(currentSlice.map((item) => item.difficulty || "Mixed"))].join(" / ");
     document.getElementById("quiz-progress").innerHTML = `
       <article class="progress-card">
         <strong>Progress</strong>
@@ -64,6 +84,10 @@
       <article class="progress-card">
         <strong>Page</strong>
         <p class="progress-copy">${pageIndex + 1} of ${Math.ceil(questions.length / pageSize)}</p>
+      </article>
+      <article class="progress-card">
+        <strong>Current Band</strong>
+        <p class="progress-copy">${bandLabel}</p>
       </article>
       <article class="progress-card">
         <strong>Best Saved ${isAdvanced ? "Advanced " : ""}Score</strong>
@@ -110,7 +134,10 @@
           <article class="question-card">
             <div class="question-topline">
               <h3>Question ${questionIndex + 1}</h3>
-              <span class="chip">${question.tag}</span>
+              <div class="chip-row">
+                <span class="chip">${question.difficulty || "Mixed"}</span>
+                <span class="chip">${question.tag}</span>
+              </div>
             </div>
             <p>${question.prompt}</p>
             <div class="option-list">${optionsMarkup}</div>
@@ -141,6 +168,18 @@
   function showResults() {
     const correct = questions.filter((question, index) => answers[index] === question.correctIndex).length;
     const percent = (correct / questions.length) * 100;
+    const breakdown = Object.keys(difficultyCounts)
+      .map((label) => {
+        const scopedQuestions = questions.filter((question) => (question.difficulty || "Mixed") === label);
+        const scopedCorrect = scopedQuestions.filter((question) => {
+          const originalIndex = questions.indexOf(question);
+          return answers[originalIndex] === question.correctIndex;
+        }).length;
+
+        return `<span class="chip">${label}: ${scopedCorrect}/${scopedQuestions.length}</span>`;
+      })
+      .join("");
+
     app.saveQuizScore(lesson.id, {
       correct,
       total: questions.length,
@@ -153,6 +192,7 @@
         <h3>${isAdvanced ? "Advanced Quiz Complete" : "Quiz Complete"}</h3>
         <p class="quiz-note">You answered ${correct} of ${questions.length} questions correctly.</p>
         <p class="quiz-note">Final score: <strong>${app.formatPercent(percent)}</strong></p>
+        <div class="chip-row">${breakdown}</div>
         <div class="card-actions">
           <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Return to Lesson</a>
           <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${mode}">Retake ${isAdvanced ? "Advanced Quiz" : "Quiz"}</a>
