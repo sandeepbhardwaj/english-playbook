@@ -61,11 +61,16 @@
           .join("")}
       </ul>
     </div>
+    <div class="portfolio-panel">
+      <h3>Tutor Tools</h3>
+      <p class="lesson-note">After submission, this quiz will recommend what to review next and help you move weak patterns into bookmarks or the error log.</p>
+    </div>
     <div class="lesson-actions">
       <a class="button button-secondary" href="lesson.html?lesson=${lesson.id}">Back to Lesson</a>
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${isAdvanced ? "standard" : "advanced"}">
         ${isAdvanced ? "Switch to Standard Quiz" : "Try Advanced Quiz"}
       </a>
+      <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
       <a class="button button-secondary" href="curriculum.html">Back to Curriculum</a>
     </div>
   `;
@@ -165,6 +170,19 @@
     });
   }
 
+  function getScoreMessage(percent) {
+    if (percent < 60) {
+      return "Reopen the lesson and review the core rules before you retake this quiz.";
+    }
+    if (percent < 80) {
+      return "You have partial control. A focused review plus one retake should move this topic into a stronger range.";
+    }
+    if (percent < 90) {
+      return "This topic is mostly secure. Use the advanced quiz or move attention to another weak area.";
+    }
+    return "Strong result. Keep this lesson in light rotation and move your attention to the next weak area.";
+  }
+
   function showResults() {
     const correct = questions.filter((question, index) => answers[index] === question.correctIndex).length;
     const percent = (correct / questions.length) * 100;
@@ -180,22 +198,61 @@
       })
       .join("");
 
-    app.saveQuizScore(lesson.id, {
-      correct,
-      total: questions.length,
-      percent,
-      updatedAt: new Date().toISOString(),
-    }, mode);
+    app.saveQuizScore(
+      lesson.id,
+      {
+        correct,
+        total: questions.length,
+        percent,
+        updatedAt: new Date().toISOString(),
+      },
+      mode
+    );
 
+    const reviewRecommendations = app
+      .getReviewRecommendations(4)
+      .filter((entry) => entry.lesson.id !== lesson.id)
+      .slice(0, 3);
     document.getElementById("quiz-results").innerHTML = `
       <div class="results-card">
         <h3>${isAdvanced ? "Advanced Quiz Complete" : "Quiz Complete"}</h3>
         <p class="quiz-note">You answered ${correct} of ${questions.length} questions correctly.</p>
         <p class="quiz-note">Final score: <strong>${app.formatPercent(percent)}</strong></p>
         <div class="chip-row">${breakdown}</div>
+        <p class="lesson-note results-helper">${getScoreMessage(percent)}</p>
         <div class="card-actions">
           <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Return to Lesson</a>
           <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${mode}">Retake ${isAdvanced ? "Advanced Quiz" : "Quiz"}</a>
+          <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
+          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+        </div>
+        <div class="portfolio-panel">
+          <h3>What to study next</h3>
+          ${
+            reviewRecommendations.length
+              ? `
+                <div class="stack-list">
+                  ${reviewRecommendations
+                    .map(
+                      (entry) => `
+                        <article class="summary-card dashboard-mini-card">
+                          <div class="summary-topline">
+                            <h3>${entry.lesson.title}</h3>
+                            <span class="chip">${entry.primaryPercent !== null ? `${Math.round(entry.primaryPercent)}%` : "Next up"}</span>
+                          </div>
+                          <p class="lesson-note">${entry.reason}</p>
+                          <div class="card-actions">
+                            <a class="button button-secondary" href="lesson.html?lesson=${entry.lesson.id}">Open Lesson</a>
+                            <a class="button button-secondary" href="quiz.html?lesson=${entry.lesson.id}">Review Quiz</a>
+                          </div>
+                        </article>
+                      `
+                    )
+                    .join("")}
+                </div>
+              `
+              : '<p class="lesson-note">More personalized review suggestions will appear after you complete a few more quizzes.</p>'
+          }
         </div>
       </div>
     `;

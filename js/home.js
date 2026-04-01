@@ -2,6 +2,12 @@
   const app = window.GrammarAtlasApp;
   const quizBank = window.GrammarAtlasQuizBank;
   const enhancements = window.GrammarAtlasEnhancements || {};
+  const lessonProgress = app.getLessonProgress();
+  const quizAnalytics = app.getQuizAnalytics();
+  const diagnosticResult = app.getDiagnosticResult();
+  const recommendedLessons = app.getRecommendedNextLessons(3);
+  const streakCount = app.getStudyStreak();
+  const bookmarkCount = app.getBookmarks().size;
 
   app.renderStats("home-stats");
 
@@ -84,6 +90,78 @@
           <a class="button button-secondary" href="quiz.html?lesson=${tenseLesson.id}&mode=advanced">
             Try ${quizBank.getQuiz(tenseLesson.id, "advanced").length}-Question Advanced Quiz
           </a>
+        </div>
+      </article>
+    </div>
+  `;
+
+  const homeTutorTools = document.getElementById("home-tutor-tools");
+  const placementModule = diagnosticResult ? app.getModule(diagnosticResult.recommendedModuleId) : null;
+  const recommendationLinks = recommendedLessons.length
+    ? recommendedLessons
+        .map((lesson) => `<a class="chip-link" href="lesson.html?lesson=${lesson.id}">${lesson.title}</a>`)
+        .join("")
+    : '<span class="chip">Take a few quizzes to unlock review suggestions</span>';
+
+  homeTutorTools.innerHTML = `
+    <div class="section-heading">
+      <p class="eyebrow">Tutor Tools</p>
+      <h2>Use the platform like a personal study coach</h2>
+    </div>
+    <div class="card-grid">
+      <article class="summary-card">
+        <div class="summary-topline">
+          <h3>Diagnostic Placement</h3>
+          <span class="chip">${diagnosticResult ? `${diagnosticResult.percent}% saved` : "Not started"}</span>
+        </div>
+        <p class="lesson-note">
+          ${
+            placementModule
+              ? `Your latest placement suggests starting with ${placementModule.title}.`
+              : "Take the 12-question diagnostic to get a static placement recommendation."
+          }
+        </p>
+        <div class="card-actions">
+          <a class="button button-primary" href="diagnostic.html">${diagnosticResult ? "Retake Diagnostic" : "Take Diagnostic"}</a>
+          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+        </div>
+      </article>
+      <article class="summary-card">
+        <div class="summary-topline">
+          <h3>Progress Snapshot</h3>
+          <span class="chip">${lessonProgress.percent}% complete</span>
+        </div>
+        <ul class="bullet-list">
+          <li><strong>Study streak:</strong> ${streakCount} day${streakCount === 1 ? "" : "s"}</li>
+          <li><strong>Bookmarked lessons:</strong> ${bookmarkCount}</li>
+          <li><strong>Average quiz:</strong> ${quizAnalytics ? `${quizAnalytics.averageScore}%` : "No scores yet"}</li>
+        </ul>
+        <div class="card-actions">
+          <a class="button button-primary" href="dashboard.html">See Review Plan</a>
+          <a class="button button-secondary" href="curriculum.html">Continue Lessons</a>
+        </div>
+      </article>
+      <article class="summary-card">
+        <div class="summary-topline">
+          <h3>Recommended Next Lessons</h3>
+          <span class="chip">${recommendedLessons.length ? "Personalized" : "Waiting for data"}</span>
+        </div>
+        <p class="lesson-note">
+          The static recommendation engine uses quiz scores, completion state, and bookmarks to decide what deserves review next.
+        </p>
+        <div class="chip-row">${recommendationLinks}</div>
+      </article>
+      <article class="summary-card">
+        <div class="summary-topline">
+          <h3>Error Review</h3>
+          <span class="chip">Feedback loop</span>
+        </div>
+        <p class="lesson-note">
+          Save repeated grammar mistakes in the error log so your review stays specific and tied to real weak areas.
+        </p>
+        <div class="card-actions">
+          <a class="button button-primary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
+          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
         </div>
       </article>
     </div>
