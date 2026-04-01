@@ -8,7 +8,7 @@ The multi-agent system ensures every lesson meets premium quality standards. The
 
 **Plan → Write → Quiz → Review → Format → Deploy**
 
-All agents are defined in the `agents/` folder. Follow `agents/shared-rules.md` for the complete content standard.
+All agents are defined in the `../agents/` folder. Follow `../agents/shared-rules.md` for the complete content standard.
 
 ---
 
@@ -357,8 +357,8 @@ When improving an existing lesson:
 
 ## Resources
 
-- **Main README:** [README.md](README.md)
-- **Agent System:** See `agents/` folder and `agents/shared-rules.md`
+- **Main README:** [README.md](../README.md)
+- **Agent System:** See `../agents/` folder and `../agents/shared-rules.md`
 - **API Reference:** [API.md](API.md)
 - **Style Guide:** [STYLE_GUIDE.md](STYLE_GUIDE.md)
 - **Code Example:** Check existing lessons in `js/program-data.js`
@@ -367,9 +367,9 @@ When improving an existing lesson:
 
 ## Questions?
 
-- Review agent documentation in `agents/` folder
+- Review agent documentation in `../agents/` folder
 - Check existing lessons for patterns
-- Consult `agents/shared-rules.md` for content standards
+- Consult `../agents/shared-rules.md` for content standards
 - Open an issue on GitHub for clarification
 
 ---

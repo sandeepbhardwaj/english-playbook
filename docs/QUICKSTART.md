@@ -9,13 +9,13 @@ Get Grammar Atlas running locally and understand the codebase in 5 minutes.
 cd english-playbook
 
 # Start local server
-python3 -m http.server 8000
+npm run serve
 
 # Open in browser
-open http://localhost:8000
+open http://127.0.0.1:8000
 ```
 
-Done! The site is now running. Any file changes auto-reflect in the browser.
+Done! The site is now running. The local dev server disables cache headers so CSS and JavaScript changes show up more reliably.
 
 ---
 
@@ -168,8 +168,8 @@ git push origin main
 ## Next Steps
 
 1. **Read** [API.md](API.md) — Full API reference with examples
-2. **Review** [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines
-3. **Explore** [agents/](agents/) — Multi-agent system for new lessons
+2. **Review** [CONTRIBUTING.md](../CONTRIBUTING.md) — Contribution guidelines
+3. **Explore** [agents/](../agents/) — Multi-agent system for new lessons
 4. **Check** [STYLE_GUIDE.md](STYLE_GUIDE.md) — Code standards
 5. **Learn** [CURRICULUM_EXPANSION.md](CURRICULUM_EXPANSION.md) — Add lessons using agents
 
@@ -197,8 +197,8 @@ Check `js/quiz.js` for scoring logic, test with `GrammarAtlasApp.saveQuizScore()
 ## Need Help?
 
 - **API questions?** → See [API.md](API.md)
-- **Deployment issues?** → See [DEPLOYMENT.md](DEPLOYMENT.md)
-- **Content standards?** → See [agents/shared-rules.md](agents/shared-rules.md)
+- **Deployment issues?** → See [DEPLOYMENT.md](../DEPLOYMENT.md)
+- **Content standards?** → See [agents/shared-rules.md](../agents/shared-rules.md)
 - **Code style?** → See [STYLE_GUIDE.md](STYLE_GUIDE.md)
 - **Adding lessons?** → See [CURRICULUM_EXPANSION.md](CURRICULUM_EXPANSION.md)
 
@@ -208,7 +208,7 @@ Check `js/quiz.js` for scoring logic, test with `GrammarAtlasApp.saveQuizScore()
 
 ```bash
 # Start local server
-python3 -m http.server 8000
+npm run serve
 
 # Check all JS files for syntax
 node -c js/*.js

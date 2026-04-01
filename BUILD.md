@@ -21,6 +21,13 @@ npm run build:watch
 
 Automatically rebuilds when source files change.
 
+### Local Dev Server
+```bash
+npm run serve
+```
+
+This serves the project with cache disabled, which helps when the browser keeps showing older CSS or JavaScript after edits.
+
 ---
 
 ## Performance Improvements

@@ -407,4 +407,4 @@ const siteUrl = process.env.SITE_URL || 'http://localhost:8000';
 
 - Check the main [README.md](README.md)
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup
-- Review [API.md](API.md) for integration details
+- Review [API.md](docs/API.md) for integration details

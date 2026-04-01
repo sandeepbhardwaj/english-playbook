@@ -4,6 +4,7 @@
   "description": "A premium, self-study English grammar learning platform",
   "main": "index.html",
   "scripts": {
+    "serve": "node scripts/dev-server.js",
     "build": "esbuild js/*.js styles.css --minify --outdir=dist --allow-overwrite",
     "build:watch": "esbuild js/*.js styles.css --minify --outdir=dist --allow-overwrite --watch"
   },

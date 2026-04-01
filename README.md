@@ -24,9 +24,11 @@ open index.html
 
 ### Run with Local Server
 ```bash
-python3 -m http.server 8000
+npm run serve
 ```
-Then visit `http://localhost:8000`
+Then visit `http://127.0.0.1:8000`
+
+This local server disables cache headers, so CSS and JavaScript changes show up more reliably during development.
 
 ### Deploy to GitHub Pages
 1. Push to a GitHub repository
@@ -80,6 +82,13 @@ english-playbook/
 ├── 404.html                   # Error page (for GitHub Pages)
 ├── styles.css                 # Responsive design system
 │
+├── docs/                      # Additional developer/reference docs
+│   ├── API.md
+│   ├── QUICKSTART.md
+│   ├── STYLE_GUIDE.md
+│   ├── CURRICULUM_EXPANSION.md
+│   └── archive/master-prompt.md
+│
 ├── js/
 │   ├── program-data.js        # Curriculum, modules, lessons, roadmap
 │   ├── lesson-enhancements.js # Extended lesson content & support
@@ -130,6 +139,8 @@ Use the multi-agent system in `agents/` to create premium lessons:
 6. **Orchestrator** → Coordinate the workflow
 
 See `agents/shared-rules.md` for the complete content standard.
+
+Additional reference docs are grouped under [`docs/`](docs/README.md).
 
 ### Local Development Workflow
 
