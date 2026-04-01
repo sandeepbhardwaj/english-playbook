@@ -12,18 +12,8 @@ Found a bug or have a suggestion? Open an issue with:
 
 ## Contributing Content
 
-### Using the Multi-Agent System
-
-All lesson and quiz content must follow the pipeline:
-
-1. **Plan** (Planner Agent) → Topic scope, prerequisites, learner level
-2. **Write** (Lesson Agent) → Complete lesson with all 11 required sections
-3. **Quiz** (Quiz Agent) → Generate 60-100 questions across 3 difficulty levels
-4. **Review** (Reviewer Agent) → Quality assurance gate (PASS/FAIL)
-5. **Format** (Formatter Agent) → Website-ready markdown
-6. **Deploy** (Orchestrator) → Coordinate the workflow
-
-See `agents/shared-rules.md` for content standards.
+Lesson and quiz content lives directly in `js/program-data.js`.
+When adding or revising content, copy the structure of an existing lesson and keep the curriculum metadata and roadmap aligned.
 
 ### Minimum Content Requirements
 
@@ -51,7 +41,7 @@ Every lesson must include:
 - [ ] Quiz split: Basic (20-30), Intermediate (20-30), Advanced (20-40)
 - [ ] All quiz answers are correct and explanations are clear
 - [ ] No duplicate questions
-- [ ] Reviewed and approved (PASS from Reviewer Agent)
+- [ ] Lesson and quiz pages still render correctly in the browser
 
 ## Contributing Code
 
@@ -120,7 +110,7 @@ All submissions will be reviewed for:
 ## Questions?
 
 - Check existing issues and discussions
-- Review the agent system documentation in `agents/`
+- Review [README.md](README.md) for the current documentation index
 - Ask in the PR discussion
 
 Thank you for making Grammar Atlas better!

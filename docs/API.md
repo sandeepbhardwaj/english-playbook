@@ -22,7 +22,7 @@ GrammarAtlasApp.allLessons.forEach(lesson => {
 ```
 
 ### `roadmap`
-12-week study plan structure.
+14-week study plan structure.
 
 ```javascript
 const weeks = GrammarAtlasApp.roadmap;
@@ -242,7 +242,7 @@ Get overall lesson completion statistics.
 ```javascript
 const progress = GrammarAtlasApp.getLessonProgress();
 console.log(progress.completed); // e.g., 5 lessons
-console.log(progress.total);     // e.g., 18 lessons
+console.log(progress.total);     // e.g., 21 lessons
 console.log(progress.percent);   // e.g., 28%
 ```
 

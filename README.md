@@ -7,7 +7,7 @@ Grammar Atlas is a complete, structured English grammar learning system designed
 ## ✨ Key Features
 
 - **6 Structured Modules** covering foundations through mastery
-- **18 Premium Lessons** with story-based instruction, especially for tenses
+- **21 Premium Lessons** with story-based instruction, especially for tenses
 - **1000+ Quiz Questions** across 3 difficulty levels (Basic, Intermediate, Advanced)
 - **Progress Tracking** — lessons completed, quiz scores saved in browser `localStorage`
 - **Framework-Free Runtime** — static HTML, CSS, and JavaScript in production
@@ -45,27 +45,30 @@ Each module builds progressively on previous concepts:
 - Sentence Structure
 - Articles, Determiners, and Nouns
 
-### **Module 2: Tenses and Time** (Week 3-4)
+### **Module 2: Tenses and Time** (Week 3-6)
 - Present Simple and Present Continuous
 - Past Simple and Present Perfect
-- Future Forms, Perfect Forms, and Modals
+- Future Forms and Future Time Reference
+- Modals in Depth
 
-### **Module 3: Sentence Accuracy** (Week 5-6)
+### **Module 3: Sentence Accuracy** (Week 7-9)
 - Subject-Verb Agreement
 - Pronouns, Questions, and Negatives
 - Prepositions and Modifiers
+- Active and Passive Voice
 
-### **Module 4: Complex Grammar** (Week 7-8)
+### **Module 4: Complex Grammar** (Week 10-12)
 - Clauses, Conjunctions, and Relative Clauses
 - Conditionals, Wishes, and Hypothetical Meaning
 - Reported Speech and Reporting Verbs
+- Gerunds, Infinitives, and Verb Patterns
 
-### **Module 5: Style and Editing** (Week 9-10)
+### **Module 5: Style and Editing** (Week 13-14)
 - Punctuation for Clarity
 - Parallelism and Comparison
 - Concision and Formal Tone
 
-### **Module 6: Mastery and Review** (Week 11-12)
+### **Module 6: Mastery and Review** (Week 14)
 - Error Correction Drills
 - Transformations and Cloze Practice
 - Final Review and Study Strategy
@@ -74,40 +77,48 @@ Each module builds progressively on previous concepts:
 
 ```
 english-playbook/
+├── AGENT_CONTEXT.md          # Fast bootstrap for agent sessions
+├── README.md                 # Main project overview
+├── package.json              # Local dev scripts
+├── package-lock.json         # Locked dev dependencies
+├── CNAME                     # Custom domain for GitHub Pages
+├── .nojekyll                 # GitHub Pages static-site hint
+│
 ├── index.html                 # Landing page
 ├── curriculum.html            # Module and lesson directory
+├── diagnostic.html            # Diagnostic assessment page
+├── dashboard.html             # Learner dashboard
 ├── lesson.html                # Single lesson renderer
 ├── quiz.html                  # Quiz engine
-├── roadmap.html               # 12-week study plan
+├── roadmap.html               # 14-week study plan
 ├── 404.html                   # Error page (for GitHub Pages)
 ├── styles.css                 # Responsive design system
 │
-├── docs/                      # Additional developer/reference docs
+├── docs/                      # All repo/process docs
 │   ├── API.md
 │   ├── QUICKSTART.md
-│   ├── STYLE_GUIDE.md
-│   ├── CURRICULUM_EXPANSION.md
-│   └── archive/master-prompt.md
+│   ├── BUILD.md
+│   ├── DEPLOYMENT.md
+│   ├── CONTRIBUTING.md
+│   └── README.md             # Docs index
 │
-├── js/
+├── js/                        # Runtime data and page logic
 │   ├── program-data.js        # Curriculum, modules, lessons, roadmap
 │   ├── lesson-enhancements.js # Extended lesson content & support
 │   ├── quiz-generators.js     # Quiz bank builder
 │   ├── common.js              # Utilities and localStorage helpers
 │   ├── home.js                # Home page logic
 │   ├── curriculum.js          # Curriculum page logic
+│   ├── diagnostic.js          # Diagnostic logic
+│   ├── dashboard.js           # Dashboard logic
 │   ├── lesson.js              # Lesson page logic
 │   ├── quiz.js                # Quiz page logic
 │   └── roadmap.js             # Roadmap page logic
 │
-├── agents/                    # Multi-agent system prompts
-│   ├── shared-rules.md        # Core principles
-│   ├── planner-agent.md       # Curriculum design
-│   ├── lesson-agent.md        # Content authoring
-│   ├── quiz-agent.md          # Question generation
-│   ├── reviewer-agent.md      # Quality assurance
-│   ├── formatter-agent.md     # Output formatting
-│   └── orchestrator.md        # Workflow coordination
+├── scripts/
+│   └── dev-server.js          # No-cache local dev server
+│
+├── dist/                      # Generated build output (not source of truth)
 │
 └── .github/workflows/
     └── deploy-pages.yml       # GitHub Actions for auto-deployment
@@ -129,19 +140,11 @@ Grammar Atlas follows these core principles:
 
 ### Adding New Content
 
-Use the multi-agent system in `agents/` to create premium lessons:
-
-1. **Planner Agent** → Design curriculum structure and topics
-2. **Lesson Agent** → Write the complete lesson with all required sections
-3. **Quiz Agent** → Generate 60-100 test questions
-4. **Reviewer Agent** → Quality assurance and approval
-5. **Formatter Agent** → Polish to publication-ready markdown
-6. **Orchestrator** → Coordinate the workflow
-
-See `agents/shared-rules.md` for the complete content standard.
+Add or revise lesson data directly in `js/program-data.js`.
+Use an existing lesson object as the template and keep the lesson content, quiz coverage notes, module metadata, and roadmap entries aligned when you change the curriculum.
 
 Additional reference docs are grouped under [`docs/`](docs/README.md).
-Use [`docs/QUICKSTART.md`](docs/QUICKSTART.md) for onboarding, [`BUILD.md`](BUILD.md) for build details, and [`DEPLOYMENT.md`](DEPLOYMENT.md) for hosting notes.
+Use [`docs/QUICKSTART.md`](docs/QUICKSTART.md) for onboarding, [`docs/BUILD.md`](docs/BUILD.md) for build details, [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for hosting notes, and [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md) for contribution workflow.
 
 ### Local Development Workflow
 
@@ -225,10 +228,10 @@ This repository includes a GitHub Actions workflow for automatic deployment.
 To help improve Grammar Atlas:
 
 1. Report issues or suggest improvements via GitHub Issues
-2. Follow the multi-agent system guidelines in `agents/shared-rules.md`
+2. Keep lesson data consistent with the existing structure in `js/program-data.js`
 3. Test content on multiple devices before submitting
 4. Ensure quiz questions have clear correct answers and realistic distractors
-5. Use the Reviewer Agent to quality-check work before contributing
+5. Review lesson and quiz flows in the browser before contributing
 
 ## 📝 License
 
@@ -239,4 +242,5 @@ No `LICENSE` file is included yet. Add one before public reuse or redistribution
 For questions or feedback:
 - Open an issue on GitHub
 - Review [`docs/README.md`](docs/README.md) for the documentation index
+- Review [`AGENT_CONTEXT.md`](AGENT_CONTEXT.md) for the repo bootstrap summary
 - Review `roadmap.html` for study guidance
