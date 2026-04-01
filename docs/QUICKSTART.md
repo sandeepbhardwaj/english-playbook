@@ -27,7 +27,7 @@ Done! The site is now running. The local dev server disables cache headers so CS
 | `curriculum.html` | Lesson directory |
 | `lesson.html` | Lesson viewer (uses `?lesson=` param) |
 | `quiz.html` | Quiz interface (uses `?lesson=` param) |
-| `roadmap.html` | 12-week study plan |
+| `roadmap.html` | 14-week study plan |
 | `styles.css` | All styling (mobile-first, responsive) |
 | `js/program-data.js` | Curriculum data (modules, lessons) |
 | `js/common.js` | Core API (progress, quizzes, analytics) |
@@ -37,7 +37,6 @@ Done! The site is now running. The local dev server disables cache headers so CS
 | `js/curriculum.js` | Curriculum page logic |
 | `js/lesson.js` | Lesson page logic |
 | `js/quiz.js` | Quiz page logic |
-| `agents/` | Multi-agent system documentation |
 
 ## API Access (1 min)
 
@@ -168,10 +167,10 @@ git push origin main
 ## Next Steps
 
 1. **Read** [API.md](API.md) — Full API reference with examples
-2. **Review** [CONTRIBUTING.md](../CONTRIBUTING.md) — Contribution guidelines
-3. **Explore** [agents/](../agents/) — Multi-agent system for new lessons
-4. **Check** [STYLE_GUIDE.md](STYLE_GUIDE.md) — Code standards
-5. **Learn** [CURRICULUM_EXPANSION.md](CURRICULUM_EXPANSION.md) — Add lessons using agents
+2. **Review** [CONTRIBUTING.md](CONTRIBUTING.md) — Contribution guidelines
+3. **Review** [README.md](README.md) — Documentation index
+4. **Check** [BUILD.md](BUILD.md) — Build and tooling commands
+5. **Check** [DEPLOYMENT.md](DEPLOYMENT.md) — Deployment workflow
 
 ---
 
@@ -197,10 +196,8 @@ Check `js/quiz.js` for scoring logic, test with `GrammarAtlasApp.saveQuizScore()
 ## Need Help?
 
 - **API questions?** → See [API.md](API.md)
-- **Deployment issues?** → See [DEPLOYMENT.md](../DEPLOYMENT.md)
-- **Content standards?** → See [agents/shared-rules.md](../agents/shared-rules.md)
-- **Code style?** → See [STYLE_GUIDE.md](STYLE_GUIDE.md)
-- **Adding lessons?** → See [CURRICULUM_EXPANSION.md](CURRICULUM_EXPANSION.md)
+- **Deployment issues?** → See [DEPLOYMENT.md](DEPLOYMENT.md)
+- **Adding lessons?** → Review existing lesson objects in `js/program-data.js`
 
 ---
 

@@ -25,11 +25,9 @@
     "Use this short context block to see the grammar working inside a realistic situation.";
   const storyPrompts = lesson.story?.analysis || contextBlock?.prompts || [];
   const reviewEntry = app.getReviewRecommendations(12).find((entry) => entry.lesson.id === lesson.id);
-  const recommendedLessons = app
-    .getReviewRecommendations(3)
-    .filter((entry) => entry.lesson.id !== lesson.id);
   const isBookmarked = app.isBookmarked(lesson.id);
   const sectionLinks = [
+    { id: "lesson-before-you-begin", label: "Start" },
     { id: "lesson-intuition", label: "Intuition" },
     { id: "lesson-rules", label: "Core Rules" },
     { id: "lesson-structures", label: "Sentence Structures" },
@@ -39,7 +37,12 @@
     { id: "lesson-practice", label: "Practice Exercises" },
     { id: "lesson-revision", label: "Quick Revision Summary" },
     { id: "lesson-cheat-sheet", label: "Cheat Sheet" },
+    { id: "lesson-next-steps", label: "Next Steps" },
   ];
+  const lessonStateLabel = completed.has(lesson.id) ? "Completed" : "In progress";
+  const lessonModeLabel = lesson.story || contextBlock ? "Context-rich lesson" : "Rule-first lesson";
+  const coreScoreLabel = quizScore ? app.formatPercent(quizScore.percent) : "No saved score";
+  const advancedScoreLabel = advancedQuizScore ? app.formatPercent(advancedQuizScore.percent) : "No advanced score";
 
   document.title = `Grammar Atlas | ${lesson.title}`;
 
@@ -56,70 +59,107 @@
     <h1>${lesson.title}</h1>
     <p class="hero-text">${lesson.summary}</p>
     <div class="lesson-meta">
-      <span class="chip">${module.level}</span>
-      <span class="chip">${lesson.duration}</span>
-      <span class="chip">${standardQuizCount} core questions</span>
-      <span class="chip">${advancedQuizCount} challenge questions</span>
-      <span class="chip">${lesson.story || contextBlock ? "Context-rich lesson" : "Rule-first lesson"}</span>
-      <span class="chip">${completed.has(lesson.id) ? "Completed" : "In progress"}</span>
-      <span class="chip">${quizScore ? `Best score ${app.formatPercent(quizScore.percent)}` : "No score yet"}</span>
-      <span class="chip">${advancedQuizScore ? `Advanced ${app.formatPercent(advancedQuizScore.percent)}` : "No advanced score yet"}</span>
-      <span class="chip">${isBookmarked ? "Bookmarked for review" : "Not bookmarked yet"}</span>
+      <span class="signal-pill">${module.level}</span>
+      <span class="signal-pill">${lesson.duration}</span>
+      <span class="signal-pill">${lessonStateLabel}</span>
+    </div>
+    <div class="hero-meta-list hero-meta-grid">
+      <div class="hero-meta-item"><strong>Coverage:</strong> ${standardQuizCount} core questions and ${advancedQuizCount} challenge questions.</div>
+      <div class="hero-meta-item"><strong>Mode:</strong> ${lessonModeLabel}. ${isBookmarked ? "Saved for review." : "Not bookmarked yet."}</div>
+      <div class="hero-meta-item"><strong>Scores:</strong> Core ${coreScoreLabel}. Advanced ${advancedScoreLabel}.</div>
     </div>
   `;
 
   document.getElementById("lesson-sidebar").innerHTML = `
-    <h3>Lesson Goals</h3>
-    <ul>
-      ${lesson.objectives.map((item) => `<li>${item}</li>`).join("")}
-    </ul>
-    <div class="portfolio-panel">
-      <h3>Prerequisites</h3>
-      <ul>
-        ${prerequisites.map((item) => `<li>${item}</li>`).join("")}
-      </ul>
+    <div class="lesson-sidebar-block">
+      <h3>Start Here</h3>
+      <p class="lesson-note">Read the lesson first, then take the core quiz, then use the dashboard to decide what stays in review.</p>
+      <div class="lesson-actions lesson-actions-stack">
+        <a class="button button-primary" href="quiz.html?lesson=${lesson.id}">Take Core Quiz</a>
+        <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
+        <button class="button button-secondary" type="button" id="toggle-lesson-complete">
+          ${completed.has(lesson.id) ? "Mark as Not Completed" : "Mark Lesson as Completed"}
+        </button>
+        <button class="button button-utility ${isBookmarked ? "is-active-control" : ""}" type="button" id="toggle-lesson-bookmark">
+          ${isBookmarked ? "Remove Bookmark" : "Bookmark Lesson"}
+        </button>
+        <a class="button button-utility" href="dashboard.html">Open Dashboard</a>
+      </div>
     </div>
-    <div class="portfolio-panel">
+    <div class="portfolio-panel lesson-sidebar-block">
+      <h3>Lesson Snapshot</h3>
+      <div class="info-points">
+        <p class="info-point"><strong>Track:</strong> ${module.level}</p>
+        <p class="info-point"><strong>Study time:</strong> ${lesson.duration}</p>
+        <p class="info-point"><strong>Best core quiz:</strong> ${quizScore ? app.formatPercent(quizScore.percent) : "Not attempted yet"}</p>
+      </div>
+    </div>
+    <div class="portfolio-panel lesson-sidebar-block">
       <h3>Lesson Map</h3>
-      <div class="chip-row">
+      <div class="section-nav" id="lesson-section-nav">
         ${sectionLinks
-          .map((section) => `<a class="chip-link" href="#${section.id}">${section.label}</a>`)
+          .map((section) => `<a class="section-link" data-section-link href="#${section.id}">${section.label}</a>`)
           .join("")}
       </div>
     </div>
-    <div class="lesson-actions">
-      <button class="button button-primary" type="button" id="toggle-lesson-complete">
-        ${completed.has(lesson.id) ? "Mark as Not Completed" : "Mark Lesson as Completed"}
-      </button>
-      <button class="button button-secondary ${isBookmarked ? "is-active-control" : ""}" type="button" id="toggle-lesson-bookmark">
-        ${isBookmarked ? "Remove Bookmark" : "Bookmark Lesson"}
-      </button>
-      <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Take Quiz</a>
-      <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
-      <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
-      <a class="button button-secondary" href="lesson.html?lesson=${app.previousLesson(lesson.id).id}">Previous Lesson</a>
-      <a class="button button-secondary" href="lesson.html?lesson=${app.nextLesson(lesson.id).id}">Next Lesson</a>
+    <div class="portfolio-panel lesson-sidebar-block">
+      <h3>Move Through The Course</h3>
+      <div class="card-actions">
+        <a class="button button-secondary" href="lesson.html?lesson=${app.nextLesson(lesson.id).id}">Next Lesson</a>
+        <a class="button button-utility" href="lesson.html?lesson=${app.previousLesson(lesson.id).id}">Previous Lesson</a>
+      </div>
     </div>
-    <div class="portfolio-panel">
-      <h3>Review Guidance</h3>
+  `;
+
+  const beforeYouBeginMarkup = `
+    <section class="summary-card lesson-anchor-card" id="lesson-before-you-begin">
+      <div class="summary-topline">
+        <h3>Before You Begin</h3>
+        <span class="section-kicker">Orientation</span>
+      </div>
+      <div class="card-grid lesson-prep-grid">
+        <article class="summary-card summary-card-nested">
+          <h3>Goals</h3>
+          <ul class="bullet-list">
+            ${lesson.objectives.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </article>
+        <article class="summary-card summary-card-nested">
+          <h3>Prerequisites</h3>
+          <ul class="bullet-list">
+            ${prerequisites.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </article>
+      </div>
+      <div class="portfolio-panel">
+        <h3>Portfolio Connection</h3>
+        <p class="lesson-note">${module.portfolioTask}</p>
+        <ul class="bullet-list">
+          ${moduleRubric.map((item) => `<li>${item}</li>`).join("")}
+        </ul>
+      </div>
+    </section>
+  `;
+
+  const reviewGuidanceMarkup = `
+    <section class="summary-card" id="lesson-next-steps">
+      <div class="summary-topline">
+        <h3>What To Do Next</h3>
+        <span class="section-kicker">Tutor guidance</span>
+      </div>
       <p class="lesson-note">
         ${
           reviewEntry
             ? reviewEntry.reason
-            : "Complete the lesson and quiz, then the dashboard will start recommending how strongly this topic should stay in rotation."
+            : "After this lesson, take the core quiz first. If your score is stable, move to the advanced quiz and then bookmark or log the topic if it still feels weak."
         }
       </p>
       <div class="card-actions">
-        <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Log A Common Mistake</a>
+        <a class="button button-primary" href="quiz.html?lesson=${lesson.id}">Take Core Quiz</a>
+        <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+        <a class="button button-utility" href="dashboard.html#dashboard-error-log">Open Error Log</a>
       </div>
-    </div>
-    <div class="portfolio-panel">
-      <h3>Portfolio Connection</h3>
-      <p class="lesson-note">${module.portfolioTask}</p>
-      <ul>
-        ${moduleRubric.map((item) => `<li>${item}</li>`).join("")}
-      </ul>
-    </div>
+    </section>
   `;
 
   const examplesMarkup = lesson.examples
@@ -128,7 +168,7 @@
         <article class="summary-card">
           <div class="summary-topline">
             <h3>Example</h3>
-            <span class="chip">Model</span>
+            <span class="section-kicker">Model</span>
           </div>
           <p class="story-text">${example.sentence}</p>
           <p class="lesson-note">${example.note}</p>
@@ -146,7 +186,7 @@
               <article class="summary-card">
                 <div class="summary-topline">
                   <h3>${item.label}</h3>
-                  <span class="chip">Pattern</span>
+                  <span class="section-kicker">Pattern</span>
                 </div>
                 <p class="story-text">${item.pattern}</p>
                 <p class="lesson-note">${item.note}</p>
@@ -165,7 +205,7 @@
       <section class="summary-card">
         <div class="summary-topline">
           <h3>Watch the Contrast</h3>
-          <span class="chip">${contrastPairs.length} focus pairs</span>
+          <span class="section-kicker">${contrastPairs.length} focus pairs</span>
         </div>
         <div class="contrast-grid">
           ${contrastPairs
@@ -192,10 +232,10 @@
   const storyMarkup = lesson.story
     ? `
         <section class="story-card" id="lesson-story">
-          <div class="story-topline">
-            <h3>${lesson.story.title}</h3>
-            <span class="chip">Story Lab</span>
-          </div>
+            <div class="story-topline">
+              <h3>${lesson.story.title}</h3>
+              <span class="section-kicker">Story Lab</span>
+            </div>
           <p class="story-note">${lesson.story.overview}</p>
           <div class="story-block">
             ${lesson.story.passages
@@ -220,7 +260,7 @@
           <section class="story-card" id="lesson-story">
             <div class="story-topline">
               <h3>${storyTitle}</h3>
-              <span class="chip">Mini Scene</span>
+              <span class="section-kicker">Mini Scene</span>
             </div>
             <p class="story-note">${storyOverview}</p>
             <ul class="story-list context-prompts">
@@ -232,17 +272,19 @@
           <section class="story-card" id="lesson-story">
             <div class="story-topline">
               <h3>${storyTitle}</h3>
-              <span class="chip">Context</span>
+              <span class="section-kicker">Context</span>
             </div>
             <p class="story-note">${storyOverview}</p>
           </section>
         `;
 
   document.getElementById("lesson-main").innerHTML = `
+    ${beforeYouBeginMarkup}
+
     <section class="summary-card" id="lesson-intuition">
       <div class="summary-topline">
         <h3>Intuition</h3>
-        <span class="chip">${lesson.focus}</span>
+        <span class="section-kicker">${lesson.focus}</span>
       </div>
       <p class="lesson-summary">${lesson.summary}</p>
       <ul class="bullet-list context-prompts">
@@ -252,7 +294,7 @@
     </section>
 
     <section class="summary-card" id="lesson-rules">
-      <h3>Key Rules</h3>
+      <h3>Core Rules</h3>
       <ul class="bullet-list">
         ${lesson.rules.map((item) => `<li>${item}</li>`).join("")}
       </ul>
@@ -261,13 +303,22 @@
     <section class="summary-card" id="lesson-structures">
       <div class="summary-topline">
         <h3>Sentence Structures</h3>
-        <span class="chip">${structures.length ? `${structures.length} patterns` : "Pattern overview"}</span>
+        <span class="section-kicker">${structures.length ? `${structures.length} patterns` : "Pattern overview"}</span>
       </div>
       ${structuresMarkup}
     </section>
 
-    <section id="lesson-examples" class="card-grid">
-      ${examplesMarkup}
+    <section id="lesson-examples" class="lesson-section-stack">
+      <article class="summary-card">
+        <div class="summary-topline">
+          <h3>Detailed Examples</h3>
+          <span class="section-kicker">${lesson.examples.length} worked examples</span>
+        </div>
+        <p class="lesson-note">Use these examples to see the rule shift from definition into sentence-level control.</p>
+      </article>
+      <div class="card-grid">
+        ${examplesMarkup}
+      </div>
     </section>
 
     ${contrastMarkup}
@@ -277,7 +328,7 @@
     <section class="summary-card" id="lesson-mistakes">
       <div class="summary-topline">
         <h3>Common Mistakes</h3>
-        <span class="chip">${lesson.pitfalls.length} watchouts</span>
+        <span class="section-kicker">${lesson.pitfalls.length} watchouts</span>
       </div>
       <div class="pitfalls-grid">
         ${lesson.pitfalls
@@ -306,7 +357,7 @@
     <section class="summary-card" id="lesson-practice">
       <div class="summary-topline">
         <h3>Practice Exercises</h3>
-        <span class="chip">Guided sequence</span>
+        <span class="section-kicker">Guided sequence</span>
       </div>
       <ul class="bullet-list">
         ${lesson.practicePlan.map((item) => `<li>${item}</li>`).join("")}
@@ -329,7 +380,7 @@
     <section class="summary-card" id="lesson-revision">
       <div class="summary-topline">
         <h3>Quick Revision Summary</h3>
-        <span class="chip">Fast recall</span>
+        <span class="section-kicker">Fast recall</span>
       </div>
       <ul class="bullet-list">
         ${revision.map((item) => `<li>${item}</li>`).join("")}
@@ -339,40 +390,14 @@
     <section class="summary-card" id="lesson-cheat-sheet">
       <div class="summary-topline">
         <h3>Cheat Sheet</h3>
-        <span class="chip">Keep handy</span>
+        <span class="section-kicker">Keep handy</span>
       </div>
       <div class="chip-row">
         ${cheatSheet.map((item) => `<span class="chip">${item}</span>`).join("")}
       </div>
     </section>
 
-    <section class="summary-card">
-      <div class="summary-topline">
-        <h3>What To Do Next</h3>
-        <span class="chip">Tutor guidance</span>
-      </div>
-      <p class="lesson-note">
-        ${
-          reviewEntry
-            ? reviewEntry.reason
-            : "After this lesson, take the core quiz first. If your score is stable, move to the advanced quiz and then bookmark or log the topic if it still feels weak."
-        }
-      </p>
-      <div class="chip-row">
-        ${
-          recommendedLessons.length
-            ? recommendedLessons
-                .map((entry) => `<a class="chip-link" href="lesson.html?lesson=${entry.lesson.id}">${entry.lesson.title}</a>`)
-                .join("")
-            : '<span class="chip">This lesson is your main focus right now</span>'
-        }
-      </div>
-      <div class="card-actions">
-        <a class="button button-primary" href="quiz.html?lesson=${lesson.id}">Take Core Quiz</a>
-        <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
-        <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
-      </div>
-    </section>
+    ${reviewGuidanceMarkup}
   `;
 
   document.getElementById("toggle-lesson-complete").addEventListener("click", () => {
@@ -384,4 +409,56 @@
     app.toggleBookmark(lesson.id);
     window.location.reload();
   });
+
+  const sectionLinkElements = [...document.querySelectorAll("[data-section-link]")];
+  const sectionTargets = sectionLinkElements
+    .map((link) => document.getElementById(link.getAttribute("href").slice(1)))
+    .filter(Boolean);
+
+  function setActiveSection(sectionId) {
+    sectionLinkElements.forEach((link) => {
+      const isActive = link.getAttribute("href") === `#${sectionId}`;
+      link.classList.toggle("is-active", isActive);
+      if (isActive) {
+        link.setAttribute("aria-current", "location");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  }
+
+  sectionLinkElements.forEach((link) => {
+    link.addEventListener("click", () => {
+      const targetId = link.getAttribute("href").slice(1);
+      window.requestAnimationFrame(() => setActiveSection(targetId));
+    });
+  });
+
+  const initialSectionId = sectionTargets.some((section) => section.id === window.location.hash.slice(1))
+    ? window.location.hash.slice(1)
+    : sectionTargets[0]?.id;
+
+  if (initialSectionId) {
+    setActiveSection(initialSectionId);
+  }
+
+  if (sectionTargets.length) {
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio || first.boundingClientRect.top - second.boundingClientRect.top);
+
+        if (visibleEntries[0]) {
+          setActiveSection(visibleEntries[0].target.id);
+        }
+      },
+      {
+        rootMargin: "-18% 0px -55% 0px",
+        threshold: [0.2, 0.45, 0.7],
+      }
+    );
+
+    sectionTargets.forEach((section) => observer.observe(section));
+  }
 })();

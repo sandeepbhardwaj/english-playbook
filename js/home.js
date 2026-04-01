@@ -25,7 +25,7 @@
             <article class="summary-card">
               <div class="summary-topline">
                 <h3>${item.title}</h3>
-                <span class="chip">Path</span>
+                <span class="section-kicker">Path</span>
               </div>
               <p class="lesson-note"><strong>${item.path}</strong></p>
               <p class="lesson-summary">${item.detail}</p>
@@ -99,9 +99,9 @@
   const placementModule = diagnosticResult ? app.getModule(diagnosticResult.recommendedModuleId) : null;
   const recommendationLinks = recommendedLessons.length
     ? recommendedLessons
-        .map((lesson) => `<a class="chip-link" href="lesson.html?lesson=${lesson.id}">${lesson.title}</a>`)
+        .map((lesson) => `<a class="text-link" href="lesson.html?lesson=${lesson.id}">${lesson.title}</a>`)
         .join("")
-    : '<span class="chip">Take a few quizzes to unlock review suggestions</span>';
+    : '<span class="section-kicker">Take a few quizzes to unlock review suggestions</span>';
 
   homeTutorTools.innerHTML = `
     <div class="section-heading">
@@ -123,7 +123,7 @@
         </p>
         <div class="card-actions">
           <a class="button button-primary" href="diagnostic.html">${diagnosticResult ? "Retake Diagnostic" : "Take Diagnostic"}</a>
-          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+          <a class="button button-utility" href="dashboard.html">Open Dashboard</a>
         </div>
       </article>
       <article class="summary-card">
@@ -149,7 +149,7 @@
         <p class="lesson-note">
           The static recommendation engine uses quiz scores, completion state, and bookmarks to decide what deserves review next.
         </p>
-        <div class="chip-row">${recommendationLinks}</div>
+        <div class="text-link-row">${recommendationLinks}</div>
       </article>
       <article class="summary-card">
         <div class="summary-topline">
@@ -161,7 +161,7 @@
         </p>
         <div class="card-actions">
           <a class="button button-primary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
-          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+          <a class="button button-utility" href="dashboard.html">Open Dashboard</a>
         </div>
       </article>
     </div>

@@ -39,10 +39,12 @@
       Work in short batches, then submit to see your score and explanations.
     </p>
     <div class="quiz-metrics">
-      <span class="chip">${module.level}</span>
-      <span class="chip">${lesson.duration}</span>
-      <span class="chip">${questions.length} questions</span>
-      <span class="chip">${isAdvanced ? "Review Challenge" : "Core Quiz Bank"}</span>
+      <span class="signal-pill">${module.level}</span>
+      <span class="signal-pill">${isAdvanced ? "Review Challenge" : "Core Quiz"}</span>
+    </div>
+    <div class="hero-meta-list hero-meta-grid">
+      <div class="hero-meta-item"><strong>Length:</strong> ${questions.length} questions across ${Math.ceil(questions.length / pageSize)} pages.</div>
+      <div class="hero-meta-item"><strong>Expected pace:</strong> ${lesson.duration} with short-batch navigation and saved score tracking.</div>
     </div>
   `;
 
@@ -70,8 +72,8 @@
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${isAdvanced ? "standard" : "advanced"}">
         ${isAdvanced ? "Switch to Standard Quiz" : "Try Advanced Quiz"}
       </a>
-      <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
-      <a class="button button-secondary" href="curriculum.html">Back to Curriculum</a>
+      <a class="button button-utility" href="dashboard.html">Open Dashboard</a>
+      <a class="button button-utility" href="curriculum.html">Back to Curriculum</a>
     </div>
   `;
 
@@ -140,8 +142,8 @@
             <div class="question-topline">
               <h3>Question ${questionIndex + 1}</h3>
               <div class="chip-row">
-                <span class="chip">${question.difficulty || "Mixed"}</span>
-                <span class="chip">${question.tag}</span>
+                <span class="section-kicker">${question.difficulty || "Mixed"}</span>
+                <span class="section-kicker">${question.tag}</span>
               </div>
             </div>
             <p>${question.prompt}</p>
@@ -194,7 +196,7 @@
           return answers[originalIndex] === question.correctIndex;
         }).length;
 
-        return `<span class="chip">${label}: ${scopedCorrect}/${scopedQuestions.length}</span>`;
+        return `<span class="section-kicker">${label}: ${scopedCorrect}/${scopedQuestions.length}</span>`;
       })
       .join("");
 
@@ -224,7 +226,7 @@
           <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Return to Lesson</a>
           <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=${mode}">Retake ${isAdvanced ? "Advanced Quiz" : "Quiz"}</a>
           <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
-          <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+          <a class="button button-utility" href="dashboard.html">Open Dashboard</a>
         </div>
         <div class="portfolio-panel">
           <h3>What to study next</h3>
@@ -238,12 +240,12 @@
                         <article class="summary-card dashboard-mini-card">
                           <div class="summary-topline">
                             <h3>${entry.lesson.title}</h3>
-                            <span class="chip">${entry.primaryPercent !== null ? `${Math.round(entry.primaryPercent)}%` : "Next up"}</span>
+                            <span class="section-kicker">${entry.primaryPercent !== null ? `${Math.round(entry.primaryPercent)}%` : "Next up"}</span>
                           </div>
                           <p class="lesson-note">${entry.reason}</p>
                           <div class="card-actions">
                             <a class="button button-secondary" href="lesson.html?lesson=${entry.lesson.id}">Open Lesson</a>
-                            <a class="button button-secondary" href="quiz.html?lesson=${entry.lesson.id}">Review Quiz</a>
+                            <a class="button button-utility" href="quiz.html?lesson=${entry.lesson.id}">Review Quiz</a>
                           </div>
                         </article>
                       `
