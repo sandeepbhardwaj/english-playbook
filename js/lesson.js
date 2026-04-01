@@ -256,9 +256,28 @@
         <h3>Common Mistakes</h3>
         <span class="chip">${lesson.pitfalls.length} watchouts</span>
       </div>
-      <ul class="bullet-list">
-        ${lesson.pitfalls.map((item) => `<li>${item}</li>`).join("")}
-      </ul>
+      <div class="pitfalls-grid">
+        ${lesson.pitfalls
+          .map(
+            (item) => `
+          <div class="pitfall-card">
+            <div class="pitfall-wrong">
+              <span class="pitfall-label">❌ Wrong:</span>
+              <p>"${item.wrong}"</p>
+            </div>
+            <div class="pitfall-right">
+              <span class="pitfall-label">✅ Right:</span>
+              <p>"${item.right}"</p>
+            </div>
+            <div class="pitfall-note">
+              <span class="pitfall-label">💡 Why:</span>
+              <p>${item.note}</p>
+            </div>
+          </div>
+        `
+          )
+          .join("")}
+      </div>
     </section>
 
     <section class="summary-card" id="lesson-practice">

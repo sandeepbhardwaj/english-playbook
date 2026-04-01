@@ -1,0 +1,27 @@
+# Development
+.DS_Store
+.vscode/settings.json
+node_modules/
+dist/
+build/
+
+# Environment
+.env
+.env.local
+*.log
+
+# IDE
+*.swp
+*.swo
+*~
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp

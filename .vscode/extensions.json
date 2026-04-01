@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "ms-vscode.vscode-serial-monitor",
+    "Equim.equation-preview",
+    "ms-vscode-remote.remote-containers",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "ritwickdey.LiveServer",
+    "astro.astro"
+  ]
+}
