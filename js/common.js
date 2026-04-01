@@ -28,6 +28,8 @@
         moduleId: module.id,
         moduleTitle: module.title,
         moduleLevel: module.level,
+        moduleDescription: module.description,
+        modulePortfolioTask: module.portfolioTask,
       }))
     );
   }

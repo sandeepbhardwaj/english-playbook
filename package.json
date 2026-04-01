@@ -1,0 +1,21 @@
+{
+  "name": "grammar-atlas",
+  "version": "1.0.0",
+  "description": "A premium, self-study English grammar learning platform",
+  "main": "index.html",
+  "scripts": {
+    "build": "esbuild js/*.js styles.css --minify --outdir=dist --allow-overwrite",
+    "build:watch": "esbuild js/*.js styles.css --minify --outdir=dist --allow-overwrite --watch"
+  },
+  "keywords": [
+    "english",
+    "grammar",
+    "learning",
+    "education"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.21.0"
+  }
+}
