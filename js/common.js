@@ -122,7 +122,7 @@
     const stats = [
       { label: "Modules", value: curriculum.length },
       { label: "Lessons", value: allLessons.length },
-      { label: "Standard Quiz", value: `${quizSize} Q` },
+      { label: "Core Quiz Bank", value: `${quizSize} Q` },
       { label: "Average Quiz", value: Object.values(quizScores).length ? formatPercent(averageQuiz) : "No scores yet" },
       { label: "Completed Lessons", value: completed.size },
       { label: "Roadmap Weeks", value: roadmap.length },

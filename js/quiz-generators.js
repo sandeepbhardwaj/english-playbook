@@ -1,6 +1,6 @@
 (function () {
   const { quizSize, curriculum } = window.GrammarAtlasData;
-  const advancedQuizSize = 12;
+  const advancedQuizSize = 20;
 
   const allLessons = curriculum.flatMap((module) =>
     module.lessons.map((lesson) => ({
@@ -43,6 +43,30 @@
 
   function uniqueStrings(items) {
     return [...new Set(items.filter(Boolean))];
+  }
+
+  function addDifficultyBands(questions, advancedLabel = null) {
+    if (advancedLabel) {
+      return questions.map((item, index) => ({
+        ...item,
+        difficulty: advancedLabel,
+        sequence: index + 1,
+      }));
+    }
+
+    const firstCut = Math.ceil(questions.length / 3);
+    const secondCut = Math.ceil((questions.length * 2) / 3);
+
+    return questions.map((item, index) => ({
+      ...item,
+      difficulty:
+        index < firstCut
+          ? "Basic"
+          : index < secondCut
+            ? "Intermediate"
+            : "Advanced",
+      sequence: index + 1,
+    }));
   }
 
   function buildAdvancedQuestionSet(lessonId) {
@@ -191,7 +215,7 @@
 
   function padToSize(questions, variantsPerItem = 10) {
     if (questions.length <= quizSize || variantsPerItem <= 1) {
-      return questions.slice(0, quizSize);
+      return addDifficultyBands(questions.slice(0, quizSize));
     }
 
     const itemCount = Math.floor(questions.length / variantsPerItem);
@@ -206,7 +230,7 @@
       }
     }
 
-    return interleaved.slice(0, quizSize);
+    return addDifficultyBands(interleaved.slice(0, quizSize));
   }
 
   function buildPartsOfSpeech() {
@@ -1311,9 +1335,9 @@
     const generators = builderMap;
     const mixed = [];
     lessonOrder.forEach((lessonId) => {
-      mixed.push(...generators[lessonId]().slice(0, 2));
+      mixed.push(...generators[lessonId]().slice(0, 4));
     });
-    return padToSize(mixed, 2);
+    return padToSize(mixed, 4);
   }
 
   function buildAdvancedMixedReview() {
@@ -1339,7 +1363,7 @@
 
     const mixed = [];
     lessonOrder.forEach((lessonId) => {
-      mixed.push(...buildAdvancedQuestionSet(lessonId).slice(0, 1));
+      mixed.push(...buildAdvancedQuestionSet(lessonId).slice(0, 2));
     });
 
     return mixed.slice(0, advancedQuizSize);
@@ -1369,7 +1393,10 @@
   window.GrammarAtlasQuizBank = {
     getQuiz(lessonId, mode = "standard") {
       if (mode === "advanced") {
-        return lessonId === "final-review" ? buildAdvancedMixedReview() : buildAdvancedQuestionSet(lessonId);
+        return addDifficultyBands(
+          lessonId === "final-review" ? buildAdvancedMixedReview() : buildAdvancedQuestionSet(lessonId),
+          "Review Challenge"
+        );
       }
       const builder = builderMap[lessonId];
       return builder ? builder() : buildMixedReview();

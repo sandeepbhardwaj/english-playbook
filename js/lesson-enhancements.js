@@ -391,6 +391,636 @@
         ],
       },
     },
+    lessonFrameworks: {
+      "parts-of-speech": {
+        prerequisites: [
+          "Comfort with reading simple everyday sentences.",
+          "Basic awareness that words do different jobs in a sentence.",
+        ],
+        structures: [
+          {
+            label: "Word + Job",
+            pattern: "target word -> identify what it is doing in the sentence",
+            note: "Always classify the word by function in context, not by memory alone.",
+          },
+          {
+            label: "Noun Phrase Pattern",
+            pattern: "determiner + adjective + noun",
+            note: "This pattern helps you separate noun support words from the main noun.",
+          },
+          {
+            label: "Verb Support Pattern",
+            pattern: "subject + verb + adverb / object",
+            note: "Watch how verbs attract modifiers and objects around them.",
+          },
+        ],
+        revision: [
+          "Ask what role the word plays before naming the category.",
+          "Check whether the same word changes class in another sentence.",
+          "Focus on function words as carefully as content words.",
+        ],
+        cheatSheet: [
+          "Noun: names a person, place, thing, or idea.",
+          "Verb: shows action or state.",
+          "Adjective: describes a noun.",
+          "Adverb: usually modifies a verb, adjective, or adverb.",
+          "Determiner: signals which noun you mean.",
+        ],
+      },
+      "sentence-structure": {
+        prerequisites: [
+          "Parts of speech basics.",
+          "Awareness that a complete sentence expresses a full thought.",
+        ],
+        structures: [
+          {
+            label: "Complete Clause",
+            pattern: "subject + finite verb",
+            note: "This is the minimum pattern for a basic complete sentence in standard English.",
+          },
+          {
+            label: "Expanded Sentence",
+            pattern: "subject + verb + object / complement / adverbial",
+            note: "Many complete sentences add information after the verb, but the core clause still has to stand on its own.",
+          },
+          {
+            label: "Complex Sentence",
+            pattern: "dependent clause + main clause",
+            note: "A dependent clause cannot stand alone, so it must connect to a main clause.",
+          },
+        ],
+        revision: [
+          "Check whether the sentence can stand alone.",
+          "Look for fragments beginning with because, although, when, or if.",
+          "Repair run-ons by adding punctuation plus a logical connector.",
+        ],
+        cheatSheet: [
+          "Fragment = incomplete thought.",
+          "Run-on = two complete clauses joined badly.",
+          "Main clause = can stand alone.",
+          "Dependent clause = needs a main clause.",
+        ],
+      },
+      "articles-nouns": {
+        prerequisites: [
+          "Comfort with singular and plural nouns.",
+          "Basic sentence structure knowledge.",
+        ],
+        structures: [
+          {
+            label: "First Mention",
+            pattern: "a / an + singular count noun",
+            note: "Use this when the noun is not yet specific to the listener or reader.",
+          },
+          {
+            label: "Specific Reference",
+            pattern: "the + noun",
+            note: "Use the when the noun is already known or clearly identified.",
+          },
+          {
+            label: "General Noncount or Plural",
+            pattern: "some / zero article + noun",
+            note: "Noncount nouns and generic plurals often do not take a or an.",
+          },
+        ],
+        revision: [
+          "Check whether the noun is countable or noncount.",
+          "Ask whether the noun is general or specific.",
+          "Watch for common errors such as an advice or a furniture.",
+        ],
+        cheatSheet: [
+          "a / an = one, singular, countable, general",
+          "the = specific, already known, or unique",
+          "some = useful with plural or noncount nouns",
+          "zero article = common with generic plurals and many noncount uses",
+        ],
+      },
+      "present-family": {
+        prerequisites: [
+          "Sentence structure basics.",
+          "Comfort with subject and verb patterns.",
+        ],
+        structures: [
+          {
+            label: "Present Simple",
+            pattern: "subject + base verb / base verb + s",
+            note: "Use it for routine, facts, and schedules.",
+          },
+          {
+            label: "Present Continuous",
+            pattern: "subject + am / is / are + verb-ing",
+            note: "Use it for action happening now or around the current period.",
+          },
+          {
+            label: "Question Contrast",
+            pattern: "Do / Does + subject + base verb? | Am / Is / Are + subject + verb-ing?",
+            note: "The auxiliary changes with the tense family.",
+          },
+        ],
+        revision: [
+          "Routine meaning usually points to the present simple.",
+          "Temporary or in-progress meaning usually points to the present continuous.",
+          "Stative verbs such as know and believe usually stay out of the continuous.",
+        ],
+        cheatSheet: [
+          "Habit / fact / timetable -> present simple",
+          "Now / around now / temporary change -> present continuous",
+          "every day is a simple-present clue",
+          "right now is a strong continuous clue",
+        ],
+      },
+      "past-and-present-perfect": {
+        prerequisites: [
+          "Present simple and continuous control.",
+          "Awareness of time markers such as yesterday, already, since, and for.",
+        ],
+        structures: [
+          {
+            label: "Past Simple",
+            pattern: "subject + past verb",
+            note: "Use it for a finished event in a finished past time.",
+          },
+          {
+            label: "Present Perfect",
+            pattern: "subject + has / have + past participle",
+            note: "Use it for present relevance, experience, or unfinished time.",
+          },
+          {
+            label: "Question Contrast",
+            pattern: "Did + subject + base verb? | Has / Have + subject + past participle?",
+            note: "The auxiliary signals the time logic of the question.",
+          },
+        ],
+        revision: [
+          "Finished time markers usually require the past simple.",
+          "Present perfect connects a past action to the present.",
+          "Since marks a starting point; for marks duration.",
+        ],
+        cheatSheet: [
+          "yesterday / last year / in 2024 -> past simple",
+          "already / yet / ever / never -> often present perfect",
+          "Do not combine present perfect with a finished past time expression.",
+        ],
+      },
+      "future-perfect-modals": {
+        prerequisites: [
+          "Control of present and past tense meaning.",
+          "Basic familiarity with auxiliaries and verb forms.",
+        ],
+        structures: [
+          {
+            label: "Future Decision",
+            pattern: "subject + will + base verb",
+            note: "Often used for decisions made at the moment or neutral predictions.",
+          },
+          {
+            label: "Plan or Evidence-Based Prediction",
+            pattern: "subject + am / is / are going to + base verb",
+            note: "Use it for prior plans or present-evidence predictions.",
+          },
+          {
+            label: "Future Perfect and Modals",
+            pattern: "subject + will have + past participle | modal + base verb",
+            note: "Future perfect shows completion before a future point, while modals express attitude or force.",
+          },
+        ],
+        revision: [
+          "Will, going to, and present continuous do different future jobs.",
+          "Future perfect answers the question complete by when?",
+          "Modals do not usually take to before the main verb.",
+        ],
+        cheatSheet: [
+          "will = decision now / neutral future",
+          "going to = prior plan or visible evidence",
+          "present continuous = arranged future",
+          "must not = prohibition",
+          "do not have to = lack of necessity",
+        ],
+      },
+      "subject-verb-agreement": {
+        prerequisites: [
+          "Sentence structure basics.",
+          "Comfort finding the subject in a clause.",
+        ],
+        structures: [
+          {
+            label: "Basic Match",
+            pattern: "singular subject + singular verb | plural subject + plural verb",
+            note: "Agreement follows the true head of the subject.",
+          },
+          {
+            label: "Interrupted Subject",
+            pattern: "subject head + extra phrase + verb",
+            note: "Ignore prepositional phrases and other interrupting words when choosing the verb.",
+          },
+          {
+            label: "Indefinite Pronouns",
+            pattern: "everyone / each / neither + singular verb",
+            note: "Formal standard English treats these as singular.",
+          },
+        ],
+        revision: [
+          "Find the real head noun before choosing the verb.",
+          "Do not trust the nearest noun automatically.",
+          "Watch collective and indefinite subjects carefully.",
+        ],
+        cheatSheet: [
+          "The head noun controls agreement.",
+          "of-phrases do not usually control the verb.",
+          "everyone, each, neither = singular in formal use",
+        ],
+      },
+      "pronouns-questions-negatives": {
+        prerequisites: [
+          "Sentence structure basics.",
+          "Awareness of present and past simple auxiliaries.",
+        ],
+        structures: [
+          {
+            label: "Pronoun Reference",
+            pattern: "antecedent -> clear pronoun match",
+            note: "The pronoun should point clearly to one noun.",
+          },
+          {
+            label: "Questions",
+            pattern: "Do / Does / Did + subject + base verb?",
+            note: "Present and past simple questions usually need do-support.",
+          },
+          {
+            label: "Negatives",
+            pattern: "subject + do / does / did not + base verb",
+            note: "Keep the main verb in the base form after the auxiliary.",
+          },
+        ],
+        revision: [
+          "Use an auxiliary in standard present and past simple questions.",
+          "Make pronoun reference explicit if two nouns compete.",
+          "Do not mix a finite auxiliary with a changed main verb form.",
+        ],
+        cheatSheet: [
+          "Why did you leave? not Why you left?",
+          "did + base verb",
+          "Clear reference beats short but ambiguous wording",
+        ],
+      },
+      "prepositions-modifiers": {
+        prerequisites: [
+          "Parts of speech awareness.",
+          "Comfort with clause meaning and sentence logic.",
+        ],
+        structures: [
+          {
+            label: "Pattern Learning",
+            pattern: "adjective / verb + fixed preposition",
+            note: "Learn the phrase as a unit: interested in, responsible for, depend on.",
+          },
+          {
+            label: "Modifier Placement",
+            pattern: "modifier close to the word it describes",
+            note: "Distance often creates confusion or accidental humor.",
+          },
+          {
+            label: "Logical Subject",
+            pattern: "opening modifier + real actor in main clause",
+            note: "The subject after the comma should be the one doing the action.",
+          },
+        ],
+        revision: [
+          "Memorize phrase patterns, not isolated prepositions.",
+          "Check who is really doing the action in a modifier.",
+          "Move modifiers closer when the meaning feels loose or unclear.",
+        ],
+        cheatSheet: [
+          "interested in",
+          "good at",
+          "responsible for",
+          "dangling modifier = missing logical subject",
+        ],
+      },
+      "clauses-and-relatives": {
+        prerequisites: [
+          "Sentence structure control.",
+          "Comfort with conjunctions and noun phrases.",
+        ],
+        structures: [
+          {
+            label: "Subordination",
+            pattern: "subordinator + dependent clause, main clause",
+            note: "Use this to show cause, contrast, time, or condition.",
+          },
+          {
+            label: "Relative Clause",
+            pattern: "noun + who / which / that + clause",
+            note: "This pattern adds detail inside the sentence itself.",
+          },
+          {
+            label: "Nonrestrictive Relative Clause",
+            pattern: "noun, which / who + clause, ...",
+            note: "Use commas when the relative clause adds extra information.",
+          },
+        ],
+        revision: [
+          "Choose the linker based on the meaning relationship.",
+          "Do not add an extra pronoun inside the relative clause.",
+          "Use commas only for nonessential information.",
+        ],
+        cheatSheet: [
+          "who = people",
+          "which = things",
+          "that = common in restrictive clauses",
+          "restrictive clause = no commas",
+        ],
+      },
+      conditionals: {
+        prerequisites: [
+          "Strong control of tense basics.",
+          "Comfort with real vs unreal meaning.",
+        ],
+        structures: [
+          {
+            label: "Zero and First Conditional",
+            pattern: "if + present, present | if + present, will + base verb",
+            note: "Use zero for truths and first for real future possibilities.",
+          },
+          {
+            label: "Second Conditional",
+            pattern: "if + past form, would + base verb",
+            note: "Use it for unreal present or future situations.",
+          },
+          {
+            label: "Third Conditional",
+            pattern: "if + had + past participle, would have + past participle",
+            note: "Use it for unreal past situations and regrets.",
+          },
+        ],
+        revision: [
+          "Do not put will in the if-clause of a normal first conditional.",
+          "Past forms often signal distance, not literal past time.",
+          "Wish often uses the same backshifted logic as hypothetical conditionals.",
+        ],
+        cheatSheet: [
+          "zero = fact",
+          "first = real possibility",
+          "second = unreal now / later",
+          "third = unreal past",
+          "If I were you ... = common advice pattern",
+        ],
+      },
+      "reported-speech": {
+        prerequisites: [
+          "Strong control of tense basics.",
+          "Comfort with questions, pronouns, and time expressions.",
+        ],
+        structures: [
+          {
+            label: "Reported Statement",
+            pattern: "subject + said / told + that-clause",
+            note: "Backshift when the reporting context is past and the information is no longer current.",
+          },
+          {
+            label: "Reported Question",
+            pattern: "subject + asked + if / whether / question word + statement order",
+            note: "Keep the meaning of the question, but use statement word order.",
+          },
+          {
+            label: "Reported Command or Advice",
+            pattern: "told / asked / advised + object + to + base verb",
+            note: "Choose the reporting verb pattern carefully.",
+          },
+        ],
+        revision: [
+          "Change tense, pronouns, and time words when the perspective shifts.",
+          "Remember that reported questions do not keep direct question order.",
+          "Say and tell do not behave in the same way.",
+        ],
+        cheatSheet: [
+          "say + clause",
+          "tell + object + clause / infinitive",
+          "ask + question / infinitive pattern",
+          "tomorrow -> the next day in many past reports",
+        ],
+      },
+      "punctuation-clarity": {
+        prerequisites: [
+          "Sentence boundary awareness.",
+          "Comfort with clauses and basic possession.",
+        ],
+        structures: [
+          {
+            label: "Introductory Comma",
+            pattern: "introductory phrase / clause, main clause",
+            note: "The comma guides the reader into the main sentence.",
+          },
+          {
+            label: "Semicolon Link",
+            pattern: "independent clause; independent clause",
+            note: "Use it only between two complete closely related clauses.",
+          },
+          {
+            label: "Possession and Contraction",
+            pattern: "noun + 's | it's / its",
+            note: "Apostrophes signal possession or contraction, not ordinary plural forms.",
+          },
+        ],
+        revision: [
+          "Check whether the punctuation reflects the relationship between ideas.",
+          "Look separately at clause punctuation and apostrophe use.",
+          "Use commas around nonrestrictive information only.",
+        ],
+        cheatSheet: [
+          "comma splice = comma joining two full clauses badly",
+          "semicolon joins related full clauses",
+          "it's = it is",
+          "its = belonging to it",
+        ],
+      },
+      "parallelism-comparison": {
+        prerequisites: [
+          "Comfort with phrases and clause structure.",
+          "Basic editing awareness.",
+        ],
+        structures: [
+          {
+            label: "Parallel List",
+            pattern: "to analyze, to revise, and to edit | reading, writing, and speaking",
+            note: "Keep the grammatical form balanced across coordinated items.",
+          },
+          {
+            label: "Comparison Logic",
+            pattern: "x is stronger than y",
+            note: "Compare like with like so the sentence stays logical.",
+          },
+          {
+            label: "Correlative Balance",
+            pattern: "not only x but also y",
+            note: "Both sides should match in structure.",
+          },
+        ],
+        revision: [
+          "Scan lists for mixed forms.",
+          "Ask whether the two things being compared belong to the same category.",
+          "Read the sentence aloud to hear balance problems.",
+        ],
+        cheatSheet: [
+          "Match grammatical form in lists and pairs.",
+          "Compare equivalent items.",
+          "Parallel structure improves clarity and rhythm.",
+        ],
+      },
+      "concision-formal-tone": {
+        prerequisites: [
+          "Stable sentence grammar.",
+          "Some experience with editing your own writing.",
+        ],
+        structures: [
+          {
+            label: "Strong Verb Revision",
+            pattern: "weak verb + noun -> one clear verb",
+            note: "This often shortens the sentence and sharpens the meaning.",
+          },
+          {
+            label: "Formal Precision",
+            pattern: "specific vocabulary + controlled tone",
+            note: "Formal style is usually direct, precise, and calm.",
+          },
+          {
+            label: "Clutter Reduction",
+            pattern: "remove filler / repeated meaning / empty opener",
+            note: "The sentence becomes easier to trust and easier to read.",
+          },
+        ],
+        revision: [
+          "Replace vague noun-heavy phrasing with clearer verbs.",
+          "Cut fillers before adding more explanation.",
+          "Choose a tone that matches the audience and task.",
+        ],
+        cheatSheet: [
+          "Prefer direct verbs over weak verb + noun combinations.",
+          "Cut repeated stance markers and empty openers.",
+          "Formal tone is precise, not stiff for its own sake.",
+        ],
+      },
+      "editing-drills": {
+        prerequisites: [
+          "Broad coverage of the earlier modules.",
+          "Willingness to explain corrections, not just guess them.",
+        ],
+        structures: [
+          {
+            label: "Edit by Category",
+            pattern: "agreement -> tense -> article -> word order",
+            note: "A repeatable order helps you spot more errors reliably.",
+          },
+          {
+            label: "Auxiliary Check",
+            pattern: "auxiliary carries tense and agreement, main verb stays simple",
+            note: "This catches many common editing mistakes quickly.",
+          },
+          {
+            label: "Proofreading Pass",
+            pattern: "read sentence -> identify error type -> fix -> explain",
+            note: "Explanation deepens retention and reduces random correction.",
+          },
+        ],
+        revision: [
+          "Do not edit randomly; scan one category at a time.",
+          "Explain why the original form is wrong.",
+          "Check whether one sentence contains more than one error.",
+        ],
+        cheatSheet: [
+          "Spot the error type before rewriting.",
+          "Auxiliary + base verb is a common repair pattern.",
+          "One correction can expose another hidden error.",
+        ],
+      },
+      "transformations-and-cloze": {
+        prerequisites: [
+          "Strong control of forms across modules.",
+          "Comfort with meaning-preserving rewrites.",
+        ],
+        structures: [
+          {
+            label: "Transformation Rule",
+            pattern: "same meaning, different grammar",
+            note: "The rewrite must keep the original meaning fully intact.",
+          },
+          {
+            label: "Cloze Logic",
+            pattern: "use clues before and after the gap",
+            note: "Grammar around the blank often tells you what belongs there.",
+          },
+          {
+            label: "Constraint Awareness",
+            pattern: "target meaning + allowed structure",
+            note: "Successful exam-style practice balances both meaning and form limits.",
+          },
+        ],
+        revision: [
+          "Underline the meaning that must stay unchanged.",
+          "Check tense, register, and hidden grammar clues around the gap.",
+          "Do not guess a vocabulary answer when the real target is grammar.",
+        ],
+        cheatSheet: [
+          "Meaning preservation is non-negotiable.",
+          "Look left and right of the gap for grammar clues.",
+          "A short answer can still require deep structural control.",
+        ],
+      },
+      "final-review": {
+        prerequisites: [
+          "Completion of the full curriculum or its equivalent.",
+          "Saved notes on recurring mistakes and weak areas.",
+        ],
+        structures: [
+          {
+            label: "Weekly Review Loop",
+            pattern: "review -> quiz -> write -> self-correct",
+            note: "This cycle turns grammar knowledge into stable long-term control.",
+          },
+          {
+            label: "Error Log Pattern",
+            pattern: "error type + example + correction + next action",
+            note: "A visible error log stops revision from becoming random.",
+          },
+          {
+            label: "Balanced Practice",
+            pattern: "recognition + correction + production",
+            note: "Retention improves when all three modes work together.",
+          },
+        ],
+        revision: [
+          "Review weak areas more often than strong ones.",
+          "Use quiz results to decide what to revisit next.",
+          "Keep grammar review connected to actual writing and speaking tasks.",
+        ],
+        cheatSheet: [
+          "Do not reread only. Produce and edit.",
+          "Track patterns, not isolated mistakes.",
+          "Repeat weak topics after a gap, not immediately.",
+        ],
+      },
+    },
+    portalBlueprint: {
+      title: "How This Portal Is Built",
+      pillars: [
+        {
+          title: "Structured Path",
+          detail: "The curriculum moves from sentence basics to tense control, complex grammar, style, and long-term review.",
+        },
+        {
+          title: "Context First",
+          detail: "Each lesson connects rules to realistic usage through examples, contrasts, and story-based teaching.",
+        },
+        {
+          title: "Practice Depth",
+          detail: "Quizzes and guided tasks are designed to move from recognition to correction to real transfer.",
+        },
+        {
+          title: "Retention System",
+          detail: "The roadmap, review guidance, and score tracking are meant to replace random book-hopping with a repeatable study loop.",
+        },
+      ],
+    },
     moduleRubrics: {
       foundations: [
         "Use the target grammar accurately in short original sentences.",

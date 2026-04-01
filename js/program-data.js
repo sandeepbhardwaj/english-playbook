@@ -911,6 +911,6 @@
   window.GrammarAtlasData = {
     curriculum,
     roadmap,
-    quizSize: 24,
+    quizSize: 60,
   };
 })();
