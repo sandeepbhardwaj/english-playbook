@@ -141,8 +141,8 @@ Scope: Focus on statement, question, negative forms
 
 **Test locally:**
 ```bash
-python3 -m http.server 8000
-# Navigate to http://localhost:8000
+npm run serve
+# Navigate to http://127.0.0.1:8000
 # Check curriculum page lists new lesson
 # Test lesson content loads
 # Try quiz functionality

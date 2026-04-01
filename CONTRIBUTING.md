@@ -63,7 +63,7 @@ git clone https://github.com/[username]/english-playbook
 cd english-playbook
 
 # Run locally
-python3 -m http.server 8000
+npm run serve
 ```
 
 ### Code Standards
@@ -71,7 +71,8 @@ python3 -m http.server 8000
 - **JavaScript:** Vanilla ES6+, no frameworks
 - **CSS:** Mobile-first responsive design
 - **HTML:** Semantic and accessible
-- **No external dependencies** required
+- **Runtime:** Framework-free HTML, CSS, and JavaScript
+- **Tooling:** npm and esbuild for local serving/build tasks
 - **localStorage** for persistent data
 - **Comments:** Explain complex logic
 - **DRY:** Don't repeat code patterns

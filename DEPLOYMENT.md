@@ -24,7 +24,7 @@ Complete instructions for deploying Grammar Atlas to various platforms.
 
 > **Current Deployment:** Grammar Atlas is live at **https://english.scalemind.dev** using GitHub Actions with a custom domain configured in the repository settings.
 
-**No build step required** — the site deploys from your repository root directly.
+**No manual build step required** — GitHub Actions installs dependencies, builds the site, and deploys it automatically.
 
 ---
 
@@ -365,7 +365,7 @@ Add error tracking import (e.g., **Sentry**):
 git pull origin main
 
 # Test locally
-python3 -m http.server 8000
+npm run serve
 
 # Push to deploy
 git push origin main
