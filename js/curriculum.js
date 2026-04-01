@@ -164,9 +164,13 @@
                   ? "In progress"
                   : "To do";
             const bookmarked = app.isBookmarked(lesson.id);
+            const scoreLabel = score ? `${app.formatPercent(score.percent)} core` : "No core score";
+            const reviewLabel = needsReview.has(lesson.id) ? "Needs review" : "On track";
+            const secondaryAction = completed.has(lesson.id) || score ? "Review Quiz" : "Preview Lesson";
+            const secondaryHref = completed.has(lesson.id) || score ? `quiz.html?lesson=${lesson.id}` : `lesson.html?lesson=${lesson.id}`;
 
             return `
-              <article class="lesson-tile">
+              <article class="lesson-tile lesson-tile-compact">
                 <div class="lesson-topline">
                   <h3>${lesson.title}</h3>
                   <button
@@ -179,18 +183,22 @@
                   </button>
                 </div>
                 <p class="lesson-summary">${lesson.summary}</p>
-                <div class="chip-row">
-                  <span class="chip">${questionCount} core bank</span>
-                  <span class="chip">${advancedQuestionCount} challenge</span>
-                  <span class="chip">${statusLabel}</span>
-                  <span class="chip">${needsReview.has(lesson.id) ? "Needs review" : "On track"}</span>
-                  <span class="chip">${score ? `${app.formatPercent(score.percent)} best score` : "No score yet"}</span>
-                  <span class="chip">${advancedScore ? `${app.formatPercent(advancedScore.percent)} advanced` : "No advanced score yet"}</span>
+                <div class="lesson-signal-row">
+                  <span class="signal-pill">${statusLabel}</span>
+                  <span class="signal-pill">${reviewLabel}</span>
+                  <span class="signal-pill">${scoreLabel}</span>
                 </div>
+                <p class="lesson-meta-note">
+                  ${questionCount} core questions · ${advancedQuestionCount} advanced questions
+                  ${advancedScore ? ` · ${app.formatPercent(advancedScore.percent)} advanced best` : ""}
+                </p>
                 <div class="card-actions">
                   <a class="button button-primary" href="lesson.html?lesson=${lesson.id}">Start Lesson</a>
-                  <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Take Quiz</a>
-                  <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
+                  <a class="button button-secondary" href="${secondaryHref}">${secondaryAction}</a>
+                </div>
+                <div class="text-link-row">
+                  <a class="text-link" href="quiz.html?lesson=${lesson.id}">Core Quiz</a>
+                  <a class="text-link" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
                 </div>
               </article>
             `;

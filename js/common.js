@@ -293,6 +293,33 @@
     siteNav.appendChild(actionGroup);
   }
 
+  function attachScrollTopButton() {
+    if (document.getElementById("scroll-top-button")) {
+      return;
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = "scroll-top-button";
+    button.className = "button button-secondary scroll-top-button";
+    button.setAttribute("aria-label", "Scroll back to top");
+    button.textContent = "Top";
+
+    function updateVisibility() {
+      const shouldShow = window.scrollY > 320;
+      button.classList.toggle("is-visible", shouldShow);
+      button.setAttribute("aria-hidden", shouldShow ? "false" : "true");
+    }
+
+    button.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+    document.body.appendChild(button);
+  }
+
   // ===== STUDY STREAK TRACKING =====
   const streakStorageKey = "grammar-atlas-streak";
 
@@ -594,6 +621,7 @@
   }
 
   attachResetProgressButton();
+  attachScrollTopButton();
   updateStudyStreak();
 
   window.GrammarAtlasApp = {
