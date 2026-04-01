@@ -38,15 +38,17 @@ jobs:
 
       - name: Copy built files to root for deployment
         run: |
-          cp dist/program-data.js js/program-data.js
-          cp dist/lesson-enhancements.js js/lesson-enhancements.js
-          cp dist/quiz-generators.js js/quiz-generators.js
-          cp dist/common.js js/common.js
-          cp dist/home.js js/home.js
-          cp dist/curriculum.js js/curriculum.js
-          cp dist/lesson.js js/lesson.js
-          cp dist/quiz.js js/quiz.js
-          cp dist/roadmap.js js/roadmap.js
+          cp dist/js/program-data.js js/program-data.js
+          cp dist/js/lesson-enhancements.js js/lesson-enhancements.js
+          cp dist/js/quiz-generators.js js/quiz-generators.js
+          cp dist/js/common.js js/common.js
+          cp dist/js/home.js js/home.js
+          cp dist/js/curriculum.js js/curriculum.js
+          cp dist/js/lesson.js js/lesson.js
+          cp dist/js/quiz.js js/quiz.js
+          cp dist/js/roadmap.js js/roadmap.js
+          cp dist/js/dashboard.js js/dashboard.js
+          cp dist/js/diagnostic.js js/diagnostic.js
           cp dist/styles.css styles.css
 
       - name: Configure Pages
