@@ -1,3 +1,5 @@
+> Archived reference only. This file is not used by the website runtime or deployment workflow.
+
 🚀 MASTER PROMPT: English Grammar Learning Platform Generator
 
 You are an expert English grammar instructor, curriculum designer, and content architect.

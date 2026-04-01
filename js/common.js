@@ -20,6 +20,8 @@
   const { curriculum, roadmap, quizSize } = window.GrammarAtlasData;
   const lessonStorageKey = "grammar-atlas-lessons-v2";
   const quizStorageKey = "grammar-atlas-quizzes-v2";
+  const diagnosticStorageKey = "grammar-atlas-diagnostic-v1";
+  const errorLogStorageKey = "grammar-atlas-error-log-v1";
 
   function flattenLessons() {
     return curriculum.flatMap((module) =>
@@ -107,6 +109,10 @@
     try {
       localStorage.removeItem(lessonStorageKey);
       localStorage.removeItem(quizStorageKey);
+      localStorage.removeItem(streakStorageKey);
+      localStorage.removeItem(bookmarksStorageKey);
+      localStorage.removeItem(diagnosticStorageKey);
+      localStorage.removeItem(errorLogStorageKey);
       return true;
     } catch (error) {
       return false;
@@ -294,6 +300,13 @@
     const today = new Date().toDateString();
     const streak = readJson(streakStorageKey, { lastDate: null, count: 0 });
 
+    if (!streak.lastDate) {
+      streak.lastDate = today;
+      streak.count = 1;
+      saveJson(streakStorageKey, streak);
+      return streak.count;
+    }
+
     if (streak.lastDate === today) {
       return streak.count; // Already updated today
     }
@@ -351,7 +364,9 @@
       completedLessons: [...getCompletedLessons()],
       quizScores: getQuizScores(),
       bookmarks: [...getBookmarks()],
-      studyStreak: getStudyStreak(),
+      studyStreak: readJson(streakStorageKey, { lastDate: null, count: 0 }),
+      diagnosticResult: getDiagnosticResult(),
+      errorLog: getErrorLogEntries(),
     };
     return JSON.stringify(export_data, null, 2);
   }
@@ -366,12 +381,183 @@
       saveJson(lessonStorageKey, data.completedLessons || []);
       saveJson(quizStorageKey, data.quizScores || {});
       saveJson(bookmarksStorageKey, data.bookmarks || []);
+      saveJson(
+        streakStorageKey,
+        typeof data.studyStreak === "object"
+          ? { lastDate: data.studyStreak.lastDate || null, count: data.studyStreak.count || 0 }
+          : { lastDate: null, count: Number(data.studyStreak) || 0 }
+      );
+      saveJson(diagnosticStorageKey, data.diagnosticResult || null);
+      saveJson(errorLogStorageKey, data.errorLog || []);
 
       return true;
     } catch (error) {
       console.error("Import failed:", error);
       return false;
     }
+  }
+
+  function getDiagnosticResult() {
+    return readJson(diagnosticStorageKey, null);
+  }
+
+  function saveDiagnosticResult(result) {
+    saveJson(diagnosticStorageKey, result);
+    return result;
+  }
+
+  function getErrorLogEntries() {
+    return readJson(errorLogStorageKey, []);
+  }
+
+  function addErrorLogEntry(entry) {
+    const entries = getErrorLogEntries();
+    const normalized = {
+      id: entry.id || `error-${Date.now()}`,
+      title: entry.title || "Grammar focus",
+      lessonId: entry.lessonId || "",
+      mistake: entry.mistake || "",
+      correction: entry.correction || "",
+      note: entry.note || "",
+      updatedAt: new Date().toISOString(),
+    };
+    saveJson(errorLogStorageKey, [normalized, ...entries]);
+    return normalized;
+  }
+
+  function removeErrorLogEntry(entryId) {
+    const nextEntries = getErrorLogEntries().filter((entry) => entry.id !== entryId);
+    saveJson(errorLogStorageKey, nextEntries);
+    return nextEntries;
+  }
+
+  function getLessonPerformanceEntries() {
+    const completed = getCompletedLessons();
+    const bookmarks = getBookmarks();
+
+    return allLessons.map((lesson, index) => {
+      const standard = getQuizScore(lesson.id);
+      const advanced = getQuizScore(lesson.id, "advanced");
+      const standardPercent = standard?.percent ?? null;
+      const advancedPercent = advanced?.percent ?? null;
+      const attempted = standardPercent !== null || advancedPercent !== null;
+      const primaryPercent = standardPercent ?? advancedPercent;
+      let priority = 0;
+      let reason = "Continue the planned course flow.";
+
+      if (standardPercent !== null && standardPercent < 70) {
+        priority = 120 - standardPercent;
+        reason = "Your core quiz score is below 70%, so this lesson should be reviewed first.";
+      } else if (advancedPercent !== null && advancedPercent < 70) {
+        priority = 95 - advancedPercent;
+        reason = "Your advanced quiz score suggests the concept is not secure yet.";
+      } else if (standardPercent !== null && standardPercent < 85) {
+        priority = 70 - standardPercent;
+        reason = "You are close, but a short review would likely improve retention.";
+      } else if (!completed.has(lesson.id) && attempted) {
+        priority = 20;
+        reason = "You have started this topic, but it is not marked complete yet.";
+      } else if (bookmarks.has(lesson.id)) {
+        priority = 16;
+        reason = "You bookmarked this lesson, so it belongs in your review cycle.";
+      } else if (!completed.has(lesson.id)) {
+        priority = Math.max(5, 15 - index);
+        reason = "This is the next unfinished lesson in your course path.";
+      }
+
+      return {
+        lesson,
+        standardPercent,
+        advancedPercent,
+        primaryPercent,
+        attempted,
+        completed: completed.has(lesson.id),
+        bookmarked: bookmarks.has(lesson.id),
+        priority,
+        reason,
+      };
+    });
+  }
+
+  function getWeakLessons(limit = 4) {
+    return getLessonPerformanceEntries()
+      .filter((entry) => entry.attempted && entry.primaryPercent !== null)
+      .sort((left, right) => left.primaryPercent - right.primaryPercent)
+      .slice(0, limit);
+  }
+
+  function getReviewRecommendations(limit = 4) {
+    return getLessonPerformanceEntries()
+      .filter((entry) => entry.priority > 0)
+      .sort((left, right) => {
+        if (right.priority !== left.priority) {
+          return right.priority - left.priority;
+        }
+        return (left.primaryPercent ?? 101) - (right.primaryPercent ?? 101);
+      })
+      .slice(0, limit);
+  }
+
+  function getRecommendedNextLessons(limit = 4) {
+    return getReviewRecommendations(limit).map((entry) => entry.lesson);
+  }
+
+  function getWeeklyReviewPlan() {
+    const reviewTargets = getReviewRecommendations(3);
+    const nextLessons = getLessonPerformanceEntries()
+      .filter((entry) => !entry.completed)
+      .slice(0, 2)
+      .map((entry) => entry.lesson);
+    const days = [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+    ];
+    const plan = [];
+
+    if (reviewTargets[0]) {
+      plan.push({
+        day: days[0],
+        title: `Relearn ${reviewTargets[0].lesson.title}`,
+        detail: reviewTargets[0].reason,
+        href: `lesson.html?lesson=${reviewTargets[0].lesson.id}`,
+      });
+      plan.push({
+        day: days[1],
+        title: `Retake the ${reviewTargets[0].lesson.title} quiz`,
+        detail: "Use the core quiz first, then move to the advanced review if your score improves.",
+        href: `quiz.html?lesson=${reviewTargets[0].lesson.id}`,
+      });
+    }
+
+    if (reviewTargets[1]) {
+      plan.push({
+        day: days[2],
+        title: `Target a second weak spot: ${reviewTargets[1].lesson.title}`,
+        detail: reviewTargets[1].reason,
+        href: `lesson.html?lesson=${reviewTargets[1].lesson.id}`,
+      });
+    }
+
+    if (nextLessons[0]) {
+      plan.push({
+        day: days[3],
+        title: `Advance the course with ${nextLessons[0].title}`,
+        detail: "Keep momentum by mixing review work with one fresh lesson.",
+        href: `lesson.html?lesson=${nextLessons[0].id}`,
+      });
+    }
+
+    plan.push({
+      day: days[4],
+      title: "Finish with a review reset",
+      detail: "Check your error log, bookmark one weak lesson, and retake one core quiz before the week ends.",
+      href: "dashboard.html",
+    });
+
+    return plan;
   }
 
   // ===== PERFORMANCE ANALYTICS =====
@@ -408,6 +594,7 @@
   }
 
   attachResetProgressButton();
+  updateStudyStreak();
 
   window.GrammarAtlasApp = {
     // Core API
@@ -443,6 +630,20 @@
     // Import/Export (NEW)
     exportProgress,
     importProgress,
+
+    // Diagnostic + planner
+    getDiagnosticResult,
+    saveDiagnosticResult,
+    getLessonPerformanceEntries,
+    getWeakLessons,
+    getReviewRecommendations,
+    getRecommendedNextLessons,
+    getWeeklyReviewPlan,
+
+    // Error log
+    getErrorLogEntries,
+    addErrorLogEntry,
+    removeErrorLogEntry,
 
     // Analytics (NEW)
     getQuizAnalytics,

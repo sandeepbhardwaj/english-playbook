@@ -204,7 +204,9 @@ body[data-page="home"] .nav-links a[href="index.html"],
 body[data-page="curriculum"] .nav-links a[href="curriculum.html"],
 body[data-page="lesson"] .nav-links a[href="curriculum.html"],
 body[data-page="quiz"] .nav-links a[href="curriculum.html"],
-body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
+body[data-page="roadmap"] .nav-links a[href="roadmap.html"],
+body[data-page="dashboard"] .nav-links a[href="dashboard.html"],
+body[data-page="diagnostic"] .nav-links a[href="dashboard.html"] {
   background: rgba(16, 35, 63, 0.08);
   color: var(--ink);
 }
@@ -289,6 +291,7 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  align-items: center;
 }
 
 .button {
@@ -461,6 +464,10 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   padding: 28px;
 }
 
+.panel > * + * {
+  margin-top: 16px;
+}
+
 .section-heading {
   margin-bottom: 18px;
 }
@@ -525,6 +532,25 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   margin-top: 16px;
 }
 
+.bookmark-button {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 35, 63, 0.16);
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bookmark-button.is-active,
+.is-active-control {
+  background: rgba(210, 105, 60, 0.14);
+  border-color: rgba(210, 105, 60, 0.34);
+  color: var(--accent-deep);
+}
+
 .lesson-layout {
   grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1.45fr);
   align-items: start;
@@ -540,6 +566,11 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
 .quiz-main {
   display: grid;
   gap: 18px;
+}
+
+.stack-list {
+  display: grid;
+  gap: 14px;
 }
 
 .breadcrumb {
@@ -616,6 +647,81 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
 .question-card {
   display: grid;
   gap: 14px;
+}
+
+.filter-row,
+.field-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.field-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.field-block {
+  display: grid;
+  gap: 8px;
+}
+
+.field-block span {
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.filter-input,
+.filter-select,
+.field-block input,
+.field-block select,
+.field-block textarea,
+.app-textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(16, 35, 63, 0.12);
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ink);
+  font: inherit;
+}
+
+.field-block textarea,
+.app-textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.dashboard-mini-card,
+.error-log-card {
+  padding: 18px;
+}
+
+.dashboard-split-list {
+  display: grid;
+  gap: 16px;
+}
+
+.section-heading + .card-actions,
+.section-heading + .lesson-actions {
+  margin-top: 18px;
+}
+
+.card-actions + .lesson-note,
+.lesson-actions + .lesson-note {
+  margin-top: 10px;
+}
+
+.results-helper {
+  margin-top: 14px;
+}
+
+.error-log-form {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 18px;
 }
 
 .option-list {
@@ -731,7 +837,9 @@ body[data-page="roadmap"] .nav-links a[href="roadmap.html"] {
   .trio-grid,
   .card-grid,
   .contrast-grid,
-  .roadmap-grid {
+  .roadmap-grid,
+  .filter-row,
+  .field-grid {
     grid-template-columns: 1fr;
   }
 

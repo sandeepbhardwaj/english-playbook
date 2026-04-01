@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar Atlas | Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-page="dashboard">
+    <div class="site-shell">
+      <header class="site-nav">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">GA</span>
+          <span>Grammar Atlas</span>
+        </a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href="index.html">Home</a>
+          <a href="curriculum.html">Curriculum</a>
+          <a href="roadmap.html">Roadmap</a>
+          <a href="dashboard.html">Dashboard</a>
+        </nav>
+      </header>
+
+      <main class="page-shell">
+        <section class="page-hero">
+          <p class="eyebrow">Tutor Dashboard</p>
+          <h1>See what to study next, where you are weak, and how to review smarter.</h1>
+          <p class="hero-text">
+            This static dashboard turns your saved quiz scores and lesson progress into
+            a practical study plan, an error review loop, and targeted revision advice.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="diagnostic.html">Take Diagnostic Test</a>
+            <a class="button button-secondary" href="curriculum.html">Browse Curriculum</a>
+          </div>
+        </section>
+
+        <section class="stats-grid" id="dashboard-metrics"></section>
+        <section class="panel" id="dashboard-placement"></section>
+        <section class="card-grid" id="dashboard-main-grid"></section>
+        <section class="panel" id="dashboard-review-plan"></section>
+        <section class="panel" id="dashboard-progress-tools"></section>
+        <section class="panel" id="dashboard-error-log"></section>
+      </main>
+    </div>
+
+    <script src="js/program-data.js"></script>
+    <script src="js/common.js"></script>
+    <script defer src="js/dashboard.js"></script>
+  </body>
+</html>

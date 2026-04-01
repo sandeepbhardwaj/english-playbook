@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Grammar Atlas | Quiz</title>
+    <title>Grammar Atlas | Diagnostic</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body data-page="quiz">
+  <body data-page="diagnostic">
     <div class="site-shell">
       <header class="site-nav">
         <a class="brand" href="index.html">
@@ -22,19 +22,23 @@
       </header>
 
       <main class="page-shell">
-        <div class="breadcrumb" id="quiz-breadcrumb"></div>
-        <section class="panel quiz-hero" id="quiz-hero"></section>
+        <div class="breadcrumb">
+          <a href="dashboard.html">Dashboard</a>
+          <span>/</span>
+          <span>Diagnostic Test</span>
+        </div>
+        <section class="panel quiz-hero" id="diagnostic-hero"></section>
         <section class="quiz-layout">
-          <aside class="panel quiz-sidebar" id="quiz-sidebar"></aside>
+          <aside class="panel quiz-sidebar" id="diagnostic-sidebar"></aside>
           <section class="panel quiz-main">
-            <div class="quiz-progress" id="quiz-progress"></div>
-            <div id="quiz-questions"></div>
+            <div class="quiz-progress" id="diagnostic-progress"></div>
+            <div id="diagnostic-questions"></div>
             <div class="quiz-controls">
-              <button class="button button-secondary" type="button" id="quiz-prev">Previous</button>
-              <button class="button button-secondary" type="button" id="quiz-next">Next</button>
-              <button class="button button-primary" type="button" id="quiz-submit">Submit Quiz</button>
+              <button class="button button-secondary" type="button" id="diagnostic-prev">Previous</button>
+              <button class="button button-secondary" type="button" id="diagnostic-next">Next</button>
+              <button class="button button-primary" type="button" id="diagnostic-submit">See Placement</button>
             </div>
-            <div id="quiz-results"></div>
+            <div id="diagnostic-results"></div>
           </section>
         </section>
       </main>
@@ -43,6 +47,6 @@
     <script src="js/program-data.js"></script>
     <script src="js/common.js"></script>
     <script defer src="js/quiz-generators.js"></script>
-    <script defer src="js/quiz.js"></script>
+    <script defer src="js/diagnostic.js"></script>
   </body>
 </html>

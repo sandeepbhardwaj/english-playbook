@@ -10,7 +10,7 @@ Grammar Atlas is a complete, structured English grammar learning system designed
 - **18 Premium Lessons** with story-based instruction, especially for tenses
 - **1000+ Quiz Questions** across 3 difficulty levels (Basic, Intermediate, Advanced)
 - **Progress Tracking** — lessons completed, quiz scores saved in browser `localStorage`
-- **No External Dependencies** — pure HTML, CSS, and JavaScript
+- **Framework-Free Runtime** — static HTML, CSS, and JavaScript in production
 - **Offline-Ready** — fully functional without internet after initial load
 - **Responsive Design** — works on desktop, tablet, and mobile
 - **GitHub Pages Ready** — one-click deployment included
@@ -24,9 +24,11 @@ open index.html
 
 ### Run with Local Server
 ```bash
-python3 -m http.server 8000
+npm run serve
 ```
-Then visit `http://localhost:8000`
+Then visit `http://127.0.0.1:8000`
+
+This local server disables cache headers, so CSS and JavaScript changes show up more reliably during development.
 
 ### Deploy to GitHub Pages
 1. Push to a GitHub repository
@@ -80,6 +82,13 @@ english-playbook/
 ├── 404.html                   # Error page (for GitHub Pages)
 ├── styles.css                 # Responsive design system
 │
+├── docs/                      # Additional developer/reference docs
+│   ├── API.md
+│   ├── QUICKSTART.md
+│   ├── STYLE_GUIDE.md
+│   ├── CURRICULUM_EXPANSION.md
+│   └── archive/master-prompt.md
+│
 ├── js/
 │   ├── program-data.js        # Curriculum, modules, lessons, roadmap
 │   ├── lesson-enhancements.js # Extended lesson content & support
@@ -131,11 +140,14 @@ Use the multi-agent system in `agents/` to create premium lessons:
 
 See `agents/shared-rules.md` for the complete content standard.
 
+Additional reference docs are grouped under [`docs/`](docs/README.md).
+Use [`docs/QUICKSTART.md`](docs/QUICKSTART.md) for onboarding, [`BUILD.md`](BUILD.md) for build details, and [`DEPLOYMENT.md`](DEPLOYMENT.md) for hosting notes.
+
 ### Local Development Workflow
 
 ```bash
-# Start local server
-python3 -m http.server 8000
+# Start local dev server
+npm run serve
 
 # Edit content in program-data.js
 # Changes auto-reflect in the browser
@@ -150,10 +162,8 @@ python3 -m http.server 8000
 - All JavaScript is vanilla ES6+ (no frameworks)
 - CSS uses responsive design with mobile-first approach
 - HTML is semantic and accessible
-- No external dependencies (fully self-contained)
+- Runtime stays framework-free; npm/esbuild are used only for local tooling and build tasks
 - localStorage used for cross-session persistence
-
-## 📊 Data Structure
 
 ## 📊 Data Structure
 
@@ -198,7 +208,7 @@ This repository includes a GitHub Actions workflow for automatic deployment.
 2. In GitHub, open `Settings` → `Pages`
 3. Under `Build and deployment`, set `Source` to `GitHub Actions`
 4. Push to the `main` branch
-5. The site deploys automatically from the repository root (no build step needed)
+5. GitHub Actions installs dependencies, builds assets, and deploys automatically, so no manual build step is needed
 
 **Result:** Your grammar learning platform is live at your deployment URL (GitHub Pages, custom domain, or other host)
 
@@ -222,16 +232,11 @@ To help improve Grammar Atlas:
 
 ## 📝 License
 
-[Add your license here]
+No `LICENSE` file is included yet. Add one before public reuse or redistribution.
 
 ## 📧 Support
 
 For questions or feedback:
 - Open an issue on GitHub
-- Check the FAQ section (coming soon)
+- Review [`docs/README.md`](docs/README.md) for the documentation index
 - Review `roadmap.html` for study guidance
-
----
-
-**Last Updated:** April 2026  
-**Maintained by:** [Your Name/Team]

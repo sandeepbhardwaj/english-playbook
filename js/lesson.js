@@ -24,6 +24,11 @@
     contextBlock?.passage ||
     "Use this short context block to see the grammar working inside a realistic situation.";
   const storyPrompts = lesson.story?.analysis || contextBlock?.prompts || [];
+  const reviewEntry = app.getReviewRecommendations(12).find((entry) => entry.lesson.id === lesson.id);
+  const recommendedLessons = app
+    .getReviewRecommendations(3)
+    .filter((entry) => entry.lesson.id !== lesson.id);
+  const isBookmarked = app.isBookmarked(lesson.id);
   const sectionLinks = [
     { id: "lesson-intuition", label: "Intuition" },
     { id: "lesson-rules", label: "Core Rules" },
@@ -59,6 +64,7 @@
       <span class="chip">${completed.has(lesson.id) ? "Completed" : "In progress"}</span>
       <span class="chip">${quizScore ? `Best score ${app.formatPercent(quizScore.percent)}` : "No score yet"}</span>
       <span class="chip">${advancedQuizScore ? `Advanced ${app.formatPercent(advancedQuizScore.percent)}` : "No advanced score yet"}</span>
+      <span class="chip">${isBookmarked ? "Bookmarked for review" : "Not bookmarked yet"}</span>
     </div>
   `;
 
@@ -85,10 +91,27 @@
       <button class="button button-primary" type="button" id="toggle-lesson-complete">
         ${completed.has(lesson.id) ? "Mark as Not Completed" : "Mark Lesson as Completed"}
       </button>
+      <button class="button button-secondary ${isBookmarked ? "is-active-control" : ""}" type="button" id="toggle-lesson-bookmark">
+        ${isBookmarked ? "Remove Bookmark" : "Bookmark Lesson"}
+      </button>
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}">Take Quiz</a>
       <a class="button button-secondary" href="quiz.html?lesson=${lesson.id}&mode=advanced">Advanced Quiz</a>
+      <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
       <a class="button button-secondary" href="lesson.html?lesson=${app.previousLesson(lesson.id).id}">Previous Lesson</a>
       <a class="button button-secondary" href="lesson.html?lesson=${app.nextLesson(lesson.id).id}">Next Lesson</a>
+    </div>
+    <div class="portfolio-panel">
+      <h3>Review Guidance</h3>
+      <p class="lesson-note">
+        ${
+          reviewEntry
+            ? reviewEntry.reason
+            : "Complete the lesson and quiz, then the dashboard will start recommending how strongly this topic should stay in rotation."
+        }
+      </p>
+      <div class="card-actions">
+        <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Log A Common Mistake</a>
+      </div>
     </div>
     <div class="portfolio-panel">
       <h3>Portfolio Connection</h3>
@@ -262,15 +285,15 @@
             (item) => `
           <div class="pitfall-card">
             <div class="pitfall-wrong">
-              <span class="pitfall-label">❌ Wrong:</span>
+              <span class="pitfall-label">Wrong</span>
               <p>"${item.wrong}"</p>
             </div>
             <div class="pitfall-right">
-              <span class="pitfall-label">✅ Right:</span>
+              <span class="pitfall-label">Right</span>
               <p>"${item.right}"</p>
             </div>
             <div class="pitfall-note">
-              <span class="pitfall-label">💡 Why:</span>
+              <span class="pitfall-label">Why</span>
               <p>${item.note}</p>
             </div>
           </div>
@@ -322,10 +345,43 @@
         ${cheatSheet.map((item) => `<span class="chip">${item}</span>`).join("")}
       </div>
     </section>
+
+    <section class="summary-card">
+      <div class="summary-topline">
+        <h3>What To Do Next</h3>
+        <span class="chip">Tutor guidance</span>
+      </div>
+      <p class="lesson-note">
+        ${
+          reviewEntry
+            ? reviewEntry.reason
+            : "After this lesson, take the core quiz first. If your score is stable, move to the advanced quiz and then bookmark or log the topic if it still feels weak."
+        }
+      </p>
+      <div class="chip-row">
+        ${
+          recommendedLessons.length
+            ? recommendedLessons
+                .map((entry) => `<a class="chip-link" href="lesson.html?lesson=${entry.lesson.id}">${entry.lesson.title}</a>`)
+                .join("")
+            : '<span class="chip">This lesson is your main focus right now</span>'
+        }
+      </div>
+      <div class="card-actions">
+        <a class="button button-primary" href="quiz.html?lesson=${lesson.id}">Take Core Quiz</a>
+        <a class="button button-secondary" href="dashboard.html#dashboard-error-log">Open Error Log</a>
+        <a class="button button-secondary" href="dashboard.html">Open Dashboard</a>
+      </div>
+    </section>
   `;
 
   document.getElementById("toggle-lesson-complete").addEventListener("click", () => {
     app.toggleLessonComplete(lesson.id);
+    window.location.reload();
+  });
+
+  document.getElementById("toggle-lesson-bookmark").addEventListener("click", () => {
+    app.toggleBookmark(lesson.id);
     window.location.reload();
   });
 })();

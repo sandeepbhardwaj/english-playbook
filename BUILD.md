@@ -21,6 +21,13 @@ npm run build:watch
 
 Automatically rebuilds when source files change.
 
+### Local Dev Server
+```bash
+npm run serve
+```
+
+This serves the project with cache disabled, which helps when the browser keeps showing older CSS or JavaScript after edits.
+
 ---
 
 ## Performance Improvements
@@ -108,7 +115,7 @@ npm run build
 ### Phase 2 — PWA & Offline Support
 - Add Service Worker for complete offline capability
 - Add Web App Manifest for mobile install
-- TBD — Contact developer if interested
+- Only add this when offline support becomes a real product requirement
 
 ### Phase 3 — Advanced Optimization
 - Separate curriculum data into JSON (if 3x larger)
@@ -143,6 +150,7 @@ ls -lh dist/js/ dist/styles.css
 
 | Command | Purpose |
 |---------|---------|
+| `npm run serve` | Start the no-cache local dev server |
 | `npm install` | Install esbuild dependency |
 | `npm run build` | Create minified production files |
 | `npm run build:watch` | Auto-rebuild on file changes |
