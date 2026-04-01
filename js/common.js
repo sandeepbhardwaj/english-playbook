@@ -1,3 +1,21 @@
+/**
+ * Grammar Atlas - Common Utilities and Data API
+ * 
+ * Provides centralized access to curriculum data, progress tracking,
+ * quiz scores, bookmarks, study streak analytics, and data export/import.
+ * 
+ * All functionality exposed through window.GrammarAtlasApp global object.
+ * Uses browser localStorage for persistence (browser-specific, not synced).
+ * 
+ * Key modules:
+ * - Curriculum navigation and lesson lookups
+ * - Lesson completion tracking
+ * - Quiz score management
+ * - Study streak monitoring
+ * - Progress export/import
+ * - Learning analytics
+ */
+
 (function () {
   const { curriculum, roadmap, quizSize } = window.GrammarAtlasData;
   const lessonStorageKey = "grammar-atlas-lessons-v2";
@@ -267,9 +285,130 @@
     siteNav.appendChild(actionGroup);
   }
 
+  // ===== STUDY STREAK TRACKING =====
+  const streakStorageKey = "grammar-atlas-streak";
+
+  function updateStudyStreak() {
+    const today = new Date().toDateString();
+    const streak = readJson(streakStorageKey, { lastDate: null, count: 0 });
+
+    if (streak.lastDate === today) {
+      return streak.count; // Already updated today
+    }
+
+    const lastDate = new Date(streak.lastDate || today);
+    const daysDiff = Math.floor((new Date(today) - lastDate) / (1000 * 60 * 60 * 24));
+
+    if (daysDiff === 1) {
+      streak.count += 1;
+    } else if (daysDiff > 1) {
+      streak.count = 1; // Streak broken, restart
+    }
+
+    streak.lastDate = today;
+    saveJson(streakStorageKey, streak);
+    return streak.count;
+  }
+
+  function getStudyStreak() {
+    const streak = readJson(streakStorageKey, { lastDate: null, count: 0 });
+    return streak.count;
+  }
+
+  function resetStudyStreak() {
+    saveJson(streakStorageKey, { lastDate: null, count: 0 });
+  }
+
+  // ===== BOOKMARKS/FAVORITES =====
+  const bookmarksStorageKey = "grammar-atlas-bookmarks";
+
+  function getBookmarks() {
+    return new Set(readJson(bookmarksStorageKey, []));
+  }
+
+  function toggleBookmark(lessonId) {
+    const bookmarks = getBookmarks();
+    if (bookmarks.has(lessonId)) {
+      bookmarks.delete(lessonId);
+    } else {
+      bookmarks.add(lessonId);
+    }
+    saveJson(bookmarksStorageKey, [...bookmarks]);
+    return bookmarks.has(lessonId); // Return new state
+  }
+
+  function isBookmarked(lessonId) {
+    return getBookmarks().has(lessonId);
+  }
+
+  // ===== PROGRESS EXPORT/IMPORT =====
+  function exportProgress() {
+    const export_data = {
+      exportDate: new Date().toISOString(),
+      version: "1.0",
+      completedLessons: [...getCompletedLessons()],
+      quizScores: getQuizScores(),
+      bookmarks: [...getBookmarks()],
+      studyStreak: getStudyStreak(),
+    };
+    return JSON.stringify(export_data, null, 2);
+  }
+
+  function importProgress(jsonData) {
+    try {
+      const data = JSON.parse(jsonData);
+      if (!data.version || data.version !== "1.0") {
+        throw new Error("Invalid export format");
+      }
+
+      saveJson(lessonStorageKey, data.completedLessons || []);
+      saveJson(quizStorageKey, data.quizScores || {});
+      saveJson(bookmarksStorageKey, data.bookmarks || []);
+
+      return true;
+    } catch (error) {
+      console.error("Import failed:", error);
+      return false;
+    }
+  }
+
+  // ===== PERFORMANCE ANALYTICS =====
+  function getQuizAnalytics() {
+    const scores = getQuizScores();
+    const attempts = Object.values(scores);
+
+    if (attempts.length === 0) {
+      return null;
+    }
+
+    const percents = attempts.map((a) => a.percent || 0);
+    const average = percents.reduce((a, b) => a + b, 0) / percents.length;
+    const highest = Math.max(...percents);
+    const lowest = Math.min(...percents);
+
+    return {
+      totalAttempts: attempts.length,
+      averageScore: Math.round(average),
+      highestScore: highest,
+      lowestScore: lowest,
+      passRate: Math.round((attempts.filter((a) => a.percent >= 70).length / attempts.length) * 100),
+    };
+  }
+
+  function getLessonProgress() {
+    const completed = getCompletedLessons().size;
+    const total = allLessons.length;
+    return {
+      completed,
+      total,
+      percent: Math.round((completed / total) * 100),
+    };
+  }
+
   attachResetProgressButton();
 
   window.GrammarAtlasApp = {
+    // Core API
     curriculum,
     roadmap,
     quizSize,
@@ -279,11 +418,35 @@
     getLessonIndex,
     nextLesson,
     previousLesson,
+
+    // Lesson tracking
     getCompletedLessons,
     toggleLessonComplete,
+
+    // Quiz tracking
     getQuizScores,
     getQuizScore,
     saveQuizScore,
+
+    // Study streak (NEW)
+    updateStudyStreak,
+    getStudyStreak,
+    resetStudyStreak,
+
+    // Bookmarks (NEW)
+    getBookmarks,
+    toggleBookmark,
+    isBookmarked,
+
+    // Import/Export (NEW)
+    exportProgress,
+    importProgress,
+
+    // Analytics (NEW)
+    getQuizAnalytics,
+    getLessonProgress,
+
+    // Utilities
     resetProgress,
     getQueryParam,
     renderStats,

@@ -1,0 +1,125 @@
+# Contributing to Grammar Atlas
+
+Thank you for wanting to improve Grammar Atlas! This document explains how to contribute high-quality lessons, quizzes, and features.
+
+## Reporting Issues
+
+Found a bug or have a suggestion? Open an issue with:
+- Clear description of the problem
+- Steps to reproduce (if applicable)
+- Expected vs. actual behavior
+- Browser/device information
+
+## Contributing Content
+
+### Using the Multi-Agent System
+
+All lesson and quiz content must follow the pipeline:
+
+1. **Plan** (Planner Agent) → Topic scope, prerequisites, learner level
+2. **Write** (Lesson Agent) → Complete lesson with all 11 required sections
+3. **Quiz** (Quiz Agent) → Generate 60-100 questions across 3 difficulty levels
+4. **Review** (Reviewer Agent) → Quality assurance gate (PASS/FAIL)
+5. **Format** (Formatter Agent) → Website-ready markdown
+6. **Deploy** (Orchestrator) → Coordinate the workflow
+
+See `agents/shared-rules.md` for content standards.
+
+### Minimum Content Requirements
+
+Every lesson must include:
+1. Topic Name
+2. Intuition (why it matters)
+3. Core Rules
+4. Sentence Structures
+5. Detailed Examples (12-20+)
+6. Story-Based Learning
+7. Common Mistakes (wrong vs. correct)
+8. Practice Exercises (multiple types)
+9. Quiz Sets (60-100 questions)
+10. Quick Revision Summary
+11. Cheat Sheet
+
+### Quality Checklist
+
+- [ ] Lesson follows the 11-section structure
+- [ ] Examples are realistic and conversational
+- [ ] Story section is included (required for tenses)
+- [ ] Common mistakes with explanations
+- [ ] At least 5 varied practice exercise types
+- [ ] Quiz has exactly 60-100 questions
+- [ ] Quiz split: Basic (20-30), Intermediate (20-30), Advanced (20-40)
+- [ ] All quiz answers are correct and explanations are clear
+- [ ] No duplicate questions
+- [ ] Reviewed and approved (PASS from Reviewer Agent)
+
+## Contributing Code
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/[username]/english-playbook
+cd english-playbook
+
+# Run locally
+python3 -m http.server 8000
+```
+
+### Code Standards
+
+- **JavaScript:** Vanilla ES6+, no frameworks
+- **CSS:** Mobile-first responsive design
+- **HTML:** Semantic and accessible
+- **No external dependencies** required
+- **localStorage** for persistent data
+- **Comments:** Explain complex logic
+- **DRY:** Don't repeat code patterns
+
+### Testing Your Changes
+
+1. Test on desktop browsers (Chrome, Firefox, Safari)
+2. Test on mobile devices (responsive)
+3. Check browser console for errors
+4. Verify localStorage data saves/loads
+5. Test quiz scoring and progress tracking
+
+### File Organization
+
+```
+js/
+├── program-data.js         # Core curriculum data
+├── lesson-enhancements.js  # Extended lesson content
+├── quiz-generators.js      # Question generation
+├── common.js               # Utilities & storage
+├── [page].js               # Page-specific logic
+```
+
+## Submission Process
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Make your changes and test thoroughly
+4. Commit with clear messages: `git commit -m "Add [feature]: description"`
+5. Push to your fork: `git push origin feature/your-feature`
+6. Create a Pull Request with:
+   - Description of changes
+   - Reviewer feedback if applicable
+   - Testing performed
+
+## Code Review
+
+All submissions will be reviewed for:
+- Content accuracy and completeness
+- Code quality and standards
+- Testing coverage
+- Documentation clarity
+- Alignment with the project vision
+
+## Questions?
+
+- Check existing issues and discussions
+- Review the agent system documentation in `agents/`
+- Ask in the PR discussion
+
+Thank you for making Grammar Atlas better!
