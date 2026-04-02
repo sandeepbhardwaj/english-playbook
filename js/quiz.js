@@ -17,7 +17,15 @@
   const answers = new Array(questions.length).fill(null);
   let submitted = false;
 
-  document.title = `Grammar Atlas | ${isAdvanced ? "Advanced Quiz" : "Quiz"} | ${lesson.title}`;
+  app.updateSeo({
+    title: `Grammar Atlas | ${isAdvanced ? "Advanced Quiz" : "Quiz"} | ${lesson.title}`,
+    description: isAdvanced
+      ? `Take the advanced review quiz for ${lesson.title} in Grammar Atlas.`
+      : `Take the core quiz for ${lesson.title} in Grammar Atlas.`,
+    canonicalUrl: `/quiz.html?lesson=${lesson.id}${isAdvanced ? "&mode=advanced" : ""}`,
+    robots: "noindex,follow",
+    ogType: "website",
+  });
 
   document.getElementById("quiz-breadcrumb").innerHTML = `
     <a href="curriculum.html">Curriculum</a>

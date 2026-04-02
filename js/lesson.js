@@ -44,7 +44,17 @@
   const coreScoreLabel = quizScore ? app.formatPercent(quizScore.percent) : "No saved score";
   const advancedScoreLabel = advancedQuizScore ? app.formatPercent(advancedQuizScore.percent) : "No advanced score";
 
-  document.title = `Grammar Atlas | ${lesson.title}`;
+  if (!app.getQueryParam("lesson")) {
+    window.history.replaceState({}, "", `lesson.html?lesson=${lesson.id}`);
+  }
+
+  app.updateSeo({
+    title: `Grammar Atlas | ${lesson.title}`,
+    description: lesson.summary,
+    canonicalUrl: `/lesson.html?lesson=${lesson.id}`,
+    robots: "index,follow",
+    ogType: "article",
+  });
 
   document.getElementById("lesson-breadcrumb").innerHTML = `
     <a href="curriculum.html">Curriculum</a>

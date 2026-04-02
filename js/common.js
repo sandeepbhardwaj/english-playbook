@@ -18,6 +18,7 @@
 
 (function () {
   const { curriculum, roadmap, quizSize } = window.GrammarAtlasData;
+  const siteUrl = "https://english.scalemind.dev";
   const lessonStorageKey = "grammar-atlas-lessons-v2";
   const quizStorageKey = "grammar-atlas-quizzes-v2";
   const diagnosticStorageKey = "grammar-atlas-diagnostic-v1";
@@ -126,6 +127,47 @@
 
   function formatPercent(value) {
     return `${Math.round(value)}%`;
+  }
+
+  function ensureHeadElement(selector, tagName, attributes) {
+    let element = document.head.querySelector(selector);
+    if (!element) {
+      element = document.createElement(tagName);
+      Object.entries(attributes).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+      });
+      document.head.appendChild(element);
+    }
+    return element;
+  }
+
+  function resolveAbsoluteUrl(url) {
+    return new URL(url, siteUrl).toString();
+  }
+
+  function updateSeo({ title, description, canonicalUrl, robots = "index,follow", ogType = "website" }) {
+    const resolvedUrl = canonicalUrl
+      ? resolveAbsoluteUrl(canonicalUrl)
+      : resolveAbsoluteUrl(`${window.location.pathname}${window.location.search}`);
+
+    if (title) {
+      document.title = title;
+      ensureHeadElement('meta[property="og:title"]', "meta", { property: "og:title" }).setAttribute("content", title);
+      ensureHeadElement('meta[name="twitter:title"]', "meta", { name: "twitter:title" }).setAttribute("content", title);
+    }
+
+    if (description) {
+      ensureHeadElement('meta[name="description"]', "meta", { name: "description" }).setAttribute("content", description);
+      ensureHeadElement('meta[property="og:description"]', "meta", { property: "og:description" }).setAttribute("content", description);
+      ensureHeadElement('meta[name="twitter:description"]', "meta", { name: "twitter:description" }).setAttribute("content", description);
+    }
+
+    ensureHeadElement('meta[name="robots"]', "meta", { name: "robots" }).setAttribute("content", robots);
+    ensureHeadElement('meta[property="og:type"]', "meta", { property: "og:type" }).setAttribute("content", ogType);
+    ensureHeadElement('meta[property="og:url"]', "meta", { property: "og:url" }).setAttribute("content", resolvedUrl);
+    ensureHeadElement('meta[property="og:site_name"]', "meta", { property: "og:site_name" }).setAttribute("content", "Grammar Atlas");
+    ensureHeadElement('meta[name="twitter:card"]', "meta", { name: "twitter:card" }).setAttribute("content", "summary");
+    ensureHeadElement('link[rel="canonical"]', "link", { rel: "canonical" }).setAttribute("href", resolvedUrl);
   }
 
   function escapeHtml(text) {
@@ -629,6 +671,7 @@
     curriculum,
     roadmap,
     quizSize,
+    siteUrl,
     allLessons,
     getModule,
     getLesson,
@@ -683,5 +726,6 @@
     renderStats,
     formatPercent,
     escapeHtml,
+    updateSeo,
   };
 })();
