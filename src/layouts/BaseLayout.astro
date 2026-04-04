@@ -17,7 +17,13 @@ const navigation = [
   { href: '/roadmap', label: 'Roadmap' },
   { href: '/dashboard', label: 'Dashboard' },
   { href: '/quiz', label: 'Quiz' },
-];
+].map((item) => ({
+  ...item,
+  isActive:
+    item.href === '/'
+      ? currentPath === '/'
+      : currentPath === item.href || currentPath.startsWith(`${item.href}/`),
+}));
 ---
 
 <!doctype html>
@@ -30,7 +36,9 @@ const navigation = [
     <link rel="canonical" href={canonical} />
     
     <!-- Favicon -->
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
   </head>
   <body>
     <div class="layout">
@@ -44,24 +52,39 @@ const navigation = [
                 <span>Lessons, quizzes, and roadmap</span>
               </span>
             </a>
-            <nav class="site-nav" aria-label="Primary">
-              {navigation.map((item) => {
-                const isActive =
-                  item.href === '/'
-                    ? currentPath === '/'
-                    : currentPath === item.href || currentPath.startsWith(`${item.href}/`);
-
-                return (
-                  <a
-                    href={item.href}
-                    class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', isActive && 'is-active']}
-                  >
-                    {item.label}
-                  </a>
-                );
-              })}
+            <nav class="site-nav site-nav-desktop" aria-label="Primary">
+              {navigation.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
+                >
+                  {item.label}
+                </a>
+              ))}
             </nav>
+            <button
+              type="button"
+              class="site-nav-toggle"
+              aria-label="Toggle navigation"
+              aria-controls="mobile-nav"
+              aria-expanded="false"
+              data-mobile-nav-toggle
+            >
+              <span class="site-nav-toggle-bar"></span>
+              <span class="site-nav-toggle-bar"></span>
+              <span class="site-nav-toggle-bar"></span>
+            </button>
           </div>
+          <nav id="mobile-nav" class="site-nav-mobile-panel" aria-label="Primary" data-mobile-nav>
+            {navigation.map((item) => (
+              <a
+                href={item.href}
+                class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
+              >
+                {item.label}
+              </a>
+            ))}
+          </nav>
         </div>
       </header>
 
@@ -102,5 +125,32 @@ const navigation = [
         </div>
       </footer>
     </div>
+
+    <script is:inline>
+      const mobileNavToggle = document.querySelector('[data-mobile-nav-toggle]');
+      const mobileNav = document.querySelector('[data-mobile-nav]');
+
+      if (mobileNavToggle instanceof HTMLButtonElement && mobileNav instanceof HTMLElement) {
+        const closeMobileNav = () => {
+          mobileNav.classList.remove('is-open');
+          mobileNavToggle.setAttribute('aria-expanded', 'false');
+        };
+
+        mobileNavToggle.addEventListener('click', () => {
+          const isOpen = mobileNav.classList.toggle('is-open');
+          mobileNavToggle.setAttribute('aria-expanded', String(isOpen));
+        });
+
+        mobileNav.querySelectorAll('a').forEach((link) => {
+          link.addEventListener('click', closeMobileNav);
+        });
+
+        window.addEventListener('resize', () => {
+          if (window.innerWidth > 768) {
+            closeMobileNav();
+          }
+        });
+      }
+    </script>
   </body>
 </html>

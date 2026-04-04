@@ -2,11 +2,11 @@
 
 :root {
   /* Color Palette */
-  --color-primary: #2151d1;
-  --color-primary-light: #5a87ff;
-  --color-primary-dark: #17348c;
-  --color-secondary: #0f766e;
-  --color-accent: #dd6b20;
+  --color-primary: #3f5c52;
+  --color-primary-light: #7f978f;
+  --color-primary-dark: #28413a;
+  --color-secondary: #9c6b3f;
+  --color-accent: #c96f32;
   
   --color-background: #fffdf8;
   --color-surface: #f4f7f6;
@@ -103,8 +103,8 @@ body {
   line-height: 1.72;
   color: var(--color-text);
   background:
-    radial-gradient(circle at top left, rgba(33, 81, 209, 0.08), transparent 20rem),
-    linear-gradient(180deg, #f6f9ff 0%, #fffdf8 22rem);
+    radial-gradient(circle at top left, rgba(63, 92, 82, 0.08), transparent 20rem),
+    linear-gradient(180deg, #f5f7f1 0%, #fffdf8 22rem);
   min-height: 100vh;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: subpixel-antialiased;
@@ -112,7 +112,7 @@ body {
 }
 
 ::selection {
-  background-color: rgba(33, 81, 209, 0.16);
+  background-color: rgba(63, 92, 82, 0.16);
   color: var(--color-text);
 }
 

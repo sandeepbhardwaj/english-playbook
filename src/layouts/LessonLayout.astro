@@ -92,7 +92,10 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
     }
 
     .lesson-hero {
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      background:
+        radial-gradient(circle at top right, rgba(243, 214, 172, 0.16), transparent 18rem),
+        radial-gradient(circle at left center, rgba(255, 255, 255, 0.08), transparent 22rem),
+        linear-gradient(135deg, #5e796d 0%, #33463d 100%);
       color: white;
       padding: 4rem 0;
       margin-bottom: 3rem;
@@ -108,7 +111,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       flex-wrap: wrap;
       gap: 1rem;
       font-size: 0.875rem;
-      opacity: 0.95;
+      color: rgba(255, 247, 238, 0.92);
     }
 
     .lesson-meta-item {
@@ -121,7 +124,8 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       margin-top: 1rem;
       font-size: 1.22rem;
       line-height: 1.75;
-      opacity: 0.95;
+      color: #fff7ee;
+      text-wrap: balance;
     }
 
     .lesson-content {
@@ -139,7 +143,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
 
     .content-prose h2 {
       font-size: clamp(1.8rem, 1.55rem + 0.7vw, 2.1rem);
-      color: var(--color-primary);
+      color: #355046;
       margin: 2rem 0 1rem 0;
       font-weight: var(--font-weight-bold);
       border-bottom: 2px solid var(--color-border);
@@ -148,7 +152,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
 
     .content-prose h3 {
       font-size: clamp(1.42rem, 1.28rem + 0.4vw, 1.65rem);
-      color: var(--color-primary-dark);
+      color: #5f776d;
       margin: 1.5rem 0 0.75rem 0;
       font-weight: var(--font-weight-semibold);
     }
