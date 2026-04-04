@@ -1,0 +1,420 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const quizTopics = [
+  {
+    title: 'Lesson-Based Quizzes',
+    description: 'Test your understanding immediately after completing each lesson',
+    items: [
+      'Parts of Speech identification',
+      'Sentence structure analysis',
+      'Article and noun phrase usage',
+      'Tense selection and formation',
+      'Agreement and pronoun references',
+      'Preposition and modifier placement',
+      'Voice transformation (active ↔ passive)',
+      'Clause identification and use',
+      'Reported speech conversion',
+      'Conditional sentence formation',
+      'Gerund vs. infinitive decisions',
+      'Punctuation and clarity',
+      'Parallelism checks',
+      'Concision and register',
+    ],
+  },
+  {
+    title: 'Module Reviews',
+    description: 'Consolidate learning with comprehensive module-level assessments',
+    items: [
+      'Module 1: Foundations - 20 items',
+      'Module 2: Tenses - 25 items',
+      'Module 3: Accuracy - 30 items',
+      'Module 4: Complex Grammar - 30 items',
+      'Module 5: Style - 20 items',
+      'Module 6: Mastery - 50 items',
+    ],
+  },
+  {
+    title: 'Practice Exercises',
+    description: 'Focused practice on specific grammar points',
+    items: [
+      'Fill-in-the-blank exercises',
+      'Multiple choice questions',
+      'Error identification and correction',
+      'Sentence transformation drills',
+      'Combined skill challenges',
+    ],
+  },
+];
+
+const quizFeatures = [
+  {
+    icon: '⚡',
+    title: 'Instant Feedback',
+    description: 'Get immediate feedback on your answers with explanations',
+  },
+  {
+    icon: '📊',
+    title: 'Progress Tracking',
+    description: 'Monitor your improvement across all lessons and modules',
+  },
+  {
+    icon: '🎯',
+    title: 'Targeted Practice',
+    description: 'Focus on weak areas with custom review sessions',
+  },
+  {
+    icon: '🏆',
+    title: 'Mastery Badges',
+    description: 'Earn badges for completing all exercises in a lesson',
+  },
+];
+---
+
+<BaseLayout
+  title="Quiz Center | English Grammar Atlas"
+  description="Test your grammar knowledge with lesson-based quizzes, module reviews, and focused practice exercises."
+>
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="quiz-hero">
+        <h1>Quiz & Practice Center</h1>
+        <p class="hero-subtitle">Test your knowledge and reinforce learning with targeted quizzes and exercises</p>
+        <p style="font-size: 1rem; margin-top: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;">
+          Every lesson includes dedicated practice exercises. Complete them to solidify your understanding and track your progress toward grammar mastery.
+        </p>
+      </section>
+
+      <!-- Features Grid -->
+      <section class="quiz-features">
+        <h2 style="text-align: center; margin-bottom: 2rem; color: var(--color-primary);">What You'll Find</h2>
+        <div class="features-grid">
+          {quizFeatures.map((feature) => (
+            <div class="feature-card">
+              <div class="feature-icon">{feature.icon}</div>
+              <h3>{feature.title}</h3>
+              <p>{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Quiz Types -->
+      <section class="quiz-types">
+        <h2 style="margin-bottom: 2rem; text-align: center; color: var(--color-primary);">Quiz Topics & Practice Areas</h2>
+        
+        <div class="quiz-cards">
+          {quizTopics.map((topic, idx) => (
+            <div class="quiz-topic-card">
+              <h3>{topic.title}</h3>
+              <p class="topic-description">{topic.description}</p>
+              
+              <ul class="topic-items">
+                {topic.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- How to Use -->
+      <section class="quiz-guide">
+        <h2>How to Use This Quiz Center</h2>
+        
+        <div class="guide-steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Complete a Lesson</h3>
+            <p>Read through a complete grammar lesson from the curriculum.</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Practice the Exercises</h3>
+            <p>Work through 5-10 practice questions linked at the end of each lesson.</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Review Your Answers</h3>
+            <p>Get detailed explanations for each question and learn from mistakes.</p>
+          </div>
+          
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Track Progress</h3>
+            <p>Monitor your scores and see which areas need more practice.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="quiz-cta">
+        <h2>Ready to Practice?</h2>
+        <p>Start with any lesson and discover the practice exercises included at the end.</p>
+        <div class="button-group">
+          <a href="/curriculum" class="btn btn-primary">View Curriculum</a>
+          <a href="/lessons/parts-of-speech" class="btn btn-secondary">Start Lesson 1</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .quiz-hero {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      margin-bottom: var(--space-2xl);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .quiz-hero h1 {
+      font-size: var(--font-size-4xl);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+    }
+
+    .quiz-features {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .feature-card {
+      background-color: var(--color-bg-secondary);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      text-align: center;
+      border: 1px solid var(--color-border);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--color-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--space-md);
+    }
+
+    .feature-card h3 {
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .feature-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--color-text);
+    }
+
+    .quiz-types {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .quiz-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .quiz-topic-card {
+      background-color: var(--color-surface);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      transition: all 0.3s ease;
+    }
+
+    .quiz-topic-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .quiz-topic-card h3 {
+      font-size: var(--font-size-xl);
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .topic-description {
+      font-size: 0.95rem;
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-md);
+      font-weight: 500;
+    }
+
+    .topic-items {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .topic-items li {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .topic-items li:before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: var(--color-primary);
+      font-weight: bold;
+    }
+
+    .quiz-guide {
+      background-color: var(--color-bg-secondary);
+      padding: var(--space-2xl);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .quiz-guide h2 {
+      font-size: var(--font-size-2xl);
+      color: var(--color-primary);
+      margin-bottom: var(--space-lg);
+      text-align: center;
+    }
+
+    .guide-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      background-color: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-md);
+    }
+
+    .step h3 {
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--color-text);
+      line-height: 1.5;
+    }
+
+    .quiz-cta {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .quiz-cta h2 {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+
+    .quiz-cta p {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .quiz-hero h1 {
+        font-size: var(--font-size-2xl);
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .guide-steps {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>

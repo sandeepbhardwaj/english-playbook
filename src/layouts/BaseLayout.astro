@@ -1,0 +1,88 @@
+---
+import '../assets/css/global.css';
+import '../assets/css/layout.css';
+import '../assets/css/components.css';
+import '../assets/css/lessons.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+
+const { title = 'English Grammar Atlas', description = 'Master English grammar from foundations to advanced proficiency', canonical = Astro.url.href } = Astro.props;
+const currentPath = new URL(Astro.request.url).pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.svg" />
+
+  </head>
+  <body>
+    <div class="layout">
+      <!-- Header -->
+      <header class="header">
+        <div class="container">
+          <div class="flex-between">
+            <div class="flex" style="gap: 1rem; align-items: center;">
+              <h1 style="margin: 0; font-size: 1.5rem;">
+                <a href="/" style="color: var(--color-primary); text-decoration: none;">
+                  English Grammar Atlas
+                </a>
+              </h1>
+            </div>
+            <nav class="hidden-mobile">
+              <a href="/curriculum" style="margin-right: 1.5rem; color: var(--color-text);">Curriculum</a>
+              <a href="/roadmap" style="margin-right: 1.5rem; color: var(--color-text);">Roadmap</a>
+              <a href="/quiz" class="btn btn-primary" style="padding: 0.5rem 1rem;">Quiz</a>
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="layout-main">
+        <slot />
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="grid-3">
+            <div>
+              <h4>Navigation</h4>
+              <ul style="list-style: none; margin: 0; padding: 0;">
+                <li><a href="/">Home</a></li>
+                <li><a href="/curriculum">Curriculum</a></li>
+                <li><a href="/roadmap">Roadmap</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Resources</h4>
+              <ul style="list-style: none; margin: 0; padding: 0;">
+                <li><a href="/about">About</a></li>
+                <li><a href="/faq">FAQ</a></li>
+                <li><a href="/contact">Contact</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4>Info</h4>
+              <p style="font-size: 0.875rem; color: var(--color-text-secondary);">
+                © 2024 English Grammar Atlas. All rights reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

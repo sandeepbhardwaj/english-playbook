@@ -1,0 +1,117 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="English Grammar Atlas" description="Master English grammar from foundations to advanced proficiency">
+  <!-- Hero Section -->
+  <section style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; padding: 6rem 2rem;">
+    <div class="container">
+      <h1 style="color: white; font-size: 3rem; margin-bottom: 1rem; text-align: center;">
+        Master English Grammar
+      </h1>
+      <p style="font-size: 1.25rem; text-align: center; max-width: 600px; margin: 0 auto 2rem; opacity: 0.95;">
+        From foundations to advanced proficiency. Learn through clear explanations, real examples, and deliberate practice.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center;">
+        <a href="/curriculum" class="btn btn-primary btn-lg">Start Learning</a>
+        <a href="/quiz" class="btn" style="background: white; color: #2563eb; display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; text-decoration: none;">Take a Quiz</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section style="padding: 4rem 2rem; background-color: var(--color-surface);">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: 3rem;">Why Choose Grammar Atlas?</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        <div class="card">
+          <h3>📚 Complete Curriculum</h3>
+          <p>6 modules covering grammar from absolute beginner to upper intermediate level, with 21 premium lessons.</p>
+        </div>
+        <div class="card">
+          <h3>🎯 Structured Learning Path</h3>
+          <p>Follow a 14-week roadmap designed to build skills progressively, with clear milestones and checkpoints.</p>
+        </div>
+        <div class="card">
+          <h3>✨ Rich Content</h3>
+          <p>Story-based lessons, real examples, common mistakes, and practical exercises for every concept.</p>
+        </div>
+        <div class="card">
+          <h3>📊 Progress Tracking</h3>
+          <p>Save your quiz scores and lesson completions in your browser for continuous self-assessment.</p>
+        </div>
+        <div class="card">
+          <h3>🚀 Offline Ready</h3>
+          <p>Download and work entirely offline after your first visit. No internet required for studying.</p>
+        </div>
+        <div class="card">
+          <h3>🤖 Instant Feedback</h3>
+          <p>Quiz hundreds of questions across three difficulty levels with instant evaluation and explanations.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curriculum Preview -->
+  <section style="padding: 4rem 2rem;">
+    <div class="container">
+      <h2 style="text-align: center; margin-bottom: 3rem;">Our Curriculum</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+        <div class="card">
+          <h3>Module 1: Foundations</h3>
+          <p>Build a solid base with word classes, sentence structure, and basic noun phrases.</p>
+        </div>
+        <div class="card">
+          <h3>Module 2: Tenses & Time</h3>
+          <p>Master all English tense forms and understand how they express different time meanings.</p>
+        </div>
+        <div class="card">
+          <h3>Module 3: Accuracy</h3>
+          <p>Strengthen agreement, reference, passive voice, and other sentence-level precision.</p>
+        </div>
+        <div class="card">
+          <h3>Module 4: Complex Grammar</h3>
+          <p>Use clauses, conditionals, reported speech, and advanced verb patterns.</p>
+        </div>
+        <div class="card">
+          <h3>Module 5: Style & Editing</h3>
+          <p>Polish your writing with punctuation, parallelism, and concise formal tone.</p>
+        </div>
+        <div class="card">
+          <h3>Module 6: Mastery</h3>
+          <p>Review, correct errors, and transform sentences to solidify all your learning.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section style="background-color: var(--color-primary); color: white; padding: 4rem 2rem; text-align: center;">
+    <div class="container">
+      <h2 style="color: white; margin-bottom: 1rem;">Ready to Master English Grammar?</h2>
+      <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.95;">
+        Start with our complete 14-week curriculum or dive straight into a specific topic.
+      </p>
+      <a href="/curriculum" style="display: inline-block; background-color: white; color: var(--color-primary); padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; text-decoration: none;">Begin Your Journey</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .card {
+    background-color: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    transition: all 250ms ease-in-out;
+  }
+
+  .card:hover {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border-color: var(--color-border-dark);
+  }
+
+  .card h3 {
+    margin-top: 0;
+  }
+</style>

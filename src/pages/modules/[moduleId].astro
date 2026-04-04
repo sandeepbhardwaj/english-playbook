@@ -1,0 +1,303 @@
+---
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const moduleMetadata = {
+    foundations: { title: 'Module 1: Foundations of Grammar' },
+    tenses: { title: 'Module 2: Tenses and Time' },
+    accuracy: { title: 'Module 3: Sentence Accuracy' },
+    'complex-grammar': { title: 'Module 4: Complex Grammar' },
+    style: { title: 'Module 5: Style and Editing' },
+    mastery: { title: 'Module 6: Mastery and Review' },
+  };
+  return Object.keys(moduleMetadata).map(moduleId => ({
+    params: { moduleId },
+  }));
+}
+
+const moduleMetadata = {
+  foundations: {
+    title: 'Module 1: Foundations of Grammar',
+    description: 'Build a clean base in word classes, sentence architecture, and noun phrases before moving into more advanced control.',
+    tasks: 'Write a 150-word self-introduction and label nouns, verbs, articles, and sentence types.',
+    color: 'var(--color-primary)',
+  },
+  tenses: {
+    title: 'Module 2: Tenses and Time',
+    description: 'Master every tense form from simple to progressive, perfect to modal, and understand the meaning differences that matter for communication.',
+    tasks: 'Create a timeline of your week and write sentences using different tenses for past, present, and future.',
+    color: 'var(--color-secondary)',
+  },
+  accuracy: {
+    title: 'Module 3: Sentence Accuracy',
+    description: 'Build confidence making sentences that are grammatically sound, then move beyond accuracy to style and impact.',
+    tasks: 'Edit a flawed paragraph covering agreement, pronouns, prepositions, and voice.',
+    color: 'var(--color-accent)',
+  },
+  'complex-grammar': {
+    title: 'Module 4: Complex Grammar',
+    description: 'Handle sophisticated sentence structures: relative clauses, conditionals, reported speech, and verb patterns that unlock formal and technical writing.',
+    tasks: 'Rewrite simple sentences into complex structures using clauses, conditionals, and reported speech.',
+    color: '#8B5CF6',
+  },
+  style: {
+    title: 'Module 5: Style and Editing',
+    description: 'Move beyond correct to compelling. Master punctuation choices, parallel structure, and concision that make writing powerful.',
+    tasks: 'Revise a sample text for clarity, parallelism, and tone.',
+    color: '#EC4899',
+  },
+  mastery: {
+    title: 'Module 6: Mastery and Review',
+    description: 'Consolidate your knowledge through targeted error correction, transformations, and a comprehensive review ready you for any writing challenge.',
+    tasks: 'Complete a final assessment covering all six modules.',
+    color: '#F59E0B',
+  },
+};
+
+const { moduleId } = Astro.params;
+const metadata = moduleMetadata[moduleId as keyof typeof moduleMetadata];
+
+if (!metadata) {
+  return new Response('Module not found', { status: 404 });
+}
+
+// Get all lessons for this module
+const lessonsDir = path.join(process.cwd(), 'src/content/lessons');
+const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.md'));
+
+const lessons = files
+  .map(file => {
+    const filePath = path.join(lessonsDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const { data } = matter(content);
+    return data;
+  })
+  .filter((lesson: any) => lesson.moduleId === moduleId)
+  .sort((a: any, b: any) => (a.slug || '').localeCompare(b.slug || ''));
+---
+
+<BaseLayout title={`${metadata.title} | English Grammar Atlas`} description={metadata.description}>
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="module-hero">
+        <h1>{metadata.title}</h1>
+        <p class="hero-subtitle">{metadata.description}</p>
+      </section>
+
+      <!-- Module Info -->
+      <section class="module-info">
+        <div class="module-task">
+          <strong>Portfolio Task:</strong> {metadata.tasks}
+        </div>
+      </section>
+
+      <!-- Lessons Grid -->
+      <section class="lessons-section">
+        <h2>Lessons in This Module</h2>
+        <div class="lessons-grid">
+          {lessons.map((lesson: any) => (
+            <a href={`/lessons/${lesson.slug}`} class="lesson-card">
+              <div class="lesson-card-header">
+                <h3>{lesson.title}</h3>
+                <span class="lesson-duration">{lesson.duration}</span>
+              </div>
+              <p class="lesson-focus">{lesson.focus}</p>
+              <div class="lesson-meta">
+                <span class="lesson-level">{lesson.level || 'Beginner'}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <section class="module-navigation">
+        <div class="nav-buttons">
+          <a href="/curriculum" class="btn btn-secondary">Back to Curriculum</a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .module-hero {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      margin-bottom: var(--space-lg);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .module-hero h1 {
+      font-size: var(--font-size-4xl);
+      margin-bottom: var(--space-sm);
+      color: var(--color-primary);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+    }
+
+    .module-info {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .module-task {
+      background-color: var(--color-bg-secondary);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+      font-size: var(--font-size-base);
+    }
+
+    .lessons-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .lessons-section h2 {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--space-lg);
+      color: var(--color-primary);
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .lesson-card {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .lesson-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-md);
+    }
+
+    .lesson-card-header h3 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      flex: 1;
+    }
+
+    .lesson-duration {
+      font-size: var(--font-size-sm);
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      margin-left: var(--space-md);
+    }
+
+    .lesson-focus {
+      margin: 0 0 var(--space-md) 0;
+      color: var(--color-text);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      flex-grow: 1;
+    }
+
+    .lesson-meta {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: auto;
+    }
+
+    .lesson-level {
+      font-size: var(--font-size-sm);
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .module-navigation {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .lessons-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .module-hero h1 {
+        font-size: var(--font-size-2xl);
+      }
+
+      .lesson-card-header {
+        flex-direction: column;
+      }
+
+      .lesson-duration {
+        margin-left: 0;
+        margin-top: var(--space-sm);
+      }
+    }
+  </style>
+</BaseLayout>

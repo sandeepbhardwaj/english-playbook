@@ -1,27 +1,29 @@
-# Development
-.DS_Store
-.vscode/settings.json
+# Astro
 node_modules/
 dist/
-build/
+.astro/
+*.local
 
 # Environment
 .env
 .env.local
-*.log
+.env.*.local
 
 # IDE
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
-.idea/
-*.sublime-project
-*.sublime-workspace
 
 # OS
+.DS_Store
 Thumbs.db
-desktop.ini
 
-# Temporary files
-*.tmp
-*.temp
+# Build
+.cache/
+.vercel/
+
+# Logs
+build.log
+npm-debug.log*

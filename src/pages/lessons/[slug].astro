@@ -1,0 +1,53 @@
+---
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
+import MarkdownIt from 'markdown-it';
+import LessonLayout from '../../layouts/LessonLayout.astro';
+
+export async function getStaticPaths() {
+  const lessonsDir = path.join(process.cwd(), 'src/content/lessons');
+  const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.md'));
+  
+  const md = new MarkdownIt({
+    html: true,
+    linkify: true,
+    typographer: true,
+  });
+  
+  const paths = files.map(file => {
+    const filePath = path.join(lessonsDir, file);
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const { data, content: markdown } = matter(content);
+    const html = md.render(markdown);
+    
+    return {
+      params: { slug: data.slug },
+      props: { data, html },
+    };
+  });
+  
+  return paths;
+}
+
+interface Props {
+  data: any;
+  html: string;
+}
+
+const { data, html } = Astro.props;
+---
+
+<LessonLayout
+  title={data.title}
+  slug={data.slug}
+  module={data.module}
+  moduleId={data.moduleId}
+  duration={data.duration}
+  focus={data.focus}
+  level={data.level || 'Beginner'}
+>
+  <div class="content-prose" set:html={html} />
+</LessonLayout>
+</LessonLayout>
+</LessonLayout>

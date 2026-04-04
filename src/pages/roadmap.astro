@@ -1,0 +1,385 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Map lesson titles to slugs
+const lessonMap: Record<string, string> = {
+  'Parts of Speech': 'parts-of-speech',
+  'Sentence Structure': 'sentence-structure',
+  'Articles, Determiners, and Nouns': 'articles-nouns',
+  'Present Family': 'present-family',
+  'Past and Present Perfect': 'past-and-present-perfect',
+  'Future Time Reference': 'future-time-reference',
+  'Modals in Depth': 'modals-in-depth',
+  'Subject-Verb Agreement': 'subject-verb-agreement',
+  'Pronouns, Questions, and Negatives': 'pronouns-questions-negatives',
+  'Prepositions and Modifiers': 'prepositions-modifiers',
+  'Active-Passive Voice': 'active-passive-voice',
+  'Clauses and Relatives': 'clauses-and-relatives',
+  'Reported Speech': 'reported-speech',
+  'Conditionals': 'conditionals',
+  'Gerunds, Infinitives, and Verb Patterns': 'gerunds-infinitives-verb-patterns',
+  'Concision and Formal Tone': 'concision-formal-tone',
+  'Punctuation and Clarity': 'punctuation-clarity',
+  'Parallelism and Comparison': 'parallelism-comparison',
+  'Editing Drills': 'editing-drills',
+  'Transformations and Cloze': 'transformations-and-cloze',
+  'Final Review': 'final-review',
+};
+
+const roadmapWeeks = [
+  {
+    week: 1,
+    title: 'Foundations I: Parts of Speech',
+    lessons: ['Parts of Speech', 'Sentence Structure'],
+    focus: 'Identify nouns, verbs, adjectives, adverbs, pronouns, prepositions, conjunctions',
+  },
+  {
+    week: 2,
+    title: 'Foundations II: Noun Phrases',
+    lessons: ['Articles, Determiners, and Nouns'],
+    focus: 'Master articles (a, an, the), noun modifiers, and noun fundamentals',
+  },
+  {
+    week: 3,
+    title: 'Tenses I: Simple & Progressive',
+    lessons: ['Present Family', 'Past and Present Perfect'],
+    focus: 'Simple present/past, progressive forms, present perfect',
+  },
+  {
+    week: 4,
+    title: 'Tenses II: Modal & Future Time',
+    lessons: ['Future Time Reference', 'Modals in Depth'],
+    focus: 'Will, going to, modals (can, could, should, must)',
+  },
+  {
+    week: 5,
+    title: 'Accuracy I: Agreement & Pronouns',
+    lessons: ['Subject-Verb Agreement', 'Pronouns, Questions, and Negatives'],
+    focus: 'Subject-verb agreement, pronoun reference, question formation',
+  },
+  {
+    week: 6,
+    title: 'Accuracy II: Prepositions & Voice',
+    lessons: ['Prepositions and Modifiers', 'Active-Passive Voice'],
+    focus: 'Preposition usage, modifiers, active and passive voice transformation',
+  },
+  {
+    week: 7,
+    title: 'Complex Grammar I: Clauses',
+    lessons: ['Clauses and Relatives', 'Reported Speech'],
+    focus: 'Relative clauses, noun clauses, reported speech conversion',
+  },
+  {
+    week: 8,
+    title: 'Complex Grammar II: Patterns & Conditionals',
+    lessons: ['Conditionals', 'Gerunds, Infinitives, and Verb Patterns'],
+    focus: 'If/unless conditionals, gerunds vs. infinitives, verb patterns',
+  },
+  {
+    week: 9,
+    title: 'Style I: Punctuation & Clarity',
+    lessons: ['Punctuation and Clarity', 'Concision and Formal Tone'],
+    focus: 'Punctuation rules, clarity principles, concision, formality register',
+  },
+  {
+    week: 10,
+    title: 'Style II: Structure & Comparison',
+    lessons: ['Parallelism and Comparison'],
+    focus: 'Parallel structure, comparison forms (comparative, superlative)',
+  },
+  {
+    week: 11,
+    title: 'Mastery I: Editing Drills',
+    lessons: ['Editing Drills'],
+    focus: 'Apply all rules in realistic editing scenarios',
+  },
+  {
+    week: 12,
+    title: 'Mastery II: Final Review',
+    lessons: ['Transformations and Cloze', 'Final Review'],
+    focus: 'Sentence transformations, comprehensive final assessment',
+  },
+];
+---
+
+<BaseLayout
+  title="Study Roadmap | English Grammar Atlas"
+  description="Follow the 12-week study roadmap to master English grammar progressively, with structured lessons and pacing."
+>
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="roadmap-hero">
+        <h1>12-Week Study Roadmap</h1>
+        <p class="hero-subtitle">Master English grammar progressively with this structured pacing plan</p>
+        <p style="font-size: 1rem; margin-top: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;">
+          This roadmap organizes all 21 lessons across 12 weeks. Start with foundations, progress through tenses and accuracy, tackle complex grammar, and finish with style. Adapt this pacing to your needs.
+        </p>
+      </section>
+
+      <!-- Roadmap Grid -->
+      <section class="roadmap-schedule">
+        <h2 style="margin-bottom: 2rem; text-align: center; color: var(--color-primary);">Weekly Schedule</h2>
+        
+        <div class="roadmap-grid">
+          {roadmapWeeks.map((week) => (
+            <div class="roadmap-week">
+              <div class="week-header">
+                <span class="week-number">Week {week.week}</span>
+              </div>
+              <h3 class="week-title">{week.title}</h3>
+              <p class="week-focus"><strong>Focus:</strong> {week.focus}</p>
+              
+              <div class="week-lessons">
+                <p style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-primary);">
+                  Lessons:
+                </p>
+                <ul style="list-style: none; margin: 0; padding: 0; font-size: 0.9rem;">
+                  {week.lessons.map((lesson) => {
+                    const slug = lessonMap[lesson] || lesson.toLowerCase().replace(/\s+/g, '-');
+                    return (
+                      <li style="margin-bottom: 0.5rem;">
+                        <a href={`/lessons/${slug}`} style="color: var(--color-primary); text-decoration: none;">
+                          → {lesson}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Tips Section -->
+      <section class="roadmap-tips">
+        <h2>Study Tips</h2>
+        <div class="tips-grid">
+          <div class="tip-card">
+            <h3>📅 Follow the Pace</h3>
+            <p>One week per lesson module. Dedicate 5-7 hours per week for optimal learning.</p>
+          </div>
+          <div class="tip-card">
+            <h3>✍️ Practice Actively</h3>
+            <p>Complete all practice exercises at the end of each lesson. Review common mistakes.</p>
+          </div>
+          <div class="tip-card">
+            <h3>📝 Take Notes</h3>
+            <p>Create your own reference sheet with key rules, examples, and transformations.</p>
+          </div>
+          <div class="tip-card">
+            <h3>🔄 Review Weekly</h3>
+            <p>Revisit previous weeks' lessons to consolidate learning. Use spaced repetition.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Section -->
+      <section class="roadmap-cta">
+        <h2>Ready to Get Started?</h2>
+        <p>Begin your grammar mastery journey with the foundations module.</p>
+        <div class="button-group">
+          <a href="/curriculum" class="btn btn-primary">View Full Curriculum</a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .roadmap-hero {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      margin-bottom: var(--space-2xl);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .roadmap-hero h1 {
+      font-size: var(--font-size-4xl);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+
+    .hero-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--color-text-secondary);
+    }
+
+    .roadmap-schedule {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .roadmap-week {
+      background-color: var(--color-bg-secondary);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      transition: all 0.3s ease;
+    }
+
+    .roadmap-week:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .week-header {
+      margin-bottom: var(--space-md);
+    }
+
+    .week-number {
+      display: inline-block;
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-md);
+      font-weight: var(--font-weight-bold);
+      font-size: 0.875rem;
+    }
+
+    .week-title {
+      font-size: var(--font-size-lg);
+      color: var(--color-primary);
+      margin: var(--space-md) 0 var(--space-sm) 0;
+      font-weight: var(--font-weight-bold);
+    }
+
+    .week-focus {
+      font-size: 0.9rem;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+      line-height: 1.5;
+    }
+
+    .week-lessons {
+      border-top: 1px solid var(--color-border);
+      padding-top: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .roadmap-tips {
+      margin-bottom: var(--space-2xl);
+      background-color: var(--color-surface);
+      padding: var(--space-2xl);
+      border-radius: var(--radius-md);
+    }
+
+    .roadmap-tips h2 {
+      font-size: var(--font-size-2xl);
+      color: var(--color-primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .tips-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .tip-card {
+      background-color: var(--color-background);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .tip-card h3 {
+      font-size: var(--font-size-lg);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+
+    .tip-card p {
+      margin: 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-text);
+    }
+
+    .roadmap-cta {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .roadmap-cta h2 {
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--space-md);
+      color: var(--color-primary);
+    }
+
+    .roadmap-cta p {
+      font-size: var(--font-size-base);
+      color: var(--color-text-secondary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .roadmap-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .roadmap-hero h1 {
+        font-size: var(--font-size-2xl);
+      }
+
+      .tips-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>
