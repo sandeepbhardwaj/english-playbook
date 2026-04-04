@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const recoveryLinks = [
+  {
+    href: '/curriculum',
+    title: 'Browse the curriculum',
+    description: 'Return to the full lesson path and pick up from any module.',
+  },
+  {
+    href: '/dashboard',
+    title: 'Open your dashboard',
+    description: 'Jump back into saved progress, bookmarks, and quiz history.',
+  },
+  {
+    href: '/quiz',
+    title: 'Practice with quizzes',
+    description: 'Go straight to lesson-based quiz routes and continue reviewing.',
+  },
+];
+---
+
+<BaseLayout
+  title="Page Not Found | English Grammar Atlas"
+  description="The page you tried to open could not be found. Return to the curriculum, dashboard, or quiz center."
+  noindex={true}
+>
+  <main class="main-content">
+    <div class="container container-md">
+      <section class="not-found-shell">
+        <div class="not-found-copy">
+          <p class="not-found-eyebrow">404 Error</p>
+          <h1>This page has gone off the study map.</h1>
+          <p class="not-found-intro">
+            The link may be outdated, incomplete, or moved during the portal rebuild. You can head back into the main learning flow from one of the routes below.
+          </p>
+          <div class="not-found-actions">
+            <a href="/" class="btn btn-primary">Go Home</a>
+            <a href="/curriculum" class="btn btn-secondary">Open Curriculum</a>
+          </div>
+        </div>
+
+        <aside class="not-found-panel" aria-label="Helpful recovery links">
+          <p class="panel-kicker">Where to go next</p>
+          <div class="not-found-link-list">
+            {recoveryLinks.map((item) => (
+              <a href={item.href} class="not-found-link-card">
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </a>
+            ))}
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .not-found-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.9fr);
+      gap: var(--space-xl);
+      align-items: stretch;
+      padding: clamp(2rem, 5vw, 4rem);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top right, rgba(52, 116, 93, 0.16), transparent 22rem),
+        linear-gradient(145deg, rgba(176, 102, 57, 0.08), rgba(255, 252, 246, 0.92));
+      box-shadow: var(--shadow-md);
+    }
+
+    .not-found-copy h1 {
+      margin-bottom: var(--space-md);
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      line-height: 0.95;
+    }
+
+    .not-found-eyebrow,
+    .panel-kicker {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.84rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
+    .not-found-intro {
+      max-width: 42rem;
+      margin-bottom: var(--space-lg);
+      color: var(--color-text-secondary);
+      font-size: clamp(1.08rem, 2vw, 1.22rem);
+      line-height: 1.82;
+    }
+
+    .not-found-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .not-found-panel {
+      padding: clamp(1.25rem, 3vw, 1.75rem);
+      border-radius: calc(var(--radius-xl) - 0.4rem);
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+    }
+
+    .not-found-link-list {
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .not-found-link-card {
+      display: grid;
+      gap: 0.3rem;
+      padding: 1rem 1.05rem;
+      border-radius: 1rem;
+      background: rgba(255, 252, 246, 0.92);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      transition:
+        transform var(--transition-base),
+        box-shadow var(--transition-base),
+        border-color var(--transition-base);
+    }
+
+    .not-found-link-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(52, 116, 93, 0.22);
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+    }
+
+    .not-found-link-card strong {
+      color: var(--color-primary);
+      font-family: var(--font-ui);
+      font-size: 1rem;
+    }
+
+    .not-found-link-card span {
+      color: var(--color-text-secondary);
+      font-size: 0.98rem;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 768px) {
+      .not-found-shell {
+        grid-template-columns: 1fr;
+        padding: 1.5rem;
+      }
+
+      .not-found-copy h1 {
+        font-size: clamp(2.25rem, 12vw, 3.2rem);
+      }
+
+      .not-found-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>

@@ -1,5 +1,6 @@
 ---
 import LessonLayout from '../../layouts/LessonLayout.astro';
+import { getAdjacentLessons } from '../../lib/course';
 import { loadLessons, renderLessonBody } from '../../lib/lesson-files';
 
 export function getStaticPaths() {
@@ -12,6 +13,56 @@ export function getStaticPaths() {
 const { lesson } = Astro.props;
 
 const html = renderLessonBody(lesson.body);
+const { previous, next } = getAdjacentLessons(lesson.data.slug);
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
+const lessonUrl = `${siteUrl}/lessons/${lesson.data.slug}`;
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LearningResource',
+    name: lesson.data.title,
+    description: lesson.data.focus,
+    url: lessonUrl,
+    learningResourceType: 'Grammar lesson',
+    educationalLevel: lesson.data.level || 'Beginner',
+    teaches: lesson.data.focus,
+    isPartOf: {
+      '@type': 'Course',
+      name: 'English Grammar Atlas',
+      url: siteUrl,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Curriculum',
+        item: `${siteUrl}/curriculum`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: lesson.data.module,
+        item: `${siteUrl}/modules/${lesson.data.moduleId}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: lesson.data.title,
+        item: lessonUrl,
+      },
+    ],
+  },
+];
 ---
 
 <LessonLayout
@@ -22,6 +73,9 @@ const html = renderLessonBody(lesson.body);
   duration={lesson.data.duration}
   focus={lesson.data.focus}
   level={lesson.data.level || 'Beginner'}
+  previousLesson={previous}
+  nextLesson={next}
+  structuredData={structuredData}
 >
   <div set:html={html} />
 </LessonLayout>

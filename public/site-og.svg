@@ -1,0 +1,41 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="630" rx="36" fill="#F7F2E8"/>
+  <rect width="1200" height="630" rx="36" fill="url(#bg)"/>
+  <circle cx="1015" cy="122" r="190" fill="#F3D6AC" fill-opacity="0.55"/>
+  <circle cx="182" cy="512" r="210" fill="#B06639" fill-opacity="0.14"/>
+  <circle cx="930" cy="468" r="248" fill="#34745D" fill-opacity="0.12"/>
+
+  <rect x="74" y="70" width="1052" height="490" rx="30" fill="#FFFDF8" fill-opacity="0.82" stroke="#E8DDCC"/>
+
+  <rect x="122" y="126" width="86" height="86" rx="24" fill="url(#mark)"/>
+  <path d="M150 154.5C150 149.253 154.253 145 159.5 145H192V193H159.5C154.253 193 150 188.747 150 183.5V154.5Z" fill="#FFF9F1"/>
+  <path d="M194 145H226.5C231.747 145 236 149.253 236 154.5V183.5C236 188.747 231.747 193 226.5 193H194V145Z" fill="#FFF3E3"/>
+  <path d="M193.5 156V203" stroke="#2F4A40" stroke-width="5" stroke-linecap="round"/>
+
+  <text x="122" y="298" fill="#A55E34" font-family="Georgia, 'Times New Roman', serif" font-size="30" letter-spacing="4">ENGLISH GRAMMAR ATLAS</text>
+  <text x="122" y="386" fill="#24352E" font-family="Georgia, 'Times New Roman', serif" font-size="76" font-weight="700">
+    <tspan x="122" dy="0">Structured Lessons,</tspan>
+    <tspan x="122" dy="88">Quizzes, and Study Flow</tspan>
+  </text>
+  <text x="122" y="523" fill="#51645B" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="34">
+    Learn grammar with a connected curriculum, lesson practice, and a review dashboard.
+  </text>
+
+  <rect x="862" y="388" width="192" height="58" rx="29" fill="#F3ECE1" stroke="#E1D3C0"/>
+  <text x="900" y="425" fill="#355046" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="24" font-weight="700">21 lessons</text>
+
+  <rect x="842" y="461" width="212" height="58" rx="29" fill="#E6F0EB" stroke="#D0E3DA"/>
+  <text x="872" y="498" fill="#355046" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="24" font-weight="700">6 modules</text>
+
+  <defs>
+    <linearGradient id="bg" x1="121" y1="66" x2="1073" y2="579" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F1E4"/>
+      <stop offset="0.58" stop-color="#FCFBF7"/>
+      <stop offset="1" stop-color="#F4ECE0"/>
+    </linearGradient>
+    <linearGradient id="mark" x1="122" y1="126" x2="208" y2="212" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#34745D"/>
+      <stop offset="1" stop-color="#A55E34"/>
+    </linearGradient>
+  </defs>
+</svg>

@@ -3,6 +3,9 @@ import type { LessonRecord } from './lesson-files';
 
 export type CurriculumModule = (typeof curriculumData.modules)[number];
 export type CurriculumLesson = CurriculumModule['lessons'][number];
+export type LessonNavigationItem = ReturnType<typeof getLessonMeta> & {
+  href: string;
+};
 
 export const curriculumModules = curriculumData.modules;
 export const moduleOrder = curriculumModules.map((module) => module.id);
@@ -44,4 +47,39 @@ export function sortLessonEntries(entries: LessonRecord[]) {
   return [...entries].sort((left, right) =>
     compareLessonOrder(left.data.slug, right.data.slug),
   );
+}
+
+export function getAdjacentLessons(slug: string): {
+  previous: LessonNavigationItem | undefined;
+  next: LessonNavigationItem | undefined;
+} {
+  const currentIndex = lessonOrderIndex.get(slug);
+
+  if (currentIndex === undefined) {
+    return {
+      previous: undefined,
+      next: undefined,
+    };
+  }
+
+  const previousSlug = lessonOrder[currentIndex - 1];
+  const nextSlug = lessonOrder[currentIndex + 1];
+
+  const previousMeta = previousSlug ? getLessonMeta(previousSlug) : undefined;
+  const nextMeta = nextSlug ? getLessonMeta(nextSlug) : undefined;
+
+  return {
+    previous: previousMeta
+      ? {
+          ...previousMeta,
+          href: `/lessons/${previousMeta.id}`,
+        }
+      : undefined,
+    next: nextMeta
+      ? {
+          ...nextMeta,
+          href: `/lessons/${nextMeta.id}`,
+        }
+      : undefined,
+  };
 }

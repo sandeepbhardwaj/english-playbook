@@ -25,6 +25,7 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
 <BaseLayout
   title="Dashboard | English Grammar Atlas"
   description="Track quiz scores, saved lessons, and review priorities in your browser-saved study dashboard."
+  noindex={true}
 >
   <main class="main-content">
     <div class="container">
@@ -469,9 +470,11 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
       margin-bottom: var(--space-2xl);
       border-radius: var(--radius-xl);
       background:
-        radial-gradient(circle at top right, rgba(15, 118, 110, 0.18), transparent 28rem),
-        linear-gradient(135deg, rgba(33, 81, 209, 0.1), rgba(33, 81, 209, 0.02));
+        radial-gradient(circle at top right, rgba(243, 214, 172, 0.2), transparent 20rem),
+        radial-gradient(circle at bottom left, rgba(52, 116, 93, 0.12), transparent 24rem),
+        linear-gradient(135deg, rgba(247, 242, 232, 0.96), rgba(255, 255, 255, 0.88));
       border: 1px solid rgba(24, 34, 48, 0.08);
+      box-shadow: var(--shadow-sm);
     }
 
     .eyebrow {
@@ -525,7 +528,7 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
     .stack-card,
     .error-card {
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.88));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 245, 238, 0.9));
       border: 1px solid var(--color-border);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-sm);
@@ -533,6 +536,7 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
 
     .metric-card {
       padding: var(--space-lg);
+      border-top: 3px solid rgba(52, 116, 93, 0.2);
     }
 
     .metric-label {
@@ -581,8 +585,8 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
 
     .command-card-primary {
       background:
-        radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 18rem),
-        linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+        radial-gradient(circle at top right, rgba(243, 214, 172, 0.14), transparent 18rem),
+        linear-gradient(135deg, #4d675c, #385147 64%, #7b5336);
       color: white;
     }
 
@@ -627,13 +631,19 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
       gap: 0.2rem;
       padding: var(--space-md);
       border-radius: var(--radius-lg);
-      background-color: var(--color-surface);
+      background-color: rgba(255, 255, 255, 0.72);
       border: 1px solid var(--color-border);
+      transition:
+        transform var(--transition-base),
+        border-color var(--transition-base),
+        box-shadow var(--transition-base);
     }
 
     .bookmark-link:hover {
       text-decoration: none;
       border-color: var(--color-primary-light);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
     }
 
     .bookmark-link span,
@@ -703,7 +713,7 @@ const dashboardPayload = JSON.stringify({ lessons, modules });
     .empty-state {
       padding: var(--space-lg);
       border-radius: var(--radius-lg);
-      background-color: var(--color-surface);
+      background-color: rgba(255, 255, 255, 0.62);
       border: 1px dashed var(--color-border-dark);
     }
 
