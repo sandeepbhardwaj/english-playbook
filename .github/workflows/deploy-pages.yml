@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -16,10 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -28,28 +28,16 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '18'
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      - name: Build and minify assets
+      - name: Build site
         run: npm run build
-
-      - name: Copy built files to root for deployment
-        run: |
-          cp dist/js/program-data.js js/program-data.js
-          cp dist/js/lesson-enhancements.js js/lesson-enhancements.js
-          cp dist/js/quiz-generators.js js/quiz-generators.js
-          cp dist/js/common.js js/common.js
-          cp dist/js/home.js js/home.js
-          cp dist/js/curriculum.js js/curriculum.js
-          cp dist/js/lesson.js js/lesson.js
-          cp dist/js/quiz.js js/quiz.js
-          cp dist/js/roadmap.js js/roadmap.js
-          cp dist/js/dashboard.js js/dashboard.js
-          cp dist/js/diagnostic.js js/diagnostic.js
-          cp dist/styles.css styles.css
+        env:
+          SITE_URL: https://english.scalemind.dev
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -57,8 +45,17 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./dist
 
+  deploy:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4

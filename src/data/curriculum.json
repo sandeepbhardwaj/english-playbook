@@ -1,0 +1,190 @@
+{
+  "modules": [
+    {
+      "id": "foundations",
+      "title": "Module 1: Foundations of Grammar",
+      "level": "Beginner",
+      "duration": "Week 1-2",
+      "description": "Build a clean base in word classes, sentence architecture, and noun phrases before moving into more advanced control.",
+      "portfolioTask": "Write a 150-word self-introduction and label nouns, verbs, articles, and sentence types.",
+      "lessons": [
+        {
+          "id": "parts-of-speech",
+          "title": "Parts of Speech",
+          "duration": "50 min",
+          "focus": "Identify the job each word does inside a sentence."
+        },
+        {
+          "id": "sentence-structure",
+          "title": "Sentence Structure",
+          "duration": "55 min",
+          "focus": "Build complete sentences with subjects, verbs, and clear complements."
+        },
+        {
+          "id": "articles-nouns",
+          "title": "Articles, Determiners, and Nouns",
+          "duration": "50 min",
+          "focus": "Use a, an, the, some, and zero article correctly."
+        }
+      ]
+    },
+    {
+      "id": "tenses",
+      "title": "Module 2: Tenses and Time",
+      "level": "Beginner to Intermediate",
+      "duration": "Week 3-6",
+      "description": "Learn how English grammar maps routine, action-in-progress, experience, finished time, future reference, and modal meaning.",
+      "portfolioTask": "Write a three-part narrative using present, past, and future meaning accurately.",
+      "lessons": [
+        {
+          "id": "present-family",
+          "title": "Present Simple and Present Continuous",
+          "duration": "60 min",
+          "focus": "Choose between routine meaning and action happening around now."
+        },
+        {
+          "id": "past-and-present-perfect",
+          "title": "Past Simple and Present Perfect",
+          "duration": "60 min",
+          "focus": "Separate finished past time from present relevance."
+        },
+        {
+          "id": "future-time-reference",
+          "title": "Future Forms and Future Time Reference",
+          "duration": "60 min",
+          "focus": "Choose the right future form for plans, predictions, schedules, and completion."
+        },
+        {
+          "id": "modals-in-depth",
+          "title": "Modals in Depth",
+          "duration": "65 min",
+          "focus": "Express advice, obligation, permission, deduction, ability, and probability precisely."
+        }
+      ]
+    },
+    {
+      "id": "accuracy",
+      "title": "Module 3: Sentence Accuracy",
+      "level": "Intermediate",
+      "duration": "Week 7-9",
+      "description": "Strengthen agreement, pronoun reference, auxiliary use, pattern control, and active-passive choices.",
+      "portfolioTask": "Edit an old paragraph only for sentence-level accuracy and annotate each correction.",
+      "lessons": [
+        {
+          "id": "subject-verb-agreement",
+          "title": "Subject-Verb Agreement",
+          "duration": "45 min",
+          "focus": "Match the verb to the true head of the subject."
+        },
+        {
+          "id": "pronouns-questions-negatives",
+          "title": "Pronouns, Questions, and Negatives",
+          "duration": "55 min",
+          "focus": "Maintain clear reference and accurate auxiliary structure."
+        },
+        {
+          "id": "prepositions-modifiers",
+          "title": "Prepositions and Modifiers",
+          "duration": "55 min",
+          "focus": "Choose natural word partnerships and place modifiers carefully."
+        },
+        {
+          "id": "active-passive-voice",
+          "title": "Active and Passive Voice",
+          "duration": "55 min",
+          "focus": "Choose whether the doer or the result deserves the spotlight."
+        }
+      ]
+    },
+    {
+      "id": "complex-grammar",
+      "title": "Module 4: Complex Grammar",
+      "level": "Intermediate to Upper Intermediate",
+      "duration": "Week 10-12",
+      "description": "Use clauses, relative structures, conditionals, reported speech, and verb patterns to communicate more complex relationships.",
+      "portfolioTask": "Write a multi-paragraph response using at least one relative clause, one conditional, one reported statement, and one verb-pattern contrast.",
+      "lessons": [
+        {
+          "id": "clauses-and-relatives",
+          "title": "Clauses, Conjunctions, and Relative Clauses",
+          "duration": "60 min",
+          "focus": "Connect ideas smoothly and add detail without repetition."
+        },
+        {
+          "id": "conditionals",
+          "title": "Conditionals, Wishes, and Hypothetical Meaning",
+          "duration": "60 min",
+          "focus": "Express real possibilities, imagined situations, and regrets."
+        },
+        {
+          "id": "reported-speech",
+          "title": "Reported Speech and Reporting Verbs",
+          "duration": "50 min",
+          "focus": "Report statements, questions, and requests accurately."
+        },
+        {
+          "id": "gerunds-infinitives-verb-patterns",
+          "title": "Gerunds, Infinitives, and Verb Patterns",
+          "duration": "65 min",
+          "focus": "Control what form follows the verb and how meaning changes with that choice."
+        }
+      ]
+    },
+    {
+      "id": "style",
+      "title": "Module 5: Style and Editing",
+      "level": "Upper Intermediate",
+      "duration": "Week 13-14",
+      "description": "Turn grammatical accuracy into polished writing through punctuation, balance, comparison, and concise style.",
+      "portfolioTask": "Revise a formal paragraph for punctuation, parallelism, and concise tone.",
+      "lessons": [
+        {
+          "id": "punctuation-clarity",
+          "title": "Punctuation for Clarity",
+          "duration": "50 min",
+          "focus": "Use commas, semicolons, colons, and apostrophes with purpose."
+        },
+        {
+          "id": "parallelism-comparison",
+          "title": "Parallelism and Comparison",
+          "duration": "55 min",
+          "focus": "Keep similar ideas in matching grammatical form."
+        },
+        {
+          "id": "concision-formal-tone",
+          "title": "Concision and Formal Tone",
+          "duration": "50 min",
+          "focus": "Write with precision without sounding abrupt or repetitive."
+        }
+      ]
+    },
+    {
+      "id": "mastery",
+      "title": "Module 6: Mastery and Review",
+      "level": "Upper Intermediate to Advanced",
+      "duration": "Week 14",
+      "description": "Turn all of the course content into active control through correction, transformation, and review strategy.",
+      "portfolioTask": "Complete a mixed review pack and write a reflection on your most persistent grammar errors.",
+      "lessons": [
+        {
+          "id": "editing-drills",
+          "title": "Error Correction Drills",
+          "duration": "45 min",
+          "focus": "Spot grammar errors quickly and explain why they are wrong."
+        },
+        {
+          "id": "transformations-and-cloze",
+          "title": "Transformations and Cloze Practice",
+          "duration": "55 min",
+          "focus": "Rephrase meaning accurately and complete grammar-based gaps."
+        },
+        {
+          "id": "final-review",
+          "title": "Final Review and Study Strategy",
+          "duration": "40 min",
+          "focus": "Turn the curriculum into a sustainable long-term review system."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { curriculumModules, sortLessonEntries } from '../lib/course';
+import { loadLessons } from '../lib/lesson-files';
+
+const lessons = sortLessonEntries(loadLessons());
+
+// Group lessons by module
+const moduleOrder = curriculumModules.map((module) => module.id);
+const curriculum = Object.fromEntries(
+  curriculumModules.map((module) => [
+    module.id,
+    {
+      title: module.title,
+      description: module.description,
+      tasks: module.portfolioTask,
+      lessons: lessons.filter((lesson) => lesson.data.moduleId === module.id),
+    },
+  ]),
+);
+---
+
+<BaseLayout title="Full Curriculum | English Grammar Atlas" description="21 premium grammar lessons organized across 6 progressive modules">
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="curriculum-hero">
+        <h1>Complete Curriculum</h1>
+        <p class="hero-subtitle">21 premium lessons across 6 progressive modules, from foundations to mastery</p>
+      </section>
+
+      <!-- Module Grid -->
+      {
+        moduleOrder.map((moduleId) => {
+          const module = curriculum[moduleId];
+          return (
+            <section class="module-section">
+              <a href={`/modules/${moduleId}`} style="text-decoration: none; color: inherit;">
+                <div class="module-header">
+                  <h2 class="module-title">{module.title}</h2>
+                  <p class="module-description">{module.description}</p>
+                  <div class="module-task">
+                    <strong>Portfolio Task:</strong> {module.tasks}
+                  </div>
+                </div>
+              </a>
+
+              <div class="lessons-grid">
+                {module.lessons.map((lesson) => (
+                  <a href={`/lessons/${lesson.data.slug}`} class="lesson-card">
+                    <div class="lesson-card-header">
+                      <h3>{lesson.data.title}</h3>
+                      <span class="lesson-duration">{lesson.data.duration}</span>
+                    </div>
+                    <p class="lesson-focus">{lesson.data.focus}</p>
+                    <div class="lesson-meta">
+                      <span class="lesson-level">{lesson.data.level || 'Beginner'}</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          );
+        })
+      }
+
+      <!-- Footer CTA -->
+      <section class="curriculum-footer">
+        <h2>Ready to master English grammar?</h2>
+        <p>Start with Module 1 or jump to any lesson that interests you. Complete all lessons for a certified accomplishment.</p>
+        <div class="button-group">
+          <a href="/lessons/parts-of-speech" class="btn btn-primary">Start Lesson 1</a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .curriculum-hero {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+      margin-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .curriculum-hero h1 {
+      font-size: clamp(2.9rem, 5vw, 4.4rem);
+      margin-bottom: var(--space-sm);
+    }
+
+    .hero-subtitle {
+      max-width: 44rem;
+      margin: 0 auto;
+      font-size: 1.2rem;
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+
+    .module-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .module-header {
+      margin-bottom: var(--space-lg);
+      padding: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .module-section a[style*="text-decoration: none"] {
+      display: block;
+    }
+
+    .module-section a[style*="text-decoration: none"]:hover .module-header {
+      background-color: var(--color-bg-secondary);
+      transform: translateX(4px);
+    }
+
+    .module-title {
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.3rem);
+      color: var(--color-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .module-description {
+      font-size: 1.1rem;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+      line-height: 1.8;
+    }
+
+    .module-task {
+      background-color: var(--color-bg-secondary);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      font-size: 0.98rem;
+      color: var(--color-text);
+      line-height: 1.7;
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .lesson-card {
+      background: var(--color-bg);
+      border: 2px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      text-decoration: none;
+      color: inherit;
+      transition: all var(--transition-normal);
+    }
+
+    .lesson-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: var(--space-md);
+      gap: var(--space-sm);
+    }
+
+    .lesson-card-header h3 {
+      font-size: 1.28rem;
+      color: var(--color-primary);
+      margin: 0;
+      flex: 1;
+    }
+
+    .lesson-duration {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      white-space: nowrap;
+    }
+
+    .lesson-focus {
+      font-size: 1rem;
+      color: var(--color-text);
+      margin-bottom: var(--space-md);
+      line-height: 1.75;
+    }
+
+    .lesson-meta {
+      display: flex;
+      gap: var(--space-sm);
+    }
+
+    .lesson-level {
+      background-color: var(--color-success-light);
+      color: var(--color-success);
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .curriculum-footer {
+      text-align: center;
+      padding: var(--space-2xl) var(--space-lg);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      border-radius: var(--radius-lg);
+      color: white;
+      margin-top: var(--space-2xl);
+    }
+
+    .curriculum-footer h2 {
+      font-size: clamp(1.9rem, 1.6rem + 0.6vw, 2.35rem);
+      margin-bottom: var(--space-md);
+    }
+
+    .curriculum-footer p {
+      font-size: 1.08rem;
+      margin-bottom: var(--space-lg);
+      line-height: 1.75;
+    }
+
+    .button-group {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .curriculum-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .module-title {
+        font-size: 1.65rem;
+      }
+
+      .hero-subtitle,
+      .module-description,
+      .lesson-focus,
+      .curriculum-footer p {
+        font-size: 1rem;
+      }
+
+      .lessons-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</BaseLayout>

@@ -1,0 +1,106 @@
+---
+import '../assets/css/global.css';
+import '../assets/css/layout.css';
+import '../assets/css/components.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+
+const { title = 'English Grammar Atlas', description = 'Master English grammar from foundations to advanced proficiency', canonical = Astro.url.href } = Astro.props;
+const currentPath = new URL(Astro.request.url).pathname;
+const navigation = [
+  { href: '/', label: 'Home' },
+  { href: '/curriculum', label: 'Curriculum' },
+  { href: '/roadmap', label: 'Roadmap' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/quiz', label: 'Quiz' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <div class="layout">
+      <header class="header">
+        <div class="container">
+          <div class="flex-between site-header-row">
+            <a href="/" class="site-brand" aria-label="English Grammar Atlas home">
+              <span class="site-brand-mark">GA</span>
+              <span class="site-brand-copy">
+                <strong>English Grammar Atlas</strong>
+                <span>Lessons, quizzes, and roadmap</span>
+              </span>
+            </a>
+            <nav class="site-nav" aria-label="Primary">
+              {navigation.map((item) => {
+                const isActive =
+                  item.href === '/'
+                    ? currentPath === '/'
+                    : currentPath === item.href || currentPath.startsWith(`${item.href}/`);
+
+                return (
+                  <a
+                    href={item.href}
+                    class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', isActive && 'is-active']}
+                  >
+                    {item.label}
+                  </a>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout-main">
+        <slot />
+      </main>
+
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div>
+              <h4 class="footer-title">Study English with structure</h4>
+              <p class="footer-copy">
+                Grammar lessons, lesson-specific quizzes, and a roadmap that keeps the
+                whole course connected.
+              </p>
+              <p class="footer-meta">Built for self-paced grammar practice.</p>
+            </div>
+            <div>
+              <h4 class="footer-title">Explore</h4>
+              <ul class="footer-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/curriculum">Curriculum</a></li>
+                <li><a href="/roadmap">Roadmap</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/quiz">Quiz Center</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="footer-title">Start Here</h4>
+              <ul class="footer-links">
+                <li><a href="/lessons/parts-of-speech">First Lesson</a></li>
+                <li><a href="/modules/foundations">Foundations Module</a></li>
+                <li><a href="/dashboard">Study Dashboard</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

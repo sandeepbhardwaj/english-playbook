@@ -1,0 +1,27 @@
+---
+import LessonLayout from '../../layouts/LessonLayout.astro';
+import { loadLessons, renderLessonBody } from '../../lib/lesson-files';
+
+export function getStaticPaths() {
+  return loadLessons().map((lesson) => ({
+    params: { slug: lesson.data.slug },
+    props: { lesson },
+  }));
+}
+
+const { lesson } = Astro.props;
+
+const html = renderLessonBody(lesson.body);
+---
+
+<LessonLayout
+  title={lesson.data.title}
+  slug={lesson.data.slug}
+  module={lesson.data.module}
+  moduleId={lesson.data.moduleId}
+  duration={lesson.data.duration}
+  focus={lesson.data.focus}
+  level={lesson.data.level || 'Beginner'}
+>
+  <div set:html={html} />
+</LessonLayout>

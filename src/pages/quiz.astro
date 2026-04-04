@@ -1,0 +1,311 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { curriculumModules, sortLessonEntries } from '../lib/course';
+import { loadLessons } from '../lib/lesson-files';
+import { buildQuizForLesson } from '../lib/quiz';
+
+const allLessons = sortLessonEntries(loadLessons());
+
+const modules = curriculumModules.map((module) => {
+  const lessons = allLessons
+    .filter((lesson) => lesson.data.moduleId === module.id)
+    .map((lesson) => ({
+      lesson,
+      questions: buildQuizForLesson(lesson, allLessons),
+    }));
+
+  return { ...module, lessons };
+});
+
+const totalQuestions = modules.reduce(
+  (count, module) =>
+    count + module.lessons.reduce((moduleCount, lesson) => moduleCount + lesson.questions.length, 0),
+  0,
+);
+---
+
+<BaseLayout
+  title="Quiz Center | English Grammar Atlas"
+  description="Practice every lesson with structured quizzes built from the lesson content."
+>
+  <main class="main-content">
+    <div class="container">
+      <section class="quiz-home-hero">
+        <p class="eyebrow">Lesson Practice</p>
+        <h1>Quiz Center</h1>
+        <p class="hero-copy">
+          Every lesson now has its own content-based quiz. Use the module sections below
+          to jump straight into focused review.
+        </p>
+
+        <div class="hero-stats">
+          <article class="hero-stat">
+            <strong>{allLessons.length}</strong>
+            <span>lesson quizzes</span>
+          </article>
+          <article class="hero-stat">
+            <strong>{totalQuestions}</strong>
+            <span>practice questions</span>
+          </article>
+          <article class="hero-stat">
+            <strong>10</strong>
+            <span>questions per lesson</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="quiz-home-guide">
+        <div class="guide-card">
+          <h2>How to use this</h2>
+          <p>
+            Finish a lesson, open its quiz, answer all questions, then review the feedback.
+            Scores are saved in your browser for each lesson.
+          </p>
+        </div>
+        <div class="guide-card">
+          <h2>What changed</h2>
+          <p>
+            The quiz routes are now connected to real lesson content instead of generic
+            placeholder questions, and the lessons are back in curriculum order.
+          </p>
+        </div>
+        <div class="guide-card">
+          <h2>Use the dashboard too</h2>
+          <p>
+            Your saved best scores, bookmarks, and completed lessons flow into the dashboard so you can see what to review next.
+          </p>
+        </div>
+      </section>
+
+      <section class="quiz-modules">
+        {modules.map((module) => (
+          <article class="module-block">
+            <div class="module-block-header">
+              <div>
+                <p class="module-kicker">{module.level}</p>
+                <h2>{module.title}</h2>
+              </div>
+              <p class="module-description">{module.description}</p>
+            </div>
+
+            <div class="quiz-lesson-grid">
+              {module.lessons.map(({ lesson, questions }) => (
+                <article class="quiz-lesson-card">
+                  <div class="quiz-lesson-topline">
+                    <span class="lesson-duration">{lesson.data.duration}</span>
+                    <span class="lesson-count">{questions.length} questions</span>
+                  </div>
+                  <h3>{lesson.data.title}</h3>
+                  <p>{lesson.data.focus}</p>
+                  <div class="quiz-lesson-actions">
+                    <a href={`/quiz/${lesson.data.slug}`} class="btn btn-primary">Start Quiz</a>
+                    <a href={`/lessons/${lesson.data.slug}`} class="btn btn-secondary">View Lesson</a>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .quiz-home-hero {
+      padding: clamp(2.5rem, 6vw, 4.5rem);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 32%),
+        linear-gradient(135deg, rgba(33, 81, 209, 0.1), rgba(33, 81, 209, 0.03));
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .eyebrow {
+      font-family: var(--font-ui);
+      letter-spacing: 0.05em;
+      font-size: 0.8rem;
+      font-weight: var(--font-weight-semibold);
+      color: var(--color-accent);
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-home-hero h1 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    .hero-copy {
+      max-width: 44rem;
+      color: var(--color-text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: 1.75rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .hero-stat {
+      padding: 1.1rem 1.2rem;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      border-radius: var(--radius-lg);
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 1.75rem;
+      color: var(--color-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .hero-stat span {
+      color: var(--color-text-secondary);
+      font-size: 0.92rem;
+    }
+
+    .quiz-home-guide {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .guide-card {
+      padding: 1.4rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+    }
+
+    .guide-card h2 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.2rem;
+      color: var(--color-primary);
+    }
+
+    .guide-card p {
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+    }
+
+    .quiz-modules {
+      display: grid;
+      gap: var(--space-2xl);
+    }
+
+    .module-block {
+      padding: 1.5rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(249, 250, 251, 0.9), #fff 32%);
+    }
+
+    .module-block-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+      gap: var(--space-lg);
+      align-items: start;
+      margin-bottom: 1.25rem;
+    }
+
+    .module-kicker {
+      margin-bottom: 0.45rem;
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
+    .module-block-header h2 {
+      margin: 0;
+      font-size: 1.7rem;
+    }
+
+    .module-description {
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+    }
+
+    .quiz-lesson-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .quiz-lesson-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      padding: 1.3rem;
+      border-radius: var(--radius-lg);
+      background: white;
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .quiz-lesson-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+      color: var(--color-text-secondary);
+    }
+
+    .lesson-duration,
+    .lesson-count {
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: var(--color-surface);
+    }
+
+    .quiz-lesson-card h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--color-text);
+    }
+
+    .quiz-lesson-card p {
+      margin: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.6;
+      flex: 1;
+    }
+
+    .quiz-lesson-actions {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .module-block-header {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .quiz-home-hero {
+        padding: 1.75rem;
+      }
+
+      .quiz-lesson-actions {
+        flex-direction: column;
+      }
+
+      .quiz-lesson-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>

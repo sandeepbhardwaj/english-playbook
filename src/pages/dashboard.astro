@@ -1,0 +1,749 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { curriculumModules, sortLessonEntries } from '../lib/course';
+import { loadLessons } from '../lib/lesson-files';
+
+const lessons = sortLessonEntries(loadLessons()).map((lesson) => ({
+  slug: lesson.data.slug,
+  title: lesson.data.title,
+  module: lesson.data.module,
+  moduleId: lesson.data.moduleId,
+  duration: lesson.data.duration,
+  focus: lesson.data.focus,
+}));
+
+const modules = curriculumModules.map((module) => ({
+  id: module.id,
+  title: module.title,
+  description: module.description,
+  lessonSlugs: module.lessons.map((lesson) => lesson.id),
+}));
+
+const dashboardPayload = JSON.stringify({ lessons, modules });
+---
+
+<BaseLayout
+  title="Dashboard | English Grammar Atlas"
+  description="Track quiz scores, saved lessons, and review priorities in your browser-saved study dashboard."
+>
+  <main class="main-content">
+    <div class="container">
+      <section class="dashboard-hero">
+        <div class="dashboard-hero-copy">
+          <p class="eyebrow">Study Command Center</p>
+          <h1>Your learning dashboard</h1>
+          <p>
+            This page turns your saved quiz scores, lesson completions, bookmarks, and error log into a practical review loop. Everything stays in this browser unless you export it.
+          </p>
+        </div>
+        <div class="dashboard-hero-actions">
+          <a href="/curriculum" class="btn btn-primary">Browse Curriculum</a>
+          <a href="/quiz" class="btn btn-secondary">Open Quiz Center</a>
+        </div>
+      </section>
+
+      <section class="dashboard-metrics" id="dashboard-metrics"></section>
+
+      <section class="dashboard-grid">
+        <section class="dashboard-panel dashboard-command" id="dashboard-command"></section>
+        <section class="dashboard-panel dashboard-review" id="dashboard-review"></section>
+      </section>
+
+      <section class="dashboard-panel" id="dashboard-modules"></section>
+      <section class="dashboard-grid">
+        <section class="dashboard-panel" id="dashboard-saved"></section>
+        <section class="dashboard-panel" id="dashboard-tools"></section>
+      </section>
+      <section class="dashboard-panel" id="dashboard-errors"></section>
+    </div>
+  </main>
+
+  <script type="application/json" id="dashboard-data" set:html={dashboardPayload}></script>
+
+  <script is:inline>
+    const payload = document.getElementById('dashboard-data');
+    const progressApi = window.GrammarAtlasProgress;
+
+    if (payload?.textContent && progressApi) {
+      const { lessons, modules } = JSON.parse(payload.textContent);
+      const metricsTarget = document.getElementById('dashboard-metrics');
+      const commandTarget = document.getElementById('dashboard-command');
+      const reviewTarget = document.getElementById('dashboard-review');
+      const modulesTarget = document.getElementById('dashboard-modules');
+      const savedTarget = document.getElementById('dashboard-saved');
+      const toolsTarget = document.getElementById('dashboard-tools');
+      const errorsTarget = document.getElementById('dashboard-errors');
+      const lessonMap = new Map(lessons.map((lesson) => [lesson.slug, lesson]));
+
+      const formatPercent = (value) => `${Math.round(value)}%`;
+
+      const buildState = () => {
+        const lessonStateMap = progressApi.getLessonProgressMap();
+        const quizScores = progressApi.getQuizScores();
+        const errorLog = progressApi.getErrorLog();
+        const completedLessons = lessons.filter((lesson) => lessonStateMap[lesson.slug]?.completed);
+        const bookmarkedLessons = lessons.filter((lesson) => lessonStateMap[lesson.slug]?.bookmarked);
+        const attemptedLessons = lessons
+          .map((lesson) => ({
+            lesson,
+            score: quizScores[lesson.slug],
+          }))
+          .filter((entry) => entry.score && typeof entry.score.percent === 'number');
+        const averageQuizScore = attemptedLessons.length
+          ? attemptedLessons.reduce((sum, entry) => sum + entry.score.percent, 0) / attemptedLessons.length
+          : null;
+        const nextLesson =
+          lessons.find((lesson) => !lessonStateMap[lesson.slug]?.completed) || lessons[0];
+        const weakestLessons = [...attemptedLessons]
+          .sort((left, right) => left.score.percent - right.score.percent)
+          .slice(0, 4);
+        const bookmarkedQueue = bookmarkedLessons
+          .filter((lesson) => !lessonStateMap[lesson.slug]?.completed)
+          .slice(0, 4);
+        const moduleStats = modules.map((module) => {
+          const moduleLessons = module.lessonSlugs
+            .map((slug) => lessonMap.get(slug))
+            .filter(Boolean);
+          const moduleAttempts = moduleLessons
+            .map((lesson) => quizScores[lesson.slug])
+            .filter((score) => score && typeof score.percent === 'number');
+
+          return {
+            ...module,
+            lessonCount: moduleLessons.length,
+            completedCount: moduleLessons.filter((lesson) => lessonStateMap[lesson.slug]?.completed).length,
+            attemptedCount: moduleAttempts.length,
+            averageScore: moduleAttempts.length
+              ? moduleAttempts.reduce((sum, score) => sum + score.percent, 0) / moduleAttempts.length
+              : null,
+          };
+        });
+        const strongestModule =
+          [...moduleStats]
+            .filter((module) => module.averageScore !== null)
+            .sort((left, right) => right.averageScore - left.averageScore)[0] || moduleStats[0];
+
+        return {
+          averageQuizScore,
+          attemptedLessons,
+          bookmarkedLessons,
+          bookmarkedQueue,
+          completedLessons,
+          errorLog,
+          lessonStateMap,
+          moduleStats,
+          nextLesson,
+          strongestModule,
+          weakestLessons,
+        };
+      };
+
+      const renderMetrics = (state) => {
+        const metrics = [
+          {
+            label: 'Study streak',
+            value: `${progressApi.getStudyStreak()} day${progressApi.getStudyStreak() === 1 ? '' : 's'}`,
+          },
+          {
+            label: 'Lessons completed',
+            value: `${state.completedLessons.length}/${lessons.length}`,
+          },
+          {
+            label: 'Quiz average',
+            value: state.averageQuizScore === null ? 'No scores yet' : formatPercent(state.averageQuizScore),
+          },
+          {
+            label: 'Saved bookmarks',
+            value: `${state.bookmarkedLessons.length}`,
+          },
+        ];
+
+        metricsTarget.innerHTML = metrics
+          .map(
+            (metric) => `
+              <article class="metric-card">
+                <span class="metric-label">${metric.label}</span>
+                <strong class="metric-value">${metric.value}</strong>
+              </article>
+            `
+          )
+          .join('');
+      };
+
+      const renderCommand = (state) => {
+        const weakest = state.weakestLessons[0];
+
+        commandTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Next Best Actions</p>
+            <h2>Use saved progress to decide what to study next</h2>
+          </div>
+          <div class="command-grid">
+            <article class="command-card command-card-primary">
+              <span class="command-chip">Continue</span>
+              <h3>${state.nextLesson.title}</h3>
+              <p>${state.nextLesson.focus}</p>
+              <div class="card-actions">
+                <a href="/lessons/${state.nextLesson.slug}" class="btn btn-primary">Open Lesson</a>
+                <a href="/quiz/${state.nextLesson.slug}" class="btn btn-secondary">Take Quiz</a>
+              </div>
+            </article>
+            <article class="command-card">
+              <span class="command-chip">Weakest Area</span>
+              <h3>${weakest ? weakest.lesson.title : 'No weak area yet'}</h3>
+              <p>${weakest ? `Best score so far: ${formatPercent(weakest.score.percent)}. Revisit the lesson, then retake the quiz.` : 'Take a few quizzes and this card will start pointing to the topics that need review.'}</p>
+              <div class="card-actions">
+                <a href="${weakest ? `/quiz/${weakest.lesson.slug}` : '/quiz'}" class="btn btn-secondary">${weakest ? 'Review Quiz' : 'Open Quiz Center'}</a>
+              </div>
+            </article>
+            <article class="command-card">
+              <span class="command-chip">Strongest Module</span>
+              <h3>${state.strongestModule.title}</h3>
+              <p>${state.strongestModule.averageScore !== null ? `Average quiz score: ${formatPercent(state.strongestModule.averageScore)} across ${state.strongestModule.attemptedCount} lesson quiz${state.strongestModule.attemptedCount === 1 ? '' : 'zes'}.` : 'No module performance data yet, but this will fill in as soon as you start taking quizzes.'}</p>
+              <div class="card-actions">
+                <a href="/modules/${state.strongestModule.id}" class="btn btn-secondary">Open Module</a>
+              </div>
+            </article>
+          </div>
+        `;
+      };
+
+      const renderReview = (state) => {
+        const queue = [];
+
+        state.weakestLessons.forEach((entry) => {
+          if (!queue.find((item) => item.slug === entry.lesson.slug)) {
+            queue.push({
+              slug: entry.lesson.slug,
+              title: entry.lesson.title,
+              note: `Retake the quiz after revisiting the lesson. Current best score: ${formatPercent(entry.score.percent)}.`,
+            });
+          }
+        });
+
+        state.bookmarkedQueue.forEach((lesson) => {
+          if (!queue.find((item) => item.slug === lesson.slug)) {
+            queue.push({
+              slug: lesson.slug,
+              title: lesson.title,
+              note: 'Saved in your bookmark list. Good candidate for a short review session.',
+            });
+          }
+        });
+
+        if (!queue.length) {
+          queue.push({
+            slug: state.nextLesson.slug,
+            title: state.nextLesson.title,
+            note: 'Start here to build the first layer of progress data for the dashboard.',
+          });
+        }
+
+        reviewTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Review Queue</p>
+            <h2>Your saved study list</h2>
+          </div>
+          <div class="stack-list">
+            ${queue
+              .slice(0, 4)
+              .map(
+                (item) => `
+                  <article class="stack-card">
+                    <h3>${item.title}</h3>
+                    <p>${item.note}</p>
+                    <div class="card-actions">
+                      <a href="/lessons/${item.slug}" class="btn btn-secondary">Open Lesson</a>
+                      <a href="/quiz/${item.slug}" class="btn btn-primary">Open Quiz</a>
+                    </div>
+                  </article>
+                `
+              )
+              .join('')}
+          </div>
+        `;
+      };
+
+      const renderModules = (state) => {
+        modulesTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Module Performance</p>
+            <h2>See progress across the whole course</h2>
+          </div>
+          <div class="module-grid">
+            ${state.moduleStats
+              .map(
+                (module) => `
+                  <article class="module-card">
+                    <h3>${module.title}</h3>
+                    <p>${module.description}</p>
+                    <div class="module-meta">
+                      <span>${module.completedCount}/${module.lessonCount} completed</span>
+                      <span>${module.averageScore === null ? 'No quiz average yet' : formatPercent(module.averageScore)}</span>
+                    </div>
+                    <a href="/modules/${module.id}" class="btn btn-secondary">Open Module</a>
+                  </article>
+                `
+              )
+              .join('')}
+          </div>
+        `;
+      };
+
+      const renderSaved = (state) => {
+        const savedLessons = [...state.bookmarkedLessons]
+          .sort((left, right) => left.title.localeCompare(right.title))
+          .slice(0, 6);
+
+        savedTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Bookmarks</p>
+            <h2>Lessons you saved for review</h2>
+          </div>
+          ${
+            savedLessons.length
+              ? `<div class="bookmark-list">
+                  ${savedLessons
+                    .map(
+                      (lesson) => `
+                        <a class="bookmark-link" href="/lessons/${lesson.slug}">
+                          <strong>${lesson.title}</strong>
+                          <span>${lesson.module}</span>
+                        </a>
+                      `
+                    )
+                    .join('')}
+                </div>`
+              : `<div class="empty-state">
+                  <h3>No bookmarks yet</h3>
+                  <p>Use the bookmark button on lesson pages to build a reusable review list here.</p>
+                </div>`
+          }
+        `;
+      };
+
+      const renderTools = () => {
+        toolsTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Backup Tools</p>
+            <h2>Export or restore your browser-saved progress</h2>
+          </div>
+          <p class="tools-copy">This includes lesson completion, bookmarks, quiz scores, activity history, and your error log.</p>
+          <textarea id="progress-transfer-box" class="progress-transfer-box" rows="9" placeholder="Exported progress JSON appears here, or paste saved JSON to import it."></textarea>
+          <div class="card-actions">
+            <button type="button" class="btn btn-primary" id="progress-export">Export Progress</button>
+            <button type="button" class="btn btn-secondary" id="progress-import">Import Progress</button>
+          </div>
+          <p class="tools-status" id="progress-transfer-status"></p>
+        `;
+
+        const transferBox = document.getElementById('progress-transfer-box');
+        const transferStatus = document.getElementById('progress-transfer-status');
+
+        document.getElementById('progress-export')?.addEventListener('click', () => {
+          transferBox.value = progressApi.exportProgress();
+          transferStatus.textContent = 'Progress exported into the box. Save it anywhere you like.';
+        });
+
+        document.getElementById('progress-import')?.addEventListener('click', () => {
+          const didImport = progressApi.importProgress(transferBox.value);
+          transferStatus.textContent = didImport
+            ? 'Progress imported successfully. Reloading now.'
+            : 'Import failed. Check that the JSON came from this site.';
+
+          if (didImport) {
+            window.setTimeout(() => window.location.reload(), 600);
+          }
+        });
+      };
+
+      const renderErrors = (state) => {
+        errorsTarget.innerHTML = `
+          <div class="section-heading">
+            <p class="eyebrow">Error Log</p>
+            <h2>Keep track of the mistakes you repeat</h2>
+          </div>
+          <form class="error-form" id="error-log-form">
+            <div class="error-form-grid">
+              <label>
+                <span>Lesson</span>
+                <select id="error-log-lesson">
+                  <option value="">General grammar issue</option>
+                  ${lessons.map((lesson) => `<option value="${lesson.slug}">${lesson.title}</option>`).join('')}
+                </select>
+              </label>
+              <label>
+                <span>Focus title</span>
+                <input id="error-log-title" type="text" placeholder="Example: Article use in introductions" required />
+              </label>
+            </div>
+            <label>
+              <span>Mistake pattern</span>
+              <textarea id="error-log-mistake" rows="3" placeholder="What do you usually write or say incorrectly?" required></textarea>
+            </label>
+            <label>
+              <span>Better correction</span>
+              <textarea id="error-log-correction" rows="2" placeholder="Write the corrected version or the rule."></textarea>
+            </label>
+            <label>
+              <span>Review note</span>
+              <textarea id="error-log-note" rows="2" placeholder="Add a memory tip or reminder."></textarea>
+            </label>
+            <div class="card-actions">
+              <button type="submit" class="btn btn-primary">Save Error Log Entry</button>
+            </div>
+          </form>
+          <div class="error-list">
+            ${
+              state.errorLog.length
+                ? state.errorLog
+                    .map((entry) => {
+                      const lesson = entry.lessonSlug ? lessonMap.get(entry.lessonSlug) : null;
+                      return `
+                        <article class="error-card">
+                          <div class="error-card-top">
+                            <h3>${entry.title}</h3>
+                            <span>${lesson ? lesson.title : 'General'}</span>
+                          </div>
+                          <p><strong>Mistake:</strong> ${entry.mistake}</p>
+                          <p><strong>Correction:</strong> ${entry.correction || 'No correction added yet.'}</p>
+                          <p><strong>Note:</strong> ${entry.note || 'No note added yet.'}</p>
+                          <div class="card-actions">
+                            ${lesson ? `<a href="/lessons/${lesson.slug}" class="btn btn-secondary">Review Lesson</a>` : ''}
+                            <button type="button" class="btn btn-secondary" data-remove-error="${entry.id}">Delete</button>
+                          </div>
+                        </article>
+                      `;
+                    })
+                    .join('')
+                : `<div class="empty-state">
+                    <h3>No error log entries yet</h3>
+                    <p>Add recurring grammar mistakes here so your review becomes specific instead of vague.</p>
+                  </div>`
+            }
+          </div>
+        `;
+
+        document.getElementById('error-log-form')?.addEventListener('submit', (event) => {
+          event.preventDefault();
+          progressApi.addErrorLogEntry({
+            lessonSlug: document.getElementById('error-log-lesson')?.value || '',
+            title: document.getElementById('error-log-title')?.value.trim(),
+            mistake: document.getElementById('error-log-mistake')?.value.trim(),
+            correction: document.getElementById('error-log-correction')?.value.trim(),
+            note: document.getElementById('error-log-note')?.value.trim(),
+          });
+          renderAll();
+        });
+
+        errorsTarget.querySelectorAll('[data-remove-error]').forEach((button) => {
+          button.addEventListener('click', () => {
+            progressApi.removeErrorLogEntry(button.getAttribute('data-remove-error'));
+            renderAll();
+          });
+        });
+      };
+
+      const renderAll = () => {
+        const state = buildState();
+        renderMetrics(state);
+        renderCommand(state);
+        renderReview(state);
+        renderModules(state);
+        renderSaved(state);
+        renderTools();
+        renderErrors(state);
+      };
+
+      renderAll();
+    }
+  </script>
+
+  <style>
+    .dashboard-hero {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-xl);
+      align-items: end;
+      padding: clamp(2rem, 5vw, 4rem);
+      margin-bottom: var(--space-2xl);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top right, rgba(15, 118, 110, 0.18), transparent 28rem),
+        linear-gradient(135deg, rgba(33, 81, 209, 0.1), rgba(33, 81, 209, 0.02));
+      border: 1px solid rgba(24, 34, 48, 0.08);
+    }
+
+    .eyebrow {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
+    .dashboard-hero-copy {
+      max-width: 56rem;
+    }
+
+    .dashboard-hero-copy h1 {
+      font-size: clamp(2.75rem, 5vw, 4.4rem);
+      margin-bottom: var(--space-md);
+    }
+
+    .dashboard-hero-copy p:last-child {
+      margin-bottom: 0;
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-lg);
+      line-height: 1.82;
+    }
+
+    .dashboard-hero-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .dashboard-metrics,
+    .dashboard-grid,
+    .module-grid,
+    .command-grid {
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .dashboard-metrics {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-bottom: var(--space-2xl);
+    }
+
+    .metric-card,
+    .dashboard-panel,
+    .module-card,
+    .command-card,
+    .stack-card,
+    .error-card {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.88));
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-card {
+      padding: var(--space-lg);
+    }
+
+    .metric-label {
+      display: block;
+      color: var(--color-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-value {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      color: var(--color-primary);
+    }
+
+    .dashboard-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: var(--space-2xl);
+    }
+
+    .dashboard-panel {
+      padding: var(--space-xl);
+    }
+
+    .section-heading {
+      margin-bottom: var(--space-lg);
+    }
+
+    .section-heading h2 {
+      margin-bottom: var(--space-sm);
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+    }
+
+    .command-grid,
+    .module-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .command-card,
+    .module-card,
+    .stack-card,
+    .error-card {
+      padding: var(--space-lg);
+    }
+
+    .command-card-primary {
+      background:
+        radial-gradient(circle at top right, rgba(255, 255, 255, 0.18), transparent 18rem),
+        linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+    }
+
+    .command-card-primary h3,
+    .command-card-primary p,
+    .command-card-primary .command-chip {
+      color: inherit;
+    }
+
+    .command-chip {
+      display: inline-flex;
+      margin-bottom: var(--space-sm);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background-color: rgba(24, 34, 48, 0.06);
+      color: var(--color-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 0.76rem;
+      letter-spacing: 0.05em;
+    }
+
+    .command-card-primary .command-chip {
+      background-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin-top: var(--space-md);
+    }
+
+    .stack-list,
+    .bookmark-list,
+    .error-list {
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    .bookmark-link {
+      display: grid;
+      gap: 0.2rem;
+      padding: var(--space-md);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+    }
+
+    .bookmark-link:hover {
+      text-decoration: none;
+      border-color: var(--color-primary-light);
+    }
+
+    .bookmark-link span,
+    .module-meta,
+    .tools-copy,
+    .tools-status {
+      color: var(--color-text-secondary);
+    }
+
+    .module-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+      margin: var(--space-md) 0;
+      font-size: var(--font-size-sm);
+    }
+
+    .progress-transfer-box,
+    .error-form input,
+    .error-form textarea,
+    .error-form select {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      background-color: white;
+      font: inherit;
+      color: var(--color-text);
+    }
+
+    .progress-transfer-box {
+      margin: var(--space-md) 0;
+      resize: vertical;
+    }
+
+    .error-form {
+      display: grid;
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+
+    .error-form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+
+    .error-form label {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .error-card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: var(--space-sm);
+    }
+
+    .error-card-top span {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+    }
+
+    .empty-state {
+      padding: var(--space-lg);
+      border-radius: var(--radius-lg);
+      background-color: var(--color-surface);
+      border: 1px dashed var(--color-border-dark);
+    }
+
+    .empty-state p:last-child {
+      margin-bottom: 0;
+      color: var(--color-text-secondary);
+    }
+
+    @media (max-width: 960px) {
+      .dashboard-hero,
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+
+      .dashboard-hero-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .dashboard-panel,
+      .dashboard-hero,
+      .metric-card {
+        padding: var(--space-lg);
+      }
+
+      .error-form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card-actions,
+      .dashboard-hero-actions {
+        flex-direction: column;
+      }
+
+      .card-actions .btn,
+      .dashboard-hero-actions .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</BaseLayout>

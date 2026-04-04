@@ -1,0 +1,273 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { curriculumModules, getModule, sortLessonEntries } from '../../lib/course';
+import { loadLessons } from '../../lib/lesson-files';
+
+export async function getStaticPaths() {
+  return curriculumModules.map((module) => ({
+    params: { moduleId: module.id },
+  }));
+}
+
+const moduleAccents: Record<string, string> = {
+  foundations: 'var(--color-primary)',
+  tenses: 'var(--color-secondary)',
+  accuracy: 'var(--color-accent)',
+  'complex-grammar': '#8B5CF6',
+  style: '#EC4899',
+  mastery: '#F59E0B',
+};
+
+const { moduleId } = Astro.params;
+const moduleMetadata = getModule(moduleId ?? '');
+
+if (!moduleMetadata) {
+  throw new Error(`Module not found for "${moduleId}"`);
+}
+
+const metadata = {
+  title: moduleMetadata.title,
+  description: moduleMetadata.description,
+  tasks: moduleMetadata.portfolioTask,
+  color: moduleAccents[moduleMetadata.id] ?? 'var(--color-primary)',
+};
+
+const lessons = sortLessonEntries(loadLessons()).filter(
+  (lesson) => lesson.data.moduleId === moduleId,
+);
+---
+
+<BaseLayout title={`${metadata.title} | English Grammar Atlas`} description={metadata.description}>
+  <main class="main-content">
+    <div class="container">
+      <!-- Hero Section -->
+      <section class="module-hero">
+        <h1>{metadata.title}</h1>
+        <p class="hero-subtitle">{metadata.description}</p>
+      </section>
+
+      <!-- Module Info -->
+      <section class="module-info">
+        <div class="module-task">
+          <strong>Portfolio Task:</strong> {metadata.tasks}
+        </div>
+      </section>
+
+      <!-- Lessons Grid -->
+      <section class="lessons-section">
+        <h2>Lessons in This Module</h2>
+        <div class="lessons-grid">
+          {lessons.map((lesson) => (
+            <a href={`/lessons/${lesson.data.slug}`} class="lesson-card">
+              <div class="lesson-card-header">
+                <h3>{lesson.data.title}</h3>
+                <span class="lesson-duration">{lesson.data.duration}</span>
+              </div>
+              <p class="lesson-focus">{lesson.data.focus}</p>
+              <div class="lesson-meta">
+                <span class="lesson-level">{lesson.data.level || 'Beginner'}</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Navigation -->
+      <section class="module-navigation">
+        <div class="nav-buttons">
+          <a href="/curriculum" class="btn btn-secondary">Back to Curriculum</a>
+          <a href="/" class="btn btn-secondary">Back to Home</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <style>
+    .module-hero {
+      text-align: center;
+      padding: var(--space-2xl) 0;
+      margin-bottom: var(--space-xl);
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .module-hero h1 {
+      font-size: clamp(2.9rem, 5vw, 4.2rem);
+      margin-bottom: var(--space-sm);
+      color: var(--color-primary);
+    }
+
+    .hero-subtitle {
+      max-width: 44rem;
+      margin: 0 auto;
+      font-size: 1.18rem;
+      color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+
+    .module-info {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .module-task {
+      background-color: var(--color-bg-secondary);
+      padding: var(--space-lg);
+      border-radius: var(--radius-md);
+      border-left: 4px solid var(--color-primary);
+      font-size: 1.03rem;
+      line-height: 1.75;
+    }
+
+    .lessons-section {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .lessons-section h2 {
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.35rem);
+      margin-bottom: var(--space-lg);
+      color: var(--color-primary);
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .lesson-card {
+      display: flex;
+      flex-direction: column;
+      padding: var(--space-lg);
+      background-color: var(--color-bg-secondary);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .lesson-card:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .lesson-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: var(--space-md);
+    }
+
+    .lesson-card-header h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      color: var(--color-primary);
+      flex: 1;
+    }
+
+    .lesson-duration {
+      font-family: var(--font-ui);
+      font-size: 0.86rem;
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      margin-left: var(--space-md);
+    }
+
+    .lesson-focus {
+      margin: 0 0 var(--space-md) 0;
+      color: var(--color-text);
+      font-size: 1rem;
+      line-height: 1.75;
+      flex-grow: 1;
+    }
+
+    .lesson-meta {
+      display: flex;
+      gap: var(--space-md);
+      margin-top: auto;
+    }
+
+    .lesson-level {
+      font-family: var(--font-ui);
+      font-size: 0.86rem;
+      background-color: var(--color-primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+    }
+
+    .module-navigation {
+      text-align: center;
+      padding: var(--space-xl) 0;
+      border-top: 2px solid var(--color-border);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: var(--space-md);
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: var(--font-ui);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .lessons-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .module-hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .lesson-card-header {
+        flex-direction: column;
+      }
+
+      .hero-subtitle,
+      .module-task,
+      .lesson-focus {
+        font-size: 1rem;
+      }
+
+      .lesson-duration {
+        margin-left: 0;
+        margin-top: var(--space-sm);
+      }
+    }
+  </style>
+</BaseLayout>
