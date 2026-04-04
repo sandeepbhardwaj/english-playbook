@@ -22,6 +22,13 @@ const totalQuestions = modules.reduce(
     count + module.lessons.reduce((moduleCount, lesson) => moduleCount + lesson.questions.length, 0),
   0,
 );
+const questionCounts = modules.flatMap((module) => module.lessons.map(({ questions }) => questions.length));
+const minQuestionsPerLesson = Math.min(...questionCounts);
+const maxQuestionsPerLesson = Math.max(...questionCounts);
+const questionRangeLabel =
+  minQuestionsPerLesson === maxQuestionsPerLesson
+    ? `${minQuestionsPerLesson}`
+    : `${minQuestionsPerLesson}-${maxQuestionsPerLesson}`;
 ---
 
 <BaseLayout
@@ -43,9 +50,9 @@ const totalQuestions = modules.reduce(
           <div class="quiz-home-hero-content">
             <h1>Quiz Center</h1>
             <p class="hero-copy">
-              Every lesson now has its own content-based quiz. Use the module sections below
-              to move lesson by lesson, review what you studied, and keep your practice in
-              curriculum order.
+              Practice each lesson with a focused quiz built around the grammar covered in
+              that chapter. Use the module sections below to move lesson by lesson, review
+              what you studied, and keep your practice in curriculum order.
             </p>
           </div>
 
@@ -61,9 +68,9 @@ const totalQuestions = modules.reduce(
               <span class="hero-stat-copy">built from examples, rules, and corrections</span>
             </article>
             <article class="hero-stat">
-              <span class="hero-stat-label">Standard set</span>
-              <strong>10</strong>
-              <span class="hero-stat-copy">questions per lesson for focused review</span>
+              <span class="hero-stat-label">Per lesson</span>
+              <strong>{questionRangeLabel}</strong>
+              <span class="hero-stat-copy">question count varies by lesson depth and topic scope</span>
             </article>
           </div>
         </div>
@@ -79,11 +86,11 @@ const totalQuestions = modules.reduce(
           </p>
         </div>
         <div class="guide-card">
-          <p class="card-kicker">What Changed</p>
-          <h2>What changed</h2>
+          <p class="card-kicker">Built For Learning</p>
+          <h2>Lesson-aligned practice</h2>
           <p>
-            The quiz routes are now connected to real lesson content instead of generic
-            placeholder questions, and the lessons are back in curriculum order.
+            Each quiz follows the grammar focus of its lesson, so practice stays aligned
+            with the examples, rules, and corrections you just studied.
           </p>
         </div>
         <div class="guide-card">
@@ -183,10 +190,11 @@ const totalQuestions = modules.reduce(
 
     .quiz-home-breadcrumb {
       margin: 0;
-      font-family: var(--font-ui);
-      font-size: 0.9rem;
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      font-style: italic;
       color: var(--color-text-secondary);
-      letter-spacing: 0.01em;
+      letter-spacing: 0;
     }
 
     .quiz-home-link {

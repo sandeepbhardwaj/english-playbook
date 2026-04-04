@@ -178,7 +178,10 @@ const structuredData = [
             <article class="question-card" data-question-card={questionIndex}>
               <div class="question-heading">
                 <span class="question-number">Question {questionIndex + 1}</span>
-                <span class="question-tag">{question.tag}</span>
+                <div class="question-chip-row">
+                  {question.difficulty && <span class="question-difficulty">{question.difficulty}</span>}
+                  <span class="question-tag">{question.tag}</span>
+                </div>
               </div>
               <p class="question-prompt">{question.prompt}</p>
 
@@ -785,7 +788,15 @@ const structuredData = [
       margin-bottom: 0.85rem;
     }
 
+    .question-chip-row {
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
     .question-number,
+    .question-difficulty,
     .question-tag {
       padding: 0.36rem 0.72rem;
       border-radius: 999px;
@@ -797,6 +808,11 @@ const structuredData = [
     .question-number {
       background: rgba(63, 92, 82, 0.11);
       color: var(--color-primary-dark);
+    }
+
+    .question-difficulty {
+      background: rgba(244, 239, 230, 0.94);
+      color: var(--color-text-secondary);
     }
 
     .question-tag {
