@@ -94,15 +94,56 @@ Basic form:
 - she works
 - it works
 
+### Subject rule
+
+- I/You/We/They + base verb
+- He/She/It + base verb + `-s` / `-es`
+
+Examples:
+
+- I work
+- You work
+- We work
+- They work
+- He works
+- She studies
+- It rains
+
 ### Negatives
 
 - do not work
 - does not work
 
+Negative rule:
+
+- I/You/We/They + do not + base verb
+- He/She/It + does not + base verb
+
+Examples:
+
+- I do not work on Sundays.
+- They do not live nearby.
+- He does not work on Sundays.
+- She does not live nearby.
+
+After **do/does**, use the base verb, not the `-s` form.
+
 ### Questions
 
 - Do you work here?
 - Does she work here?
+
+Question rule:
+
+- Do + I/you/we/they + base verb?
+- Does + he/she/it + base verb?
+
+Examples:
+
+- Do you work here?
+- Do they play chess?
+- Does he work here?
+- Does she play chess?
 
 ### Example 1
 
@@ -169,16 +210,56 @@ Basic form:
 - is working
 - are working
 
+### Subject rule
+
+- I + am + verb-`ing`
+- He/She/It + is + verb-`ing`
+- You/We/They + are + verb-`ing`
+
+Examples:
+
+- I am working
+- He is working
+- She is studying
+- It is raining
+- You are working
+- We are studying
+- They are waiting
+
 ### Negatives
 
 - am not working
 - is not working
 - are not working
 
+Negative rule:
+
+- I + am not + verb-`ing`
+- He/She/It + is not + verb-`ing`
+- You/We/They + are not + verb-`ing`
+
+Examples:
+
+- I am not working today.
+- She is not studying right now.
+- They are not waiting outside.
+
 ### Questions
 
 - Are you working?
 - Is she working?
+
+Question rule:
+
+- Am + I + verb-`ing`?
+- Is + he/she/it + verb-`ing`?
+- Are + you/we/they + verb-`ing`?
+
+Examples:
+
+- Am I disturbing you?
+- Is he coming with us?
+- Are they waiting outside?
 
 ### Spelling reminders
 
