@@ -12,7 +12,69 @@ export function getStaticPaths() {
 
 const { lesson } = Astro.props;
 
-const html = renderLessonBody(lesson.body);
+function slugifyHeading(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[`'".,:;!?()[\]{}]/g, '')
+    .replace(/&/g, 'and')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function decorateLessonHtml(source: string) {
+  const usedIds = new Set<string>();
+  const buildHeadingId = (plainText: string) => {
+    const base = slugifyHeading(plainText) || 'section';
+    let candidate = base;
+    let counter = 2;
+
+    while (usedIds.has(candidate)) {
+      candidate = `${base}-${counter}`;
+      counter += 1;
+    }
+
+    usedIds.add(candidate);
+    return candidate;
+  };
+
+  let html = source.replace(/<h([23])>([\s\S]*?)<\/h\1>/g, (_fullMatch, level, innerHtml) => {
+    const plainText = innerHtml.replace(/<[^>]+>/g, '').trim();
+    const id = buildHeadingId(plainText);
+
+    if (level === '2') {
+      const variant = plainText.startsWith('Section ') ? 'section' : 'chapter';
+      const sectionMatch = plainText.match(/^Section\s+(\d+)/i);
+      return `<h2 id="${id}" class="lesson-heading lesson-heading-${variant}"${sectionMatch ? ` data-section-number="${sectionMatch[1]}"` : ''}>${innerHtml}</h2>`;
+    }
+
+    if (plainText.startsWith('Example ')) {
+      return `<h3 id="${id}" class="lesson-heading lesson-heading-example">${innerHtml}</h3>`;
+    }
+
+    if (/story lab:/i.test(plainText) || /^[“"]/.test(plainText)) {
+      return `<h3 id="${id}" class="lesson-heading lesson-heading-feature">${innerHtml}</h3>`;
+    }
+
+    return `<h3 id="${id}" class="lesson-heading lesson-heading-subsection">${innerHtml}</h3>`;
+  });
+
+  html = html.replace(
+    /(<h3[^>]*class="lesson-heading lesson-heading-example"[^>]*>[\s\S]*?<\/h3>)\s*<ul>/g,
+    '$1<ul class="lesson-example-list">',
+  );
+
+  html = html.replace(
+    /<p>([^<]*:)\s*<\/p>\s*<(ul|ol)>/g,
+    (_match, labelText, tagName) =>
+      `<p class="lesson-list-label">${labelText.trim()}</p><${tagName} class="lesson-labeled-list lesson-labeled-list-${tagName}">`,
+  );
+
+  return html;
+}
+
+const html = decorateLessonHtml(renderLessonBody(lesson.body));
 const { previous, next } = getAdjacentLessons(lesson.data.slug);
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
 const lessonUrl = `${siteUrl}/lessons/${lesson.data.slug}`;
@@ -77,5 +139,8 @@ const structuredData = [
   nextLesson={next}
   structuredData={structuredData}
 >
-  <div set:html={html} />
+  <div
+    class:list={['lesson-markdown', 'lesson-markdown--chaptered']}
+    set:html={html}
+  />
 </LessonLayout>
