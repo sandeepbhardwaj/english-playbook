@@ -99,6 +99,44 @@ Examples:
 - **Should** we wait?
 - She **cannot come**.
 
+### Form rule
+
+- I/You/He/She/It/We/They + modal + base verb
+
+Examples:
+
+- I can swim.
+- You should wait.
+- He must leave.
+- They might come later.
+
+The modal does not change for **he/she/it**.
+
+- Correct: He can drive.
+- Wrong: He can drives.
+
+### Negative rule
+
+- I/You/He/She/It/We/They + modal + not + base verb
+
+Examples:
+
+- I cannot stay.
+- She should not worry.
+- They might not agree.
+
+Do not use **do/does/did** with a true modal.
+
+### Question rule
+
+- Modal + I/you/he/she/it/we/they + base verb?
+
+Examples:
+
+- Can you help?
+- Should we wait?
+- Might she know?
+
 ### Example 1
 
 - Correct: He **can drive**.
@@ -185,9 +223,26 @@ Meaning depends on context.
 
 - I have to submit the form by noon.
 
+Form reminder:
+
+- I/You/We/They + have to + base verb
+- He/She/It + has to + base verb
+
+Examples:
+
+- I have to leave now.
+- They have to sign in.
+- He has to leave now.
+- She has to sign in.
+
 ### No necessity: `do not have to`
 
 - You don't have to stay.
+
+Negative reminder:
+
+- I/You/We/They + do not have to + base verb
+- He/She/It + does not have to + base verb
 
 ### Prohibition: `must not`
 
@@ -318,6 +373,17 @@ The grammar becomes less direct and more polite.
 ## Section 9: Past Modal Meanings
 
 Modal meaning often becomes especially important in the past.
+
+Past modal form:
+
+- modal + have + past participle
+
+Examples:
+
+- must have forgotten
+- should have checked
+- could have won
+- might have misunderstood
 
 ### Must have + past participle
 

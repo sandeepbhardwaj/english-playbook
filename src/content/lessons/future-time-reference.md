@@ -81,6 +81,35 @@ Do not ask only, "Is this about the future?" Ask:
 - offers and promises
 - willingness
 
+### Form rule
+
+- I/You/He/She/It/We/They + will + base verb
+
+Examples:
+
+- I will call.
+- You will see.
+- He will help.
+- They will arrive soon.
+
+Negative rule:
+
+- I/You/He/She/It/We/They + will not + base verb
+
+Examples:
+
+- I will not forget.
+- She will not join us.
+
+Question rule:
+
+- Will + I/you/he/she/it/we/they + base verb?
+
+Examples:
+
+- Will you join us?
+- Will they arrive soon?
+
 ### Example 1
 
 - Sentence: I think it **will rain** later.
@@ -108,6 +137,30 @@ Do not ask only, "Is this about the future?" Ask:
 - prior intention
 - future plan already in the speaker's mind
 - prediction based on present evidence
+
+### Form rule
+
+- I + am going to + base verb
+- He/She/It + is going to + base verb
+- You/We/They + are going to + base verb
+
+Examples:
+
+- I am going to apply.
+- He is going to study tonight.
+- They are going to renovate the office.
+
+Negative rule:
+
+- I + am not going to + base verb
+- He/She/It + is not going to + base verb
+- You/We/They + are not going to + base verb
+
+Question rule:
+
+- Am + I + going to + base verb?
+- Is + he/she/it + going to + base verb?
+- Are + you/we/they + going to + base verb?
 
 ### Example 5
 
@@ -161,6 +214,12 @@ Difference:
 
 The present continuous is common for personal arrangements that are already organized.
 
+Form reminder:
+
+- I + am + verb-`ing`
+- He/She/It + is + verb-`ing`
+- You/We/They + are + verb-`ing`
+
 Examples:
 
 - I am meeting the dean tomorrow.
@@ -185,6 +244,11 @@ Examples:
 ## Section 5: Present Simple for Schedules and Timetables
 
 English often uses the present simple for official or fixed schedules.
+
+Form reminder:
+
+- I/You/We/They + base verb
+- He/She/It + base verb + `-s` / `-es`
 
 Examples:
 
@@ -211,6 +275,24 @@ The future continuous describes an action that will be in progress at a specific
 Form:
 
 - will be + `-ing`
+
+Rule:
+
+- I/You/He/She/It/We/They + will be + verb-`ing`
+
+Examples:
+
+- I will be working.
+- She will be traveling.
+- They will be waiting.
+
+Negative rule:
+
+- I/You/He/She/It/We/They + will not be + verb-`ing`
+
+Question rule:
+
+- Will + I/you/he/she/it/we/they + be + verb-`ing`?
 
 Common uses:
 
@@ -240,6 +322,24 @@ The future perfect describes something that will be completed before a future po
 Form:
 
 - will have + past participle
+
+Rule:
+
+- I/You/He/She/It/We/They + will have + past participle
+
+Examples:
+
+- I will have finished.
+- He will have left.
+- They will have completed the work.
+
+Negative rule:
+
+- I/You/He/She/It/We/They + will not have + past participle
+
+Question rule:
+
+- Will + I/you/he/she/it/we/they + have + past participle?
 
 ### Example 19
 

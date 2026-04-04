@@ -95,28 +95,92 @@ Basic pattern:
 
 The tense is carried by **be**.
 
+### Core rule
+
+- active object -> passive subject
+- correct form of **be** -> shows the tense
+- past participle -> stays the main passive form
+
+Examples:
+
+- Active: The company delivers the parcels.
+- Passive: The parcels are delivered.
+
+- Active: The company delivered the parcels.
+- Passive: The parcels were delivered.
+
 ### Present simple passive
 
 - is made
 - are delivered
+
+Rule:
+
+- singular subject + is + past participle
+- plural subject + are + past participle
+
+Examples:
+
+- The report is checked.
+- The reports are checked.
 
 ### Past simple passive
 
 - was built
 - were chosen
 
+Rule:
+
+- singular subject + was + past participle
+- plural subject + were + past participle
+
+Examples:
+
+- The bridge was built.
+- The bridges were built.
+
 ### Present continuous passive
 
 - is being repaired
 
+Rule:
+
+- singular subject + is being + past participle
+- plural subject + are being + past participle
+
+Examples:
+
+- The road is being repaired.
+- The roads are being repaired.
+
 ### Present perfect passive
 
 - has been completed
+- have been completed
+
+Rule:
+
+- singular subject + has been + past participle
+- plural subject + have been + past participle
+
+Examples:
+
+- The form has been completed.
+- The forms have been completed.
 
 ### Modal passive
 
 - must be submitted
 - can be seen
+
+Rule:
+
+- subject + modal + be + past participle
+
+Examples:
+
+- The application must be submitted.
+- The results can be seen online.
 
 ### Example 3
 

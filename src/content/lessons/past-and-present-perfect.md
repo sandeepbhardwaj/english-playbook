@@ -89,15 +89,62 @@ Irregular verbs:
 - have -> had
 - write -> wrote
 
+### Subject rule
+
+For most verbs, the past simple uses the same main verb form with every subject:
+
+- I/You/He/She/It/We/They + past form
+
+Examples:
+
+- I worked
+- You worked
+- He worked
+- They worked
+
+With **be**, the subject changes the form:
+
+- I/He/She/It + was
+- You/We/They + were
+
+Examples:
+
+- I was tired.
+- She was ready.
+- We were late.
+- They were excited.
+
 ### Negatives
 
 - did not go
 - did not work
 
+Negative rule:
+
+- I/You/He/She/It/We/They + did not + base verb
+
+Examples:
+
+- I did not go.
+- She did not work yesterday.
+- They did not finish the task.
+
+After **did**, use the base verb, not the past form.
+
 ### Questions
 
 - Did you call?
 - Did she arrive?
+
+Question rule:
+
+- Did + I/you/he/she/it/we/they + base verb?
+
+Examples:
+
+- Did you call?
+- Did he arrive?
+- Did they finish on time?
 
 ### Example 1
 
@@ -159,15 +206,54 @@ Examples:
 - has gone
 - have seen
 
+### Subject rule
+
+- I/You/We/They + have + past participle
+- He/She/It + has + past participle
+
+Examples:
+
+- I have finished
+- You have seen it
+- We have arrived
+- They have left
+- He has finished
+- She has seen it
+- It has changed
+
 ### Negatives
 
 - have not finished
 - has not arrived
 
+Negative rule:
+
+- I/You/We/They + have not + past participle
+- He/She/It + has not + past participle
+
+Examples:
+
+- I have not finished.
+- We have not started yet.
+- He has not arrived.
+- She has not replied.
+
 ### Questions
 
 - Have you finished?
 - Has she called?
+
+Question rule:
+
+- Have + I/you/we/they + past participle?
+- Has + he/she/it + past participle?
+
+Examples:
+
+- Have you finished?
+- Have they left?
+- Has he called?
+- Has she replied?
 
 ### Example 7
 
