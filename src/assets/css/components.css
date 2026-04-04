@@ -3,16 +3,23 @@
 /* Buttons */
 .btn {
   display: inline-block;
-  padding: var(--space-sm) var(--space-md);
+  padding: 0.8rem 1.15rem;
+  font-family: var(--font-ui);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.01em;
   text-align: center;
   text-decoration: none;
-  border: none;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  transition: all var(--transition-base);
   border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn:hover {
@@ -21,18 +28,18 @@
 }
 
 .btn-primary {
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
 }
 
 .btn-primary:hover {
-  background-color: var(--color-primary-dark);
+  color: white;
 }
 
 .btn-secondary {
-  background-color: var(--color-surface);
+  background-color: rgba(255, 255, 255, 0.84);
   color: var(--color-text);
-  border-color: var(--color-border);
+  border-color: rgba(24, 34, 48, 0.08);
 }
 
 .btn-secondary:hover {
@@ -62,14 +69,20 @@
 
 /* Cards */
 .card {
-  background-color: var(--color-background);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.88));
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
-  transition: all var(--transition-base);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition-base),
+    box-shadow var(--transition-base),
+    border-color var(--transition-base);
 }
 
 .card:hover {
+  transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
   border-color: var(--color-border-dark);
 }
@@ -93,12 +106,13 @@
 /* Badges */
 .badge {
   display: inline-block;
+  font-family: var(--font-ui);
   padding: var(--space-xs) var(--space-sm);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   border-radius: var(--radius-sm);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.08em;
 }
 
 .badge-primary {
@@ -165,6 +179,7 @@
 
 label {
   display: block;
+  font-family: var(--font-ui);
   margin-bottom: var(--space-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text);
@@ -176,7 +191,7 @@ select {
   width: 100%;
   max-width: 100%;
   padding: var(--space-sm) var(--space-md);
-  font-family: var(--font-sans);
+  font-family: var(--font-ui);
   font-size: var(--font-size-base);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);

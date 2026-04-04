@@ -35,9 +35,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
               <span class="badge badge-primary">{level}</span>
             </div>
           </div>
-          <p style="margin-top: 1rem; font-size: 1.125rem; opacity: 0.95;">
-            {focus}
-          </p>
+          <p class="lesson-focus-copy">{focus}</p>
         </div>
       </div>
     </section>
@@ -52,22 +50,35 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       </div>
     </div>
 
-    <!-- Practice & Next Section -->
-    <section class="lesson-footer">
+    <!-- Next Steps Section -->
+    <section class="lesson-next-steps">
       <div class="container">
-        <div class="footer-content">
-          <div class="practice-card">
-            <h3>📝 Practice What You Learned</h3>
-            <p>Test your understanding with lesson-specific practice exercises and quizzes.</p>
-            <a href="/quiz" class="btn btn-primary">View Practice Exercises</a>
+        <div class="next-steps-content">
+          <div class="next-step-card practice">
+            <div class="card-icon">✍️</div>
+            <h3>Ready to Practice?</h3>
+            <p>Reinforce your understanding with targeted exercises and quizzes designed specifically for this lesson.</p>
+            <a href={`/quiz/${slug}`} class="btn btn-primary btn-lg">Start Practice Exercises</a>
+          </div>
+
+          <div class="next-step-card track" data-lesson-progress data-lesson-slug={slug}>
+            <div class="card-icon">📈</div>
+            <h3>Track Progress</h3>
+            <p class="progress-copy">Mark this lesson complete when you finish it so the dashboard can build a real review plan.</p>
+            <div class="step-buttons">
+              <button type="button" class="btn btn-outline lesson-progress-toggle">Mark Lesson Complete</button>
+              <button type="button" class="btn btn-outline lesson-bookmark-toggle">Add Bookmark</button>
+              <a href="/dashboard" class="btn btn-outline">Open Dashboard</a>
+            </div>
           </div>
           
-          <div class="navigation-card">
-            <h3>📚 Continue Learning</h3>
-            <p>Explore more lessons in the curriculum or check your progress on the roadmap.</p>
-            <div class="nav-buttons">
-              <a href="/curriculum" class="btn btn-secondary">View Curriculum</a>
-              <a href="/roadmap" class="btn btn-secondary">View Roadmap</a>
+          <div class="next-step-card explore">
+            <div class="card-icon">🗺️</div>
+            <h3>Explore Your Path</h3>
+            <p>View the complete curriculum or follow the structured roadmap to stay on track with your learning journey.</p>
+            <div class="step-buttons">
+              <a href="/curriculum" class="btn btn-outline">View Curriculum</a>
+              <a href="/roadmap" class="btn btn-outline">Study Roadmap</a>
             </div>
           </div>
         </div>
@@ -106,6 +117,13 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       gap: 0.5rem;
     }
 
+    .lesson-focus-copy {
+      margin-top: 1rem;
+      font-size: 1.22rem;
+      line-height: 1.75;
+      opacity: 0.95;
+    }
+
     .lesson-content {
       width: 100%;
     }
@@ -114,13 +132,13 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
     .content-prose {
       max-width: 800px;
       margin: 0 auto;
-      line-height: 1.7;
+      line-height: 1.82;
       color: var(--color-text);
-      font-size: var(--font-size-base);
+      font-size: clamp(1.1rem, 1.02rem + 0.22vw, 1.2rem);
     }
 
     .content-prose h2 {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.8rem, 1.55rem + 0.7vw, 2.1rem);
       color: var(--color-primary);
       margin: 2rem 0 1rem 0;
       font-weight: var(--font-weight-bold);
@@ -129,14 +147,14 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
     }
 
     .content-prose h3 {
-      font-size: var(--font-size-xl);
+      font-size: clamp(1.42rem, 1.28rem + 0.4vw, 1.65rem);
       color: var(--color-primary-dark);
       margin: 1.5rem 0 0.75rem 0;
       font-weight: var(--font-weight-semibold);
     }
 
     .content-prose h4 {
-      font-size: var(--font-size-lg);
+      font-size: 1.2rem;
       color: var(--color-text);
       margin: 1rem 0 0.5rem 0;
       font-weight: var(--font-weight-semibold);
@@ -144,7 +162,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
 
     .content-prose p {
       margin: 1rem 0;
-      line-height: 1.8;
+      line-height: 1.9;
     }
 
     .content-prose ul,
@@ -155,7 +173,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
 
     .content-prose li {
       margin: 0.5rem 0;
-      line-height: 1.7;
+      line-height: 1.82;
     }
 
     .content-prose li strong {
@@ -180,7 +198,7 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       padding: 0.25rem 0.5rem;
       border-radius: var(--radius-sm);
       font-family: 'Courier New', monospace;
-      font-size: 0.9em;
+      font-size: 0.95em;
     }
 
     .content-prose pre {
@@ -268,14 +286,15 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
 
       .content-prose {
         padding: 0 1rem;
+        font-size: 1.06rem;
       }
 
       .content-prose h2 {
-        font-size: var(--font-size-xl);
+        font-size: 1.55rem;
       }
 
       .content-prose h3 {
-        font-size: var(--font-size-lg);
+        font-size: 1.28rem;
       }
 
       .content-prose ul,
@@ -284,102 +303,229 @@ const { title, slug, module, moduleId, duration, focus, level } = Astro.props;
       }
     }
 
-    /* Lesson Footer Section */
-    .lesson-footer {
-      background-color: var(--color-surface);
-      padding: var(--space-2xl) 0;
-      margin-top: var(--space-2xl);
-      border-top: 2px solid var(--color-border);
+    /* Next Steps Section */
+    .lesson-next-steps {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+      padding: 4rem 0;
+      margin-top: 4rem;
     }
 
-    .footer-content {
+    .next-steps-content {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: var(--space-lg);
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
     }
 
-    .practice-card,
-    .navigation-card {
-      background-color: var(--color-background);
-      padding: var(--space-lg);
-      border-radius: var(--radius-md);
-      border: 2px solid var(--color-border);
+    .next-step-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.05);
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .practice-card:hover,
-    .navigation-card:hover {
-      border-color: var(--color-primary);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .next-step-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
     }
 
-    .practice-card h3,
-    .navigation-card h3 {
-      font-size: var(--font-size-lg);
-      color: var(--color-primary);
-      margin: 0 0 var(--space-md) 0;
+    .next-step-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      transform: translateY(-4px);
     }
 
-    .practice-card p,
-    .navigation-card p {
-      margin: 0 0 var(--space-lg) 0;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      color: var(--color-text);
+    .next-step-card.practice::before {
+      background: linear-gradient(90deg, #3b82f6, #1e40af);
     }
 
-    .practice-card .btn,
-    .navigation-card .btn {
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: none;
-      font-weight: 500;
+    .next-step-card.explore::before {
+      background: linear-gradient(90deg, #8b5cf6, #6d28d9);
+    }
+
+    .next-step-card.track::before {
+      background: linear-gradient(90deg, #f59e0b, #d97706);
+    }
+
+    .card-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
       display: inline-block;
     }
 
-    .btn-primary {
+    .next-step-card h3 {
+      font-size: 1.5rem;
+      color: var(--color-text);
+      margin: 0 0 0.75rem 0;
+      font-weight: 700;
+    }
+
+    .next-step-card p {
+      margin: 0 0 1.5rem 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-text-secondary);
+    }
+
+    .btn-lg {
+      padding: 0.875rem 2rem !important;
+      font-size: 0.95rem !important;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .btn-outline:hover {
       background-color: var(--color-primary);
       color: white;
+    }
+
+    .step-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .progress-copy.is-complete {
+      color: #065f46;
+      font-weight: 600;
+    }
+
+    .progress-copy.is-bookmarked {
+      color: #92400e;
+      font-weight: 600;
+    }
+
+    .btn {
+      text-decoration: none;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+      padding: 0.875rem 2rem;
+      font-size: 0.95rem;
     }
 
     .btn-primary:hover {
       opacity: 0.9;
-    }
-
-    .btn-secondary {
-      background-color: transparent;
-      color: var(--color-primary);
-      border: 2px solid var(--color-primary);
-    }
-
-    .btn-secondary:hover {
-      background-color: var(--color-primary);
-      color: white;
-    }
-
-    .nav-buttons {
-      display: flex;
-      gap: var(--space-md);
-      flex-wrap: wrap;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     @media (max-width: 768px) {
-      .footer-content {
-        grid-template-columns: 1fr;
+      .lesson-next-steps {
+        padding: 2.5rem 0;
+        margin-top: 2.5rem;
       }
 
-      .nav-buttons {
+      .next-steps-content {
+        gap: 1.5rem;
+      }
+
+      .next-step-card {
+        padding: 1.5rem;
+      }
+
+      .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .next-step-card h3 {
+        font-size: 1.25rem;
+      }
+
+      .step-buttons {
         flex-direction: column;
       }
 
-      .nav-buttons .btn {
+      .step-buttons .btn-outline {
         width: 100%;
         text-align: center;
       }
     }
   </style>
+
+  <script is:inline>
+    const lessonProgressRoot = document.querySelector('[data-lesson-progress]');
+
+    if (lessonProgressRoot instanceof HTMLElement) {
+      const slug = lessonProgressRoot.dataset.lessonSlug || '';
+      const toggleButton = lessonProgressRoot.querySelector('.lesson-progress-toggle');
+      const bookmarkButton = lessonProgressRoot.querySelector('.lesson-bookmark-toggle');
+      const progressCopy = lessonProgressRoot.querySelector('.progress-copy');
+      const progressApi = window.GrammarAtlasProgress;
+
+      const renderProgress = () => {
+        if (!progressApi) {
+          return;
+        }
+
+        const entry = progressApi.getLessonState(slug);
+        const isComplete = Boolean(entry?.completed);
+        const isBookmarked = Boolean(entry?.bookmarked);
+
+        if (toggleButton instanceof HTMLElement) {
+          toggleButton.textContent = isComplete ? 'Mark As In Progress' : 'Mark Lesson Complete';
+        }
+
+        if (bookmarkButton instanceof HTMLElement) {
+          bookmarkButton.textContent = isBookmarked ? 'Remove Bookmark' : 'Add Bookmark';
+        }
+
+        if (progressCopy instanceof HTMLElement) {
+          progressCopy.classList.toggle('is-complete', isComplete);
+          progressCopy.classList.toggle('is-bookmarked', !isComplete && isBookmarked);
+          progressCopy.textContent = isComplete
+            ? `Completed${entry?.updatedAt ? ` on ${new Date(entry.updatedAt).toLocaleDateString()}` : ''}.`
+            : isBookmarked
+              ? 'Bookmarked for review. Open the dashboard to keep it in your study queue.'
+              : 'Mark this lesson complete when you finish it so the dashboard can build a real review plan.';
+        }
+      };
+
+      toggleButton?.addEventListener('click', () => {
+        if (progressApi) {
+          progressApi.toggleLessonComplete(slug);
+          renderProgress();
+        }
+      });
+
+      bookmarkButton?.addEventListener('click', () => {
+        if (progressApi) {
+          progressApi.toggleLessonBookmark(slug);
+          renderProgress();
+        }
+      });
+
+      if (progressApi) {
+        renderProgress();
+      }
+    }
+  </script>
 </BaseLayout>

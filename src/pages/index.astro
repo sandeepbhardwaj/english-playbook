@@ -1,117 +1,330 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const highlights = [
+  {
+    title: 'Structured Curriculum',
+    description: 'Move through foundations, tense control, accuracy, complex grammar, style, and review in one connected sequence.',
+  },
+  {
+    title: 'Lesson-Based Quizzes',
+    description: 'Each lesson now has its own quiz route again, with instant checking and browser-saved best scores.',
+  },
+  {
+    title: 'Study Dashboard',
+    description: 'Track completions, bookmarks, weak areas, exported progress, and your personal grammar error log.',
+  },
+];
+
+const pathways = [
+  {
+    title: 'Start Fresh',
+    description: 'Open the curriculum and begin from the first lesson if you want the cleanest progression.',
+    href: '/curriculum',
+    label: 'Browse Curriculum',
+  },
+  {
+    title: 'Practice Immediately',
+    description: 'Jump into the quiz center if you want to test yourself before reading everything in order.',
+    href: '/quiz',
+    label: 'Open Quiz Center',
+  },
+  {
+    title: 'Review Smarter',
+    description: 'Use the dashboard to turn saved scores and bookmarks into a focused review plan.',
+    href: '/dashboard',
+    label: 'Open Dashboard',
+  },
+];
+
+const modules = [
+  'Foundations',
+  'Tenses and Time',
+  'Sentence Accuracy',
+  'Complex Grammar',
+  'Style and Editing',
+  'Mastery and Review',
+];
 ---
 
-<BaseLayout title="English Grammar Atlas" description="Master English grammar from foundations to advanced proficiency">
-  <!-- Hero Section -->
-  <section style="background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%); color: white; padding: 6rem 2rem;">
+<BaseLayout title="English Grammar Atlas" description="Master English grammar with clear lessons, real quiz routes, and a browser-saved study dashboard.">
+  <main class="main-content">
     <div class="container">
-      <h1 style="color: white; font-size: 3rem; margin-bottom: 1rem; text-align: center;">
-        Master English Grammar
-      </h1>
-      <p style="font-size: 1.25rem; text-align: center; max-width: 600px; margin: 0 auto 2rem; opacity: 0.95;">
-        From foundations to advanced proficiency. Learn through clear explanations, real examples, and deliberate practice.
-      </p>
-      <div style="display: flex; gap: 1rem; justify-content: center;">
-        <a href="/curriculum" class="btn btn-primary btn-lg">Start Learning</a>
-        <a href="/quiz" class="btn" style="background: white; color: #2563eb; display: inline-block; padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; text-decoration: none;">Take a Quiz</a>
-      </div>
-    </div>
-  </section>
+      <section class="home-hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">English Grammar Atlas</p>
+            <h1>Study grammar with a clearer path and a cleaner review loop.</h1>
+            <p class="hero-text">
+              Learn lesson by lesson, test yourself with topic-specific quizzes, and keep everything organized in a dashboard that remembers your progress in this browser.
+            </p>
+            <div class="hero-actions">
+              <a href="/curriculum" class="btn btn-primary">Start Learning</a>
+              <a href="/dashboard" class="btn btn-secondary">Open Dashboard</a>
+              <a href="/quiz" class="btn btn-secondary">Take A Quiz</a>
+            </div>
+          </div>
 
-  <!-- Features Section -->
-  <section style="padding: 4rem 2rem; background-color: var(--color-surface);">
-    <div class="container">
-      <h2 style="text-align: center; margin-bottom: 3rem;">Why Choose Grammar Atlas?</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        <div class="card">
-          <h3>📚 Complete Curriculum</h3>
-          <p>6 modules covering grammar from absolute beginner to upper intermediate level, with 21 premium lessons.</p>
+          <div class="hero-panel">
+            <p class="panel-label">What works now</p>
+            <ul class="hero-checklist">
+              <li>21 lesson pages in sequence</li>
+              <li>Per-lesson quiz routes</li>
+              <li>Saved quiz scores and bookmarks</li>
+              <li>Dashboard review queue and export/import tools</li>
+            </ul>
+          </div>
         </div>
-        <div class="card">
-          <h3>🎯 Structured Learning Path</h3>
-          <p>Follow a 14-week roadmap designed to build skills progressively, with clear milestones and checkpoints.</p>
-        </div>
-        <div class="card">
-          <h3>✨ Rich Content</h3>
-          <p>Story-based lessons, real examples, common mistakes, and practical exercises for every concept.</p>
-        </div>
-        <div class="card">
-          <h3>📊 Progress Tracking</h3>
-          <p>Save your quiz scores and lesson completions in your browser for continuous self-assessment.</p>
-        </div>
-        <div class="card">
-          <h3>🚀 Offline Ready</h3>
-          <p>Download and work entirely offline after your first visit. No internet required for studying.</p>
-        </div>
-        <div class="card">
-          <h3>🤖 Instant Feedback</h3>
-          <p>Quiz hundreds of questions across three difficulty levels with instant evaluation and explanations.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- Curriculum Preview -->
-  <section style="padding: 4rem 2rem;">
-    <div class="container">
-      <h2 style="text-align: center; margin-bottom: 3rem;">Our Curriculum</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-        <div class="card">
-          <h3>Module 1: Foundations</h3>
-          <p>Build a solid base with word classes, sentence structure, and basic noun phrases.</p>
+      <section class="home-highlights">
+        <div class="section-heading">
+          <p class="eyebrow">Why This Version Is Better</p>
+          <h2>A calmer, more connected study experience</h2>
         </div>
-        <div class="card">
-          <h3>Module 2: Tenses & Time</h3>
-          <p>Master all English tense forms and understand how they express different time meanings.</p>
+        <div class="highlight-grid">
+          {highlights.map((item) => (
+            <article class="card highlight-card">
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
         </div>
-        <div class="card">
-          <h3>Module 3: Accuracy</h3>
-          <p>Strengthen agreement, reference, passive voice, and other sentence-level precision.</p>
-        </div>
-        <div class="card">
-          <h3>Module 4: Complex Grammar</h3>
-          <p>Use clauses, conditionals, reported speech, and advanced verb patterns.</p>
-        </div>
-        <div class="card">
-          <h3>Module 5: Style & Editing</h3>
-          <p>Polish your writing with punctuation, parallelism, and concise formal tone.</p>
-        </div>
-        <div class="card">
-          <h3>Module 6: Mastery</h3>
-          <p>Review, correct errors, and transform sentences to solidify all your learning.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      </section>
 
-  <!-- CTA Section -->
-  <section style="background-color: var(--color-primary); color: white; padding: 4rem 2rem; text-align: center;">
-    <div class="container">
-      <h2 style="color: white; margin-bottom: 1rem;">Ready to Master English Grammar?</h2>
-      <p style="font-size: 1.125rem; margin-bottom: 2rem; opacity: 0.95;">
-        Start with our complete 14-week curriculum or dive straight into a specific topic.
-      </p>
-      <a href="/curriculum" style="display: inline-block; background-color: white; color: var(--color-primary); padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 500; text-decoration: none;">Begin Your Journey</a>
+      <section class="home-pathways">
+        <div class="section-heading">
+          <p class="eyebrow">Choose Your Entry Point</p>
+          <h2>Different ways to use the portal</h2>
+        </div>
+        <div class="pathway-grid">
+          {pathways.map((path) => (
+            <article class="pathway-card">
+              <h3>{path.title}</h3>
+              <p>{path.description}</p>
+              <a href={path.href} class="btn btn-secondary">{path.label}</a>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section class="home-modules">
+        <div class="section-heading">
+          <p class="eyebrow">Course Shape</p>
+          <h2>Six modules, one progression</h2>
+        </div>
+        <div class="module-strip">
+          {modules.map((module, index) => (
+            <div class="module-pill">
+              <span class="module-index">0{index + 1}</span>
+              <span>{module}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="home-cta">
+        <div class="cta-shell">
+          <div>
+            <p class="eyebrow">Ready To Begin</p>
+            <h2>Pick one lesson, one quiz, and let the dashboard do the rest.</h2>
+          </div>
+          <div class="cta-actions">
+            <a href="/lessons/parts-of-speech" class="btn btn-primary">Start Lesson 1</a>
+            <a href="/dashboard" class="btn btn-secondary">View Saved Progress</a>
+          </div>
+        </div>
+      </section>
     </div>
-  </section>
+  </main>
+
+  <style>
+    .eyebrow {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
+    .section-heading {
+      margin-bottom: var(--space-xl);
+      max-width: 50rem;
+    }
+
+    .home-hero {
+      margin-bottom: var(--space-3xl);
+      padding: clamp(2rem, 5vw, 4rem);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top right, rgba(15, 118, 110, 0.18), transparent 24rem),
+        linear-gradient(135deg, rgba(33, 81, 209, 0.1), rgba(33, 81, 209, 0.02));
+      border: 1px solid rgba(24, 34, 48, 0.08);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
+      gap: var(--space-xl);
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      font-size: clamp(3rem, 6vw, 5rem);
+      margin-bottom: var(--space-md);
+    }
+
+    .hero-text {
+      max-width: 42rem;
+      margin-bottom: var(--space-lg);
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-lg);
+      line-height: 1.82;
+    }
+
+    .hero-actions,
+    .cta-actions {
+      display: flex;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .hero-panel {
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .panel-label {
+      margin-bottom: var(--space-md);
+      color: var(--color-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-checklist {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .hero-checklist li {
+      color: var(--color-text);
+    }
+
+    .home-highlights,
+    .home-pathways,
+    .home-modules {
+      margin-bottom: var(--space-3xl);
+    }
+
+    .highlight-grid,
+    .pathway-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .highlight-card h3,
+    .pathway-card h3 {
+      margin-bottom: var(--space-sm);
+    }
+
+    .highlight-card p,
+    .pathway-card p {
+      margin-bottom: 0;
+      color: var(--color-text-secondary);
+      line-height: 1.65;
+    }
+
+    .pathway-card {
+      display: grid;
+      gap: var(--space-md);
+      padding: var(--space-xl);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.88));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .module-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .module-pill {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: center;
+      padding: 1rem 1.1rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid var(--color-border);
+      box-shadow: var(--shadow-sm);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .module-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      color: white;
+      font-size: var(--font-size-sm);
+    }
+
+    .home-cta {
+      margin-bottom: var(--space-xl);
+    }
+
+    .cta-shell {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-xl);
+      align-items: center;
+      padding: clamp(1.75rem, 4vw, 3rem);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+      color: white;
+    }
+
+    .cta-shell h2,
+    .cta-shell .eyebrow {
+      color: white;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .cta-shell {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-actions,
+      .cta-actions {
+        flex-direction: column;
+      }
+
+      .hero-actions .btn,
+      .cta-actions .btn {
+        width: 100%;
+      }
+
+      .highlight-grid,
+      .pathway-grid,
+      .module-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </BaseLayout>
-
-<style>
-  .card {
-    background-color: var(--color-background);
-    border: 1px solid var(--color-border);
-    border-radius: 0.75rem;
-    padding: 1.5rem;
-    transition: all 250ms ease-in-out;
-  }
-
-  .card:hover {
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    border-color: var(--color-border-dark);
-  }
-
-  .card h3 {
-    margin-top: 0;
-  }
-</style>

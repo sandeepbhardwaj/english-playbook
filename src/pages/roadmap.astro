@@ -112,14 +112,14 @@ const roadmapWeeks = [
       <section class="roadmap-hero">
         <h1>12-Week Study Roadmap</h1>
         <p class="hero-subtitle">Master English grammar progressively with this structured pacing plan</p>
-        <p style="font-size: 1rem; margin-top: 1.5rem; color: var(--color-text-secondary); line-height: 1.6;">
+        <p class="hero-intro">
           This roadmap organizes all 21 lessons across 12 weeks. Start with foundations, progress through tenses and accuracy, tackle complex grammar, and finish with style. Adapt this pacing to your needs.
         </p>
       </section>
 
       <!-- Roadmap Grid -->
       <section class="roadmap-schedule">
-        <h2 style="margin-bottom: 2rem; text-align: center; color: var(--color-primary);">Weekly Schedule</h2>
+        <h2 class="roadmap-section-title">Weekly Schedule</h2>
         
         <div class="roadmap-grid">
           {roadmapWeeks.map((week) => (
@@ -131,15 +131,15 @@ const roadmapWeeks = [
               <p class="week-focus"><strong>Focus:</strong> {week.focus}</p>
               
               <div class="week-lessons">
-                <p style="font-size: 0.875rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-primary);">
+                <p class="week-lessons-label">
                   Lessons:
                 </p>
-                <ul style="list-style: none; margin: 0; padding: 0; font-size: 0.9rem;">
+                <ul class="week-lesson-list">
                   {week.lessons.map((lesson) => {
                     const slug = lessonMap[lesson] || lesson.toLowerCase().replace(/\s+/g, '-');
                     return (
-                      <li style="margin-bottom: 0.5rem;">
-                        <a href={`/lessons/${slug}`} style="color: var(--color-primary); text-decoration: none;">
+                      <li class="week-lesson-item">
+                        <a href={`/lessons/${slug}`} class="week-lesson-link">
                           → {lesson}
                         </a>
                       </li>
@@ -190,24 +190,42 @@ const roadmapWeeks = [
   <style>
     .roadmap-hero {
       text-align: center;
-      padding: var(--space-xl) 0;
+      padding: var(--space-2xl) 0;
       margin-bottom: var(--space-2xl);
       border-bottom: 2px solid var(--color-border);
     }
 
     .roadmap-hero h1 {
-      font-size: var(--font-size-4xl);
+      font-size: clamp(2.9rem, 5vw, 4.4rem);
       margin-bottom: var(--space-md);
       color: var(--color-primary);
     }
 
     .hero-subtitle {
-      font-size: var(--font-size-lg);
+      max-width: 42rem;
+      margin: 0 auto;
+      font-size: 1.18rem;
       color: var(--color-text-secondary);
+      line-height: 1.8;
+    }
+
+    .hero-intro {
+      max-width: 48rem;
+      margin: 1.5rem auto 0;
+      font-size: 1.05rem;
+      color: var(--color-text-secondary);
+      line-height: 1.82;
     }
 
     .roadmap-schedule {
       margin-bottom: var(--space-2xl);
+    }
+
+    .roadmap-section-title {
+      margin-bottom: 2rem;
+      text-align: center;
+      color: var(--color-primary);
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.35rem);
     }
 
     .roadmap-grid {
@@ -241,28 +259,60 @@ const roadmapWeeks = [
       color: white;
       padding: 0.5rem 1rem;
       border-radius: var(--radius-md);
+      font-family: var(--font-ui);
       font-weight: var(--font-weight-bold);
-      font-size: 0.875rem;
+      font-size: 0.88rem;
+      letter-spacing: 0.03em;
     }
 
     .week-title {
-      font-size: var(--font-size-lg);
+      font-size: 1.38rem;
       color: var(--color-primary);
       margin: var(--space-md) 0 var(--space-sm) 0;
       font-weight: var(--font-weight-bold);
     }
 
     .week-focus {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--color-text);
       margin-bottom: var(--space-md);
-      line-height: 1.5;
+      line-height: 1.75;
     }
 
     .week-lessons {
       border-top: 1px solid var(--color-border);
       padding-top: var(--space-md);
       margin-top: var(--space-md);
+    }
+
+    .week-lessons-label {
+      margin-bottom: 0.75rem;
+      color: var(--color-primary);
+      font-family: var(--font-ui);
+      font-size: 0.84rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.04em;
+    }
+
+    .week-lesson-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0.98rem;
+    }
+
+    .week-lesson-item {
+      margin-bottom: 0.5rem;
+    }
+
+    .week-lesson-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      line-height: 1.6;
+    }
+
+    .week-lesson-link:hover {
+      text-decoration: underline;
     }
 
     .roadmap-tips {
@@ -273,7 +323,7 @@ const roadmapWeeks = [
     }
 
     .roadmap-tips h2 {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.35rem);
       color: var(--color-primary);
       margin-bottom: var(--space-lg);
     }
@@ -292,15 +342,15 @@ const roadmapWeeks = [
     }
 
     .tip-card h3 {
-      font-size: var(--font-size-lg);
+      font-size: 1.28rem;
       margin-bottom: var(--space-md);
       color: var(--color-primary);
     }
 
     .tip-card p {
       margin: 0;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      font-size: 1rem;
+      line-height: 1.75;
       color: var(--color-text);
     }
 
@@ -311,15 +361,16 @@ const roadmapWeeks = [
     }
 
     .roadmap-cta h2 {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.35rem);
       margin-bottom: var(--space-md);
       color: var(--color-primary);
     }
 
     .roadmap-cta p {
-      font-size: var(--font-size-base);
+      font-size: 1.06rem;
       color: var(--color-text-secondary);
       margin-bottom: var(--space-lg);
+      line-height: 1.75;
     }
 
     .button-group {
@@ -330,6 +381,7 @@ const roadmapWeeks = [
     }
 
     .btn {
+      font-family: var(--font-ui);
       padding: 0.75rem 1.5rem;
       border-radius: var(--radius-md);
       text-decoration: none;
@@ -366,7 +418,16 @@ const roadmapWeeks = [
       }
 
       .roadmap-hero h1 {
-        font-size: var(--font-size-2xl);
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle,
+      .hero-intro,
+      .week-focus,
+      .week-lesson-list,
+      .tip-card p,
+      .roadmap-cta p {
+        font-size: 1rem;
       }
 
       .tips-grid {

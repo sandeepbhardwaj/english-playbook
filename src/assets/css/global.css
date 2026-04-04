@@ -2,31 +2,35 @@
 
 :root {
   /* Color Palette */
-  --color-primary: #2563eb;
-  --color-primary-light: #3b82f6;
-  --color-primary-dark: #1e40af;
-  --color-secondary: #7c3aed;
-  --color-accent: #f59e0b;
+  --color-primary: #2151d1;
+  --color-primary-light: #5a87ff;
+  --color-primary-dark: #17348c;
+  --color-secondary: #0f766e;
+  --color-accent: #dd6b20;
   
-  --color-background: #ffffff;
-  --color-surface: #f9fafb;
-  --color-surface-alt: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-border-dark: #d1d5db;
+  --color-background: #fffdf8;
+  --color-surface: #f4f7f6;
+  --color-surface-alt: #eaf0f3;
+  --color-bg: var(--color-background);
+  --color-bg-secondary: var(--color-surface);
+  --color-border: #d8e0e7;
+  --color-border-dark: #bcc7d2;
   
-  --color-text: #1f2937;
-  --color-text-secondary: #6b7280;
-  --color-text-light: #9ca3af;
+  --color-text: #182230;
+  --color-text-secondary: #556273;
+  --color-text-light: #8692a2;
   
   --color-success: #10b981;
+  --color-success-light: #d1fae5;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #0ea5e9;
   
   /* Typography */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  --font-ui: 'Avenir Next', 'Segoe UI Variable', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Charter', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --font-sans: var(--font-ui);
+  --font-display: 'Baskerville', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
   
   --font-size-xs: 0.75rem;
@@ -40,7 +44,7 @@
   
   --font-weight-normal: 400;
   --font-weight-medium: 500;
-  --font-weight-semibold: 600;
+  --font-weight-semibold: 580;
   --font-weight-bold: 700;
   
   --line-height-tight: 1.25;
@@ -72,11 +76,12 @@
   /* Transitions */
   --transition-fast: 150ms ease-in-out;
   --transition-base: 250ms ease-in-out;
+  --transition-normal: var(--transition-base);
   --transition-slow: 350ms ease-in-out;
   
   /* Layout */
   --max-width-content: 1200px;
-  --max-width-prose: 65ch;
+  --max-width-prose: 68ch;
 }
 
 /* Reset */
@@ -93,50 +98,73 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-normal);
+  font-family: var(--font-body);
+  font-size: 1.03rem;
+  line-height: 1.72;
   color: var(--color-text);
-  background-color: var(--color-background);
-  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(circle at top left, rgba(33, 81, 209, 0.08), transparent 20rem),
+    linear-gradient(180deg, #f6f9ff 0%, #fffdf8 22rem);
+  min-height: 100vh;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: rgba(33, 81, 209, 0.16);
+  color: var(--color-text);
+}
+
+main {
+  display: block;
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
+  font-family: var(--font-display);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+  margin-top: 0;
   margin-bottom: var(--space-md);
 }
 
 h1 {
   font-size: var(--font-size-4xl);
-  margin-top: var(--space-2xl);
 }
 
 h2 {
   font-size: var(--font-size-3xl);
-  margin-top: var(--space-2xl);
 }
 
 h3 {
   font-size: var(--font-size-2xl);
-  margin-top: var(--space-lg);
 }
 
 h4, h5, h6 {
   font-size: var(--font-size-lg);
-  margin-top: var(--space-md);
 }
 
 p {
   margin-bottom: var(--space-md);
+  color: var(--color-text-secondary);
+}
+
+button,
+input,
+textarea,
+select,
+label {
+  font-family: var(--font-ui);
 }
 
 a {
   color: var(--color-primary);
   text-decoration: none;
-  transition: color var(--transition-base);
+  transition:
+    color var(--transition-base),
+    opacity var(--transition-base);
 }
 
 a:hover {

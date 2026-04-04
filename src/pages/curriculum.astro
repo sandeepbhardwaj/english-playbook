@@ -1,60 +1,23 @@
 ---
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { curriculumModules, sortLessonEntries } from '../lib/course';
+import { loadLessons } from '../lib/lesson-files';
 
-// Load all lesson files
-const lessonsDir = path.join(process.cwd(), 'src/content/lessons');
-const files = fs.readdirSync(lessonsDir).filter(f => f.endsWith('.md'));
-
-const lessons = files.map(file => {
-  const filePath = path.join(lessonsDir, file);
-  const content = fs.readFileSync(filePath, 'utf-8');
-  const { data } = matter(content);
-  return { data };
-});
+const lessons = sortLessonEntries(loadLessons());
 
 // Group lessons by module
-const moduleOrder = ['foundations', 'tenses', 'accuracy', 'complex-grammar', 'style', 'mastery'];
-const curriculum = {
-  foundations: {
-    title: 'Module 1: Foundations of Grammar',
-    description: 'Build a clean base in word classes, sentence architecture, and noun phrases before moving into more advanced control.',
-    tasks: 'Write a 150-word self-introduction and label nouns, verbs, articles, and sentence types.',
-    lessons: lessons.filter(l => l.data.moduleId === 'foundations'),
-  },
-  tenses: {
-    title: 'Module 2: Tenses and Time',
-    description: 'Master every tense form from simple to progressive, perfect to modal, and understand the meaning differences that matter for communication.',
-    tasks: 'Create a timeline of your week and write sentences using different tenses for past, present, and future.',
-    lessons: lessons.filter(l => l.data.moduleId === 'tenses'),
-  },
-  accuracy: {
-    title: 'Module 3: Sentence Accuracy',
-    description: 'Build confidence making sentences that are grammatically sound, then move beyond accuracy to style and impact.',
-    tasks: 'Edit a flawed paragraph covering agreement, pronouns, prepositions, and voice.',
-    lessons: lessons.filter(l => l.data.moduleId === 'accuracy'),
-  },
-  'complex-grammar': {
-    title: 'Module 4: Complex Grammar',
-    description: 'Handle sophisticated sentence structures: relative clauses, conditionals, reported speech, and verb patterns that unlock formal and technical writing.',
-    tasks: 'Rewrite simple sentences into complex structures using clauses, conditionals, and reported speech.',
-    lessons: lessons.filter(l => l.data.moduleId === 'complex-grammar'),
-  },
-  style: {
-    title: 'Module 5: Style and Editing',
-    description: 'Move beyond correct to compelling. Master punctuation choices, parallel structure, and concision that make writing powerful.',
-    tasks: 'Revise a sample text for clarity, parallelism, and tone.',
-    lessons: lessons.filter(l => l.data.moduleId === 'style'),
-  },
-  mastery: {
-    title: 'Module 6: Mastery and Review',
-    description: 'Consolidate your knowledge through targeted error correction, transformations, and a comprehensive review ready you for any writing challenge.',
-    tasks: 'Complete a final assessment covering all six modules.',
-    lessons: lessons.filter(l => l.data.moduleId === 'mastery'),
-  },
-};
+const moduleOrder = curriculumModules.map((module) => module.id);
+const curriculum = Object.fromEntries(
+  curriculumModules.map((module) => [
+    module.id,
+    {
+      title: module.title,
+      description: module.description,
+      tasks: module.portfolioTask,
+      lessons: lessons.filter((lesson) => lesson.data.moduleId === module.id),
+    },
+  ]),
+);
 ---
 
 <BaseLayout title="Full Curriculum | English Grammar Atlas" description="21 premium grammar lessons organized across 6 progressive modules">
@@ -83,20 +46,18 @@ const curriculum = {
               </a>
 
               <div class="lessons-grid">
-                {module.lessons
-                  .sort((a, b) => (a.data.slug || '').localeCompare(b.data.slug || ''))
-                  .map((lesson) => (
-                    <a href={`/lessons/${lesson.data.slug}`} class="lesson-card">
-                      <div class="lesson-card-header">
-                        <h3>{lesson.data.title}</h3>
-                        <span class="lesson-duration">{lesson.data.duration}</span>
-                      </div>
-                      <p class="lesson-focus">{lesson.data.focus}</p>
-                      <div class="lesson-meta">
-                        <span class="lesson-level">{lesson.data.level || 'Beginner'}</span>
-                      </div>
-                    </a>
-                  ))}
+                {module.lessons.map((lesson) => (
+                  <a href={`/lessons/${lesson.data.slug}`} class="lesson-card">
+                    <div class="lesson-card-header">
+                      <h3>{lesson.data.title}</h3>
+                      <span class="lesson-duration">{lesson.data.duration}</span>
+                    </div>
+                    <p class="lesson-focus">{lesson.data.focus}</p>
+                    <div class="lesson-meta">
+                      <span class="lesson-level">{lesson.data.level || 'Beginner'}</span>
+                    </div>
+                  </a>
+                ))}
               </div>
             </section>
           );
@@ -118,19 +79,22 @@ const curriculum = {
   <style>
     .curriculum-hero {
       text-align: center;
-      padding: var(--space-xl) 0;
-      margin-bottom: var(--space-lg);
+      padding: var(--space-2xl) 0;
+      margin-bottom: var(--space-xl);
       border-bottom: 2px solid var(--color-border);
     }
 
     .curriculum-hero h1 {
-      font-size: var(--font-size-4xl);
+      font-size: clamp(2.9rem, 5vw, 4.4rem);
       margin-bottom: var(--space-sm);
     }
 
     .hero-subtitle {
-      font-size: var(--font-size-lg);
+      max-width: 44rem;
+      margin: 0 auto;
+      font-size: 1.2rem;
       color: var(--color-text-secondary);
+      line-height: 1.8;
     }
 
     .module-section {
@@ -139,8 +103,8 @@ const curriculum = {
 
     .module-header {
       margin-bottom: var(--space-lg);
-      padding: var(--space-lg);
-      padding-bottom: var(--space-lg);
+      padding: var(--space-xl);
+      padding-bottom: var(--space-xl);
       border-bottom: 2px solid var(--color-border);
       border-radius: var(--radius-md);
       transition: all 0.3s ease;
@@ -157,24 +121,25 @@ const curriculum = {
     }
 
     .module-title {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.95rem, 1.7rem + 0.5vw, 2.3rem);
       color: var(--color-primary);
       margin-bottom: var(--space-md);
     }
 
     .module-description {
-      font-size: var(--font-size-base);
+      font-size: 1.1rem;
       color: var(--color-text);
       margin-bottom: var(--space-md);
-      line-height: 1.6;
+      line-height: 1.8;
     }
 
     .module-task {
       background-color: var(--color-bg-secondary);
       padding: var(--space-md);
       border-radius: var(--radius-md);
-      font-size: var(--font-size-sm);
+      font-size: 0.98rem;
       color: var(--color-text);
+      line-height: 1.7;
     }
 
     .lessons-grid {
@@ -209,7 +174,7 @@ const curriculum = {
     }
 
     .lesson-card-header h3 {
-      font-size: var(--font-size-lg);
+      font-size: 1.28rem;
       color: var(--color-primary);
       margin: 0;
       flex: 1;
@@ -226,10 +191,10 @@ const curriculum = {
     }
 
     .lesson-focus {
-      font-size: var(--font-size-sm);
+      font-size: 1rem;
       color: var(--color-text);
       margin-bottom: var(--space-md);
-      line-height: 1.5;
+      line-height: 1.75;
     }
 
     .lesson-meta {
@@ -256,13 +221,14 @@ const curriculum = {
     }
 
     .curriculum-footer h2 {
-      font-size: var(--font-size-2xl);
+      font-size: clamp(1.9rem, 1.6rem + 0.6vw, 2.35rem);
       margin-bottom: var(--space-md);
     }
 
     .curriculum-footer p {
-      font-size: var(--font-size-base);
+      font-size: 1.08rem;
       margin-bottom: var(--space-lg);
+      line-height: 1.75;
     }
 
     .button-group {
@@ -274,11 +240,18 @@ const curriculum = {
 
     @media (max-width: 768px) {
       .curriculum-hero h1 {
-        font-size: var(--font-size-3xl);
+        font-size: 2.5rem;
       }
 
       .module-title {
-        font-size: var(--font-size-xl);
+        font-size: 1.65rem;
+      }
+
+      .hero-subtitle,
+      .module-description,
+      .lesson-focus,
+      .curriculum-footer p {
+        font-size: 1rem;
       }
 
       .lessons-grid {
