@@ -27,11 +27,54 @@ const {
 const moduleMeta = getModule(lesson.data.moduleId);
 const quizQuestions = buildQuizForLesson(lesson, lessons);
 const storageKey = `grammar-atlas.quiz.${lesson.data.slug}`;
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
+const quizUrl = `${siteUrl}/quiz/${lesson.data.slug}`;
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'LearningResource',
+    name: `${lesson.data.title} Quiz`,
+    description: `Practice ${lesson.data.title} with a lesson-based quiz.`,
+    url: quizUrl,
+    learningResourceType: 'Quiz',
+    educationalLevel: lesson.data.level || 'Beginner',
+    isPartOf: {
+      '@type': 'Course',
+      name: 'English Grammar Atlas',
+      url: siteUrl,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Quiz Center',
+        item: `${siteUrl}/quiz`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: lesson.data.title,
+        item: quizUrl,
+      },
+    ],
+  },
+];
 ---
 
 <BaseLayout
   title={`Quiz: ${lesson.data.title} | English Grammar Atlas`}
   description={`Practice ${lesson.data.title} with a lesson-based quiz.`}
+  structuredData={structuredData}
 >
   <main class="main-content">
     <div class="container">

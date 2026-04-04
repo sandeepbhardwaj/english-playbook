@@ -4,6 +4,8 @@ import { curriculumModules, sortLessonEntries } from '../lib/course';
 import { loadLessons } from '../lib/lesson-files';
 
 const lessons = sortLessonEntries(loadLessons());
+const lessonCount = lessons.length;
+const moduleCount = curriculumModules.length;
 
 // Group lessons by module
 const moduleOrder = curriculumModules.map((module) => module.id);
@@ -12,36 +14,86 @@ const curriculum = Object.fromEntries(
     module.id,
     {
       title: module.title,
+      level: module.level,
+      duration: module.duration,
       description: module.description,
       tasks: module.portfolioTask,
       lessons: lessons.filter((lesson) => lesson.data.moduleId === module.id),
     },
   ]),
 );
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Course',
+    name: 'English Grammar Atlas',
+    description: 'A structured English grammar curriculum with progressive modules, lessons, and lesson-based quizzes.',
+    provider: {
+      '@type': 'Organization',
+      name: 'English Grammar Atlas',
+      url: siteUrl,
+    },
+    url: `${siteUrl}/curriculum`,
+    educationalLevel: 'Beginner to Advanced',
+    hasCourseInstance: curriculumModules.map((module) => ({
+      '@type': 'CourseInstance',
+      name: module.title,
+      description: module.description,
+    })),
+  },
+];
 ---
 
-<BaseLayout title="Full Curriculum | English Grammar Atlas" description="21 premium grammar lessons organized across 6 progressive modules">
+<BaseLayout
+  title="Full Curriculum | English Grammar Atlas"
+  description="21 premium grammar lessons organized across 6 progressive modules"
+  structuredData={structuredData}
+>
   <main class="main-content">
     <div class="container">
       <!-- Hero Section -->
       <section class="curriculum-hero">
+        <p class="hero-kicker">Course Map</p>
         <h1>Complete Curriculum</h1>
         <p class="hero-subtitle">21 premium lessons across 6 progressive modules, from foundations to mastery</p>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <strong>{moduleCount}</strong>
+            <span>progressive modules</span>
+          </div>
+          <div class="hero-stat">
+            <strong>{lessonCount}</strong>
+            <span>lesson pages</span>
+          </div>
+          <div class="hero-stat">
+            <strong>1</strong>
+            <span>connected study path</span>
+          </div>
+        </div>
       </section>
 
       <!-- Module Grid -->
       {
-        moduleOrder.map((moduleId) => {
+        moduleOrder.map((moduleId, index) => {
           const module = curriculum[moduleId];
           return (
             <section class="module-section">
-              <a href={`/modules/${moduleId}`} style="text-decoration: none; color: inherit;">
+              <a href={`/modules/${moduleId}`} class="module-header-link">
                 <div class="module-header">
+                  <div class="module-header-topline">
+                    <span class="module-sequence">Module {String(index + 1).padStart(2, '0')}</span>
+                    <div class="module-pills">
+                      <span class="module-pill">{module.level}</span>
+                      <span class="module-pill">{module.duration}</span>
+                    </div>
+                  </div>
                   <h2 class="module-title">{module.title}</h2>
                   <p class="module-description">{module.description}</p>
                   <div class="module-task">
                     <strong>Portfolio Task:</strong> {module.tasks}
                   </div>
+                  <span class="module-header-cta">Open module overview</span>
                 </div>
               </a>
 
@@ -65,23 +117,38 @@ const curriculum = Object.fromEntries(
       }
 
       <!-- Footer CTA -->
-      <section class="curriculum-footer">
-        <h2>Ready to master English grammar?</h2>
-        <p>Start with Module 1 or jump to any lesson that interests you. Complete all lessons for a certified accomplishment.</p>
-        <div class="button-group">
-          <a href="/lessons/parts-of-speech" class="btn btn-primary">Start Lesson 1</a>
-          <a href="/" class="btn btn-secondary">Back to Home</a>
-        </div>
-      </section>
+	      <section class="curriculum-footer">
+	        <h2>Ready to master English grammar?</h2>
+	        <p>Start with Module 1 or jump to any lesson that interests you. Complete the full path for a real sense of accomplishment.</p>
+	        <div class="button-group">
+	          <a href="/lessons/parts-of-speech" class="btn btn-primary">Start Lesson 1</a>
+	          <a href="/" class="btn btn-secondary">Back to Home</a>
+	        </div>
+	      </section>
     </div>
   </main>
 
   <style>
     .curriculum-hero {
       text-align: center;
-      padding: var(--space-2xl) 0;
-      margin-bottom: var(--space-xl);
-      border-bottom: 2px solid var(--color-border);
+      padding: clamp(2.25rem, 5vw, 4rem);
+      margin-bottom: var(--space-2xl);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at top left, rgba(243, 214, 172, 0.2), transparent 24rem),
+        radial-gradient(circle at bottom right, rgba(52, 116, 93, 0.12), transparent 20rem),
+        linear-gradient(145deg, rgba(247, 242, 232, 0.95), rgba(255, 255, 255, 0.88));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-kicker {
+      margin-bottom: var(--space-sm);
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.05em;
     }
 
     .curriculum-hero h1 {
@@ -95,29 +162,100 @@ const curriculum = Object.fromEntries(
       font-size: 1.2rem;
       color: var(--color-text-secondary);
       line-height: 1.8;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: var(--space-md);
+      max-width: 48rem;
+      margin: 0 auto;
+    }
+
+    .hero-stat {
+      padding: 1rem 1.1rem;
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero-stat strong {
+      display: block;
+      margin-bottom: 0.2rem;
+      color: var(--color-primary);
+      font-size: 1.7rem;
+    }
+
+    .hero-stat span {
+      color: var(--color-text-secondary);
+      font-size: 0.92rem;
     }
 
     .module-section {
       margin-bottom: var(--space-2xl);
     }
 
+    .module-header-link {
+      display: block;
+      color: inherit;
+      text-decoration: none;
+    }
+
     .module-header {
       margin-bottom: var(--space-lg);
-      padding: var(--space-xl);
-      padding-bottom: var(--space-xl);
-      border-bottom: 2px solid var(--color-border);
-      border-radius: var(--radius-md);
-      transition: all 0.3s ease;
+      padding: clamp(1.4rem, 3vw, 2rem);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(247, 242, 232, 0.9));
+      box-shadow: var(--shadow-sm);
+      transition:
+        transform var(--transition-base),
+        box-shadow var(--transition-base),
+        border-color var(--transition-base);
       cursor: pointer;
     }
 
-    .module-section a[style*="text-decoration: none"] {
-      display: block;
+    .module-header-link:hover .module-header {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(52, 116, 93, 0.18);
     }
 
-    .module-section a[style*="text-decoration: none"]:hover .module-header {
-      background-color: var(--color-bg-secondary);
-      transform: translateX(4px);
+    .module-header-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: var(--space-md);
+      flex-wrap: wrap;
+    }
+
+    .module-sequence {
+      color: var(--color-accent);
+      font-family: var(--font-ui);
+      font-size: 0.82rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .module-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .module-pill {
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(24, 34, 48, 0.08);
+      color: var(--color-text-secondary);
+      font-family: var(--font-ui);
+      font-size: 0.84rem;
     }
 
     .module-title {
@@ -140,6 +278,16 @@ const curriculum = Object.fromEntries(
       font-size: 0.98rem;
       color: var(--color-text);
       line-height: 1.7;
+      border: 1px solid rgba(24, 34, 48, 0.06);
+    }
+
+    .module-header-cta {
+      display: inline-flex;
+      margin-top: var(--space-md);
+      color: var(--color-primary);
+      font-family: var(--font-ui);
+      font-size: 0.95rem;
+      font-weight: var(--font-weight-semibold);
     }
 
     .lessons-grid {
@@ -150,19 +298,24 @@ const curriculum = Object.fromEntries(
     }
 
     .lesson-card {
-      background: var(--color-bg);
-      border: 2px solid var(--color-border);
-      border-radius: var(--radius-md);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(249, 246, 240, 0.94));
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
       padding: var(--space-lg);
       text-decoration: none;
       color: inherit;
-      transition: all var(--transition-normal);
+      transition:
+        transform var(--transition-base),
+        box-shadow var(--transition-base),
+        border-color var(--transition-base);
+      box-shadow: var(--shadow-sm);
     }
 
     .lesson-card:hover {
-      border-color: var(--color-primary);
-      box-shadow: var(--shadow-lg);
+      border-color: rgba(52, 116, 93, 0.18);
+      box-shadow: var(--shadow-md);
       transform: translateY(-4px);
+      text-decoration: none;
     }
 
     .lesson-card-header {
@@ -181,7 +334,7 @@ const curriculum = Object.fromEntries(
     }
 
     .lesson-duration {
-      background-color: var(--color-primary-light);
+      background-color: rgba(241, 235, 224, 0.92);
       color: var(--color-primary);
       padding: var(--space-xs) var(--space-sm);
       border-radius: var(--radius-sm);
@@ -203,33 +356,62 @@ const curriculum = Object.fromEntries(
     }
 
     .lesson-level {
-      background-color: var(--color-success-light);
-      color: var(--color-success);
+      background-color: rgba(231, 241, 235, 0.96);
+      color: #42604f;
       padding: var(--space-xs) var(--space-sm);
       border-radius: var(--radius-sm);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
     }
 
-    .curriculum-footer {
-      text-align: center;
-      padding: var(--space-2xl) var(--space-lg);
-      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-      border-radius: var(--radius-lg);
-      color: white;
-      margin-top: var(--space-2xl);
-    }
+	    .curriculum-footer {
+	      text-align: center;
+	      padding: var(--space-2xl) var(--space-lg);
+	      background:
+	        radial-gradient(circle at top right, rgba(243, 214, 172, 0.18), transparent 16rem),
+	        linear-gradient(135deg, #3d564b, #5b6a4d 56%, #93613b);
+	      border-radius: var(--radius-lg);
+	      color: white;
+	      margin-top: var(--space-2xl);
+	      border: 1px solid rgba(255, 255, 255, 0.08);
+	      box-shadow: var(--shadow-lg);
+	    }
 
-    .curriculum-footer h2 {
-      font-size: clamp(1.9rem, 1.6rem + 0.6vw, 2.35rem);
-      margin-bottom: var(--space-md);
-    }
+	    .curriculum-footer h2 {
+	      font-size: clamp(1.9rem, 1.6rem + 0.6vw, 2.35rem);
+	      margin-bottom: var(--space-md);
+	      color: #fff9f1;
+	    }
 
-    .curriculum-footer p {
-      font-size: 1.08rem;
-      margin-bottom: var(--space-lg);
-      line-height: 1.75;
-    }
+	    .curriculum-footer p {
+	      font-size: 1.08rem;
+	      margin-bottom: var(--space-lg);
+	      line-height: 1.75;
+	      color: rgba(255, 247, 238, 0.92);
+	      max-width: 42rem;
+	      margin-left: auto;
+	      margin-right: auto;
+	    }
+
+	    .curriculum-footer .btn-primary {
+	      background: rgba(255, 255, 255, 0.94);
+	      color: #31453c;
+	      border-color: rgba(255, 255, 255, 0.7);
+	    }
+
+	    .curriculum-footer .btn-primary:hover {
+	      background: white;
+	    }
+
+	    .curriculum-footer .btn-secondary {
+	      background: rgba(255, 255, 255, 0.12);
+	      color: #fff9f1;
+	      border-color: rgba(255, 255, 255, 0.2);
+	    }
+
+	    .curriculum-footer .btn-secondary:hover {
+	      background: rgba(255, 255, 255, 0.18);
+	    }
 
     .button-group {
       display: flex;
@@ -241,6 +423,10 @@ const curriculum = Object.fromEntries(
     @media (max-width: 768px) {
       .curriculum-hero h1 {
         font-size: 2.5rem;
+      }
+
+      .module-header {
+        padding: 1.25rem;
       }
 
       .module-title {

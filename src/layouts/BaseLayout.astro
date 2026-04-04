@@ -7,9 +7,28 @@ interface Props {
   title?: string;
   description?: string;
   canonical?: string;
+  ogImage?: string;
+  ogType?: string;
+  noindex?: boolean;
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const { title = 'English Grammar Atlas', description = 'Master English grammar from foundations to advanced proficiency', canonical = Astro.url.href } = Astro.props;
+const {
+  title = 'English Grammar Atlas',
+  description = 'Master English grammar from foundations to advanced proficiency',
+  canonical = Astro.url.href,
+  ogImage = '/site-og.svg',
+  ogType = 'website',
+  noindex = false,
+  structuredData,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
+const canonicalUrl = new URL(canonical, siteUrl).toString();
+const ogImageUrl = new URL(ogImage, siteUrl).toString();
+const robotsContent = noindex
+  ? 'noindex,follow,max-image-preview:large'
+  : 'index,follow,max-image-preview:large';
 const currentPath = new URL(Astro.request.url).pathname;
 const navigation = [
   { href: '/', label: 'Home' },
@@ -24,6 +43,40 @@ const navigation = [
       ? currentPath === '/'
       : currentPath === item.href || currentPath.startsWith(`${item.href}/`),
 }));
+
+const schemaItems = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'English Grammar Atlas',
+    url: siteUrl,
+    description: 'Structured English grammar lessons, quizzes, and roadmap-based study flow.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'English Grammar Atlas',
+    url: siteUrl,
+    logo: new URL('/favicon.svg', siteUrl).toString(),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: canonicalUrl,
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'English Grammar Atlas',
+      url: siteUrl,
+    },
+    primaryImageOfPage: {
+      '@type': 'ImageObject',
+      url: ogImageUrl,
+    },
+  },
+  ...(Array.isArray(structuredData) ? structuredData : structuredData ? [structuredData] : []),
+];
 ---
 
 <!doctype html>
@@ -33,12 +86,30 @@ const navigation = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
-    
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={robotsContent} />
+    <meta name="theme-color" content="#3d564b" />
+
+    <meta property="og:site_name" content="English Grammar Atlas" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="English Grammar Atlas study portal preview" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/favicon.png" />
+    {schemaItems.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item)} />
+    ))}
   </head>
   <body>
     <div class="layout">
@@ -57,6 +128,7 @@ const navigation = [
                 <a
                   href={item.href}
                   class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
+                  aria-current={item.isActive ? 'page' : undefined}
                 >
                   {item.label}
                 </a>
@@ -80,6 +152,7 @@ const navigation = [
               <a
                 href={item.href}
                 class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
+                aria-current={item.isActive ? 'page' : undefined}
               >
                 {item.label}
               </a>
@@ -124,11 +197,22 @@ const navigation = [
           </div>
         </div>
       </footer>
+
+      <button
+        type="button"
+        class="back-to-top"
+        aria-label="Move to top"
+        title="Move to top"
+        data-back-to-top
+      >
+        <span aria-hidden="true">↑</span>
+      </button>
     </div>
 
     <script is:inline>
       const mobileNavToggle = document.querySelector('[data-mobile-nav-toggle]');
       const mobileNav = document.querySelector('[data-mobile-nav]');
+      const backToTopButton = document.querySelector('[data-back-to-top]');
 
       if (mobileNavToggle instanceof HTMLButtonElement && mobileNav instanceof HTMLElement) {
         const closeMobileNav = () => {
@@ -145,11 +229,36 @@ const navigation = [
           link.addEventListener('click', closeMobileNav);
         });
 
+        document.addEventListener('click', (event) => {
+          if (!mobileNav.contains(event.target) && !mobileNavToggle.contains(event.target)) {
+            closeMobileNav();
+          }
+        });
+
+        document.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeMobileNav();
+          }
+        });
+
         window.addEventListener('resize', () => {
           if (window.innerWidth > 768) {
             closeMobileNav();
           }
         });
+      }
+
+      if (backToTopButton instanceof HTMLButtonElement) {
+        const toggleBackToTop = () => {
+          backToTopButton.classList.toggle('is-visible', window.scrollY > 420);
+        };
+
+        backToTopButton.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        toggleBackToTop();
+        window.addEventListener('scroll', toggleBackToTop, { passive: true });
       }
     </script>
   </body>

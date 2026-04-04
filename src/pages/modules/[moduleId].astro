@@ -35,9 +35,53 @@ const metadata = {
 const lessons = sortLessonEntries(loadLessons()).filter(
   (lesson) => lesson.data.moduleId === moduleId,
 );
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';
+const moduleUrl = `${siteUrl}/modules/${moduleMetadata.id}`;
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: metadata.title,
+    description: metadata.description,
+    url: moduleUrl,
+    isPartOf: {
+      '@type': 'Course',
+      name: 'English Grammar Atlas',
+      url: siteUrl,
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Curriculum',
+        item: `${siteUrl}/curriculum`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: metadata.title,
+        item: moduleUrl,
+      },
+    ],
+  },
+];
 ---
 
-<BaseLayout title={`${metadata.title} | English Grammar Atlas`} description={metadata.description}>
+<BaseLayout
+  title={`${metadata.title} | English Grammar Atlas`}
+  description={metadata.description}
+  structuredData={structuredData}
+>
   <main class="main-content">
     <div class="container">
       <!-- Hero Section -->
