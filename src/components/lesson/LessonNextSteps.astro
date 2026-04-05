@@ -1,0 +1,243 @@
+---
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<section class="lesson-next-steps">
+  <div class="container">
+    <div class="next-steps-content">
+      <div class="next-step-card practice">
+        <p class="card-kicker">Lesson Practice</p>
+        <h3>Ready to Practice?</h3>
+        <p>Reinforce your understanding with targeted exercises and quizzes designed specifically for this lesson.</p>
+        <a href={`/quiz/${slug}`} class="btn btn-primary btn-lg">Start Practice Exercises</a>
+      </div>
+
+      <div class="next-step-card track" data-lesson-progress data-lesson-slug={slug}>
+        <p class="card-kicker">Study Progress</p>
+        <h3>Track Progress</h3>
+        <p class="progress-copy">Mark this lesson complete when you finish it so the dashboard can build a real review plan.</p>
+        <div class="step-buttons">
+          <button type="button" class="btn btn-outline lesson-progress-toggle">Mark Lesson Complete</button>
+          <button type="button" class="btn btn-outline lesson-bookmark-toggle">Add Bookmark</button>
+          <a href="/dashboard" class="btn btn-outline">Open Dashboard</a>
+        </div>
+      </div>
+
+      <div class="next-step-card explore">
+        <p class="card-kicker">Keep Exploring</p>
+        <h3>Explore Your Path</h3>
+        <p>View the complete curriculum or follow the structured roadmap to stay on track with your learning journey.</p>
+        <div class="step-buttons">
+          <a href="/curriculum" class="btn btn-outline">View Curriculum</a>
+          <a href="/roadmap" class="btn btn-outline">Study Roadmap</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  const lessonProgressRoot = document.querySelector('[data-lesson-progress]');
+
+  if (lessonProgressRoot instanceof HTMLElement) {
+    const slug = lessonProgressRoot.dataset.lessonSlug || '';
+    const toggleButton = lessonProgressRoot.querySelector('.lesson-progress-toggle');
+    const bookmarkButton = lessonProgressRoot.querySelector('.lesson-bookmark-toggle');
+    const progressCopy = lessonProgressRoot.querySelector('.progress-copy');
+    const progressApi = window.GrammarAtlasProgress;
+
+    const renderProgress = () => {
+      if (!progressApi) {
+        return;
+      }
+
+      const entry = progressApi.getLessonState(slug);
+      const isComplete = Boolean(entry?.completed);
+      const isBookmarked = Boolean(entry?.bookmarked);
+
+      if (toggleButton instanceof HTMLElement) {
+        toggleButton.textContent = isComplete ? 'Mark As In Progress' : 'Mark Lesson Complete';
+      }
+
+      if (bookmarkButton instanceof HTMLElement) {
+        bookmarkButton.textContent = isBookmarked ? 'Remove Bookmark' : 'Add Bookmark';
+      }
+
+      if (progressCopy instanceof HTMLElement) {
+        progressCopy.classList.toggle('is-complete', isComplete);
+        progressCopy.classList.toggle('is-bookmarked', !isComplete && isBookmarked);
+        progressCopy.textContent = isComplete
+          ? `Completed${entry?.updatedAt ? ` on ${new Date(entry.updatedAt).toLocaleDateString()}` : ''}.`
+          : isBookmarked
+            ? 'Bookmarked for review. Open the dashboard to keep it in your study queue.'
+            : 'Mark this lesson complete when you finish it so the dashboard can build a real review plan.';
+      }
+    };
+
+    toggleButton?.addEventListener('click', () => {
+      if (progressApi) {
+        progressApi.toggleLessonComplete(slug);
+        renderProgress();
+      }
+    });
+
+    bookmarkButton?.addEventListener('click', () => {
+      if (progressApi) {
+        progressApi.toggleLessonBookmark(slug);
+        renderProgress();
+      }
+    });
+
+    if (progressApi) {
+      renderProgress();
+    }
+  }
+</script>
+
+<style>
+  .lesson-next-steps {
+    background:
+      radial-gradient(circle at top left, rgba(63, 92, 82, 0.08), transparent 20rem),
+      radial-gradient(circle at top right, rgba(201, 111, 50, 0.1), transparent 22rem),
+      linear-gradient(180deg, rgba(247, 242, 234, 0.88), rgba(255, 253, 248, 0.96));
+    padding: 3.4rem 0;
+    margin-top: 4rem;
+  }
+
+  .next-steps-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.35rem;
+    align-items: stretch;
+  }
+
+  .next-step-card {
+    display: grid;
+    align-content: start;
+    gap: 0.9rem;
+    min-height: 100%;
+    padding: 1.55rem 1.55rem 1.45rem;
+    border-radius: 1.3rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 242, 234, 0.95));
+    box-shadow: 0 22px 40px -34px rgba(24, 34, 48, 0.36);
+    border: 1px solid rgba(24, 34, 48, 0.08);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-base);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .next-step-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, rgba(63, 92, 82, 0.88), rgba(201, 111, 50, 0.88));
+  }
+
+  .next-step-card:hover {
+    box-shadow: 0 28px 48px -34px rgba(24, 34, 48, 0.42);
+    transform: translateY(-3px);
+    border-color: rgba(63, 92, 82, 0.16);
+  }
+
+  .next-step-card.practice::before {
+    background: linear-gradient(90deg, rgba(63, 92, 82, 0.92), rgba(122, 148, 140, 0.88));
+  }
+
+  .next-step-card.explore::before {
+    background: linear-gradient(90deg, rgba(201, 111, 50, 0.92), rgba(156, 107, 63, 0.88));
+  }
+
+  .next-step-card.track::before {
+    background: linear-gradient(90deg, rgba(84, 113, 101, 0.92), rgba(201, 111, 50, 0.78));
+  }
+
+  .card-kicker {
+    margin: 0;
+    color: var(--color-accent);
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .next-step-card h3 {
+    font-size: clamp(1.32rem, 1.14rem + 0.28vw, 1.56rem);
+    color: var(--color-primary-dark);
+    margin: 0;
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .next-step-card p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.72;
+    color: var(--color-text-secondary);
+  }
+
+  .btn-lg {
+    padding: 0.92rem 1.55rem !important;
+    font-size: 0.98rem !important;
+  }
+
+  .step-buttons {
+    display: flex;
+    gap: 0.72rem;
+    flex-wrap: wrap;
+    margin-top: 0.15rem;
+  }
+
+  .progress-copy.is-complete {
+    color: #065f46;
+    font-weight: 600;
+  }
+
+  .progress-copy.is-bookmarked {
+    color: #92400e;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    .lesson-next-steps {
+      padding: 2.4rem 0;
+      margin-top: 2.5rem;
+    }
+
+    .next-steps-content {
+      gap: 1rem;
+    }
+
+    .next-step-card {
+      padding: 1.3rem 1.2rem 1.2rem;
+    }
+
+    .next-step-card h3 {
+      font-size: 1.24rem;
+    }
+
+    .step-buttons {
+      flex-direction: column;
+    }
+
+    .step-buttons :global(.btn-outline) {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  @media print {
+    .lesson-next-steps {
+      display: none !important;
+    }
+  }
+</style>

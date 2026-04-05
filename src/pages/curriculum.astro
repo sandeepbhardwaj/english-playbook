@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { curriculumModules, sortLessonEntries } from '../lib/course';
 import { loadLessons } from '../lib/lesson-files';
 
-const lessons = sortLessonEntries(loadLessons());
+const lessons = sortLessonEntries(await loadLessons());
 const lessonCount = lessons.length;
 const moduleCount = curriculumModules.length;
 

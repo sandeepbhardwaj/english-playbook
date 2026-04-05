@@ -1,0 +1,26 @@
+---
+import type { ActiveNavigationItem } from '../../lib/site';
+
+interface Props {
+  items: ActiveNavigationItem[];
+}
+
+const { items } = Astro.props;
+---
+
+{
+  items.map((item) => (
+    <a
+      href={item.href}
+      class:list={[
+        'site-nav-link',
+        item.isCta && 'btn btn-primary',
+        item.isCta && 'site-nav-link-cta',
+        item.isActive && 'is-active',
+      ]}
+      aria-current={item.isActive ? 'page' : undefined}
+    >
+      {item.label}
+    </a>
+  ))
+}

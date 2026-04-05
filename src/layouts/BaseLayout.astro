@@ -3,6 +3,11 @@ import '../assets/css/global.css';
 import '../assets/css/layout.css';
 import '../assets/css/components.css';
 
+import BackToTopButton from '../components/layout/BackToTopButton.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import { BRAND_SUBTITLE, SITE_NAME, buildPrimaryNavigation } from '../lib/site';
+
 interface Props {
   title?: string;
   description?: string;
@@ -13,11 +18,9 @@ interface Props {
   structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
-const brandSubtitle = 'Structured lessons, focused quizzes, clear progress';
-
 const {
-  title = 'English Grammar Atlas',
-  description = brandSubtitle,
+  title = SITE_NAME,
+  description = BRAND_SUBTITLE,
   canonical = Astro.url.href,
   ogImage = '/site-og.png?v=20260405',
   ogType = 'website',
@@ -35,32 +38,20 @@ const robotsContent = noindex
   ? 'noindex,follow,max-image-preview:large'
   : 'index,follow,max-image-preview:large';
 const currentPath = new URL(Astro.request.url).pathname;
-const navigation = [
-  { href: '/', label: 'Home' },
-  { href: '/curriculum', label: 'Curriculum' },
-  { href: '/roadmap', label: 'Roadmap' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/quiz', label: 'Quiz' },
-].map((item) => ({
-  ...item,
-  isActive:
-    item.href === '/'
-      ? currentPath === '/'
-      : currentPath === item.href || currentPath.startsWith(`${item.href}/`),
-}));
+const navigation = buildPrimaryNavigation(currentPath);
 
 const schemaItems = [
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'English Grammar Atlas',
+    name: SITE_NAME,
     url: siteUrl,
-    description: brandSubtitle,
+    description: BRAND_SUBTITLE,
   },
   {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'English Grammar Atlas',
+    name: SITE_NAME,
     url: siteUrl,
     logo: new URL('/favicon.svg', siteUrl).toString(),
   },
@@ -72,7 +63,7 @@ const schemaItems = [
     url: canonicalUrl,
     isPartOf: {
       '@type': 'WebSite',
-      name: 'English Grammar Atlas',
+      name: SITE_NAME,
       url: siteUrl,
     },
     primaryImageOfPage: {
@@ -95,7 +86,7 @@ const schemaItems = [
     <meta name="robots" content={robotsContent} />
     <meta name="theme-color" content="#3d564b" />
 
-    <meta property="og:site_name" content="English Grammar Atlas" />
+    <meta property="og:site_name" content={SITE_NAME} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -111,165 +102,33 @@ const schemaItems = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`/favicon.svg?v=${faviconVersion}`} />
     <link rel="icon" type="image/png" sizes="32x32" href={`/favicon-32.png?v=${faviconVersion}`} />
     <link rel="shortcut icon" href={`/favicon.ico?v=${faviconVersion}`} />
     <link rel="apple-touch-icon" href={`/apple-touch-icon.png?v=${faviconVersion}`} />
+
     <script is:inline src="/scripts/progress.js"></script>
     {schemaItems.map((item) => (
       <script type="application/ld+json" set:html={JSON.stringify(item)} />
     ))}
   </head>
+
   <body>
     <div class="layout">
-      <header class="header">
-        <div class="container">
-          <div class="flex-between site-header-row">
-            <a href="/" class="site-brand" aria-label="English Grammar Atlas home">
-              <span class="site-brand-mark">GA</span>
-              <span class="site-brand-copy">
-                <strong>English Grammar Atlas</strong>
-                <span class="site-brand-subtitle">{brandSubtitle}</span>
-              </span>
-            </a>
-            <nav class="site-nav site-nav-desktop" aria-label="Primary">
-              {navigation.map((item) => (
-                <a
-                  href={item.href}
-                  class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
-                  aria-current={item.isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-            <button
-              type="button"
-              class="site-nav-toggle"
-              aria-label="Toggle navigation"
-              aria-controls="mobile-nav"
-              aria-expanded="false"
-              data-mobile-nav-toggle
-            >
-              <span class="site-nav-toggle-bar"></span>
-              <span class="site-nav-toggle-bar"></span>
-              <span class="site-nav-toggle-bar"></span>
-            </button>
-          </div>
-          <nav id="mobile-nav" class="site-nav-mobile-panel" aria-label="Primary" data-mobile-nav>
-            {navigation.map((item) => (
-              <a
-                href={item.href}
-                class:list={['site-nav-link', item.href === '/quiz' && 'btn btn-primary', item.isActive && 'is-active']}
-                aria-current={item.isActive ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
+      <SiteHeader brandSubtitle={BRAND_SUBTITLE} navigation={navigation} />
 
       <main class="layout-main">
         <slot />
       </main>
 
-      <footer class="footer">
-        <div class="container">
-          <div class="footer-grid">
-            <div>
-              <h4 class="footer-title">English Grammar Atlas</h4>
-              <p class="footer-copy">
-                Grammar lessons, lesson-specific quizzes, and a roadmap that keeps the
-                whole course connected.
-              </p>
-              <p class="footer-meta">{brandSubtitle}</p>
-            </div>
-            <div>
-              <h4 class="footer-title">Explore</h4>
-              <ul class="footer-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/curriculum">Curriculum</a></li>
-                <li><a href="/roadmap">Roadmap</a></li>
-                <li><a href="/dashboard">Dashboard</a></li>
-                <li><a href="/quiz">Quiz Center</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="footer-title">Start Here</h4>
-              <ul class="footer-links">
-                <li><a href="/lessons/parts-of-speech">First Lesson</a></li>
-                <li><a href="/modules/foundations">Foundations Module</a></li>
-                <li><a href="/dashboard">Study Dashboard</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </footer>
-
-      <button
-        type="button"
-        class="back-to-top"
-        aria-label="Move to top"
-        title="Move to top"
-        data-back-to-top
-      >
-        <span aria-hidden="true">↑</span>
-      </button>
+      <SiteFooter brandSubtitle={BRAND_SUBTITLE} />
+      <BackToTopButton />
     </div>
 
-    <script is:inline>
-      const mobileNavToggle = document.querySelector('[data-mobile-nav-toggle]');
-      const mobileNav = document.querySelector('[data-mobile-nav]');
-      const backToTopButton = document.querySelector('[data-back-to-top]');
+    <script>
+      import { initBaseLayout } from '../scripts/base-layout';
 
-      if (mobileNavToggle instanceof HTMLButtonElement && mobileNav instanceof HTMLElement) {
-        const closeMobileNav = () => {
-          mobileNav.classList.remove('is-open');
-          mobileNavToggle.setAttribute('aria-expanded', 'false');
-        };
-
-        mobileNavToggle.addEventListener('click', () => {
-          const isOpen = mobileNav.classList.toggle('is-open');
-          mobileNavToggle.setAttribute('aria-expanded', String(isOpen));
-        });
-
-        mobileNav.querySelectorAll('a').forEach((link) => {
-          link.addEventListener('click', closeMobileNav);
-        });
-
-        document.addEventListener('click', (event) => {
-          if (!mobileNav.contains(event.target) && !mobileNavToggle.contains(event.target)) {
-            closeMobileNav();
-          }
-        });
-
-        document.addEventListener('keydown', (event) => {
-          if (event.key === 'Escape') {
-            closeMobileNav();
-          }
-        });
-
-        window.addEventListener('resize', () => {
-          if (window.innerWidth > 768) {
-            closeMobileNav();
-          }
-        });
-      }
-
-      if (backToTopButton instanceof HTMLButtonElement) {
-        const toggleBackToTop = () => {
-          backToTopButton.classList.toggle('is-visible', window.scrollY > 420);
-        };
-
-        backToTopButton.addEventListener('click', () => {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        toggleBackToTop();
-        window.addEventListener('scroll', toggleBackToTop, { passive: true });
-      }
+      initBaseLayout();
     </script>
   </body>
 </html>

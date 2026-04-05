@@ -32,7 +32,7 @@ const metadata = {
   color: moduleAccents[moduleMetadata.id] ?? 'var(--color-primary)',
 };
 
-const lessons = sortLessonEntries(loadLessons()).filter(
+const lessons = sortLessonEntries(await loadLessons()).filter(
   (lesson) => lesson.data.moduleId === moduleId,
 );
 const siteUrl = Astro.site?.toString().replace(/\/$/, '') || 'https://english.scalemind.dev';

@@ -1,0 +1,202 @@
+---
+import type { LessonNavigationItem } from '../../lib/course';
+
+interface Props {
+  module: string;
+  moduleId: string;
+  previousLesson?: LessonNavigationItem;
+  nextLesson?: LessonNavigationItem;
+}
+
+const { module, moduleId, previousLesson, nextLesson } = Astro.props;
+---
+
+{
+  (previousLesson || nextLesson) && (
+    <section class="lesson-navigation-shell">
+      <div class="container">
+        <div class="lesson-navigation-header">
+          <p class="lesson-navigation-kicker">Keep moving through the curriculum</p>
+          <a href={`/modules/${moduleId}`} class="lesson-module-link">Back to {module}</a>
+        </div>
+        <div class="lesson-navigation-grid">
+          {previousLesson ? (
+            <a href={previousLesson.href} class="lesson-navigation-card previous">
+              <span class="lesson-navigation-topline">
+                <span class="lesson-navigation-arrow" aria-hidden="true">←</span>
+                <span class="lesson-navigation-label">Previous lesson</span>
+              </span>
+              <strong>{previousLesson.title}</strong>
+              <span>{previousLesson.focus}</span>
+            </a>
+          ) : (
+            <a href="/curriculum" class="lesson-navigation-card fallback">
+              <span class="lesson-navigation-topline">
+                <span class="lesson-navigation-arrow" aria-hidden="true">↺</span>
+                <span class="lesson-navigation-label">Start of path</span>
+              </span>
+              <strong>View the full curriculum</strong>
+              <span>Return to the course map and choose where to continue next.</span>
+            </a>
+          )}
+
+          {nextLesson ? (
+            <a href={nextLesson.href} class="lesson-navigation-card next">
+              <span class="lesson-navigation-topline">
+                <span class="lesson-navigation-label">Next lesson</span>
+                <span class="lesson-navigation-arrow" aria-hidden="true">→</span>
+              </span>
+              <strong>{nextLesson.title}</strong>
+              <span>{nextLesson.focus}</span>
+            </a>
+          ) : (
+            <a href="/quiz/final-review" class="lesson-navigation-card fallback">
+              <span class="lesson-navigation-topline">
+                <span class="lesson-navigation-arrow" aria-hidden="true">✓</span>
+                <span class="lesson-navigation-label">You reached the end</span>
+              </span>
+              <strong>Take the final review quiz</strong>
+              <span>Wrap up the course with the closing practice set and check retention.</span>
+            </a>
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .lesson-navigation-shell {
+    margin-top: 3rem;
+  }
+
+  .lesson-navigation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 auto 1.25rem;
+    max-width: 800px;
+  }
+
+  .lesson-navigation-kicker {
+    margin: 0;
+    color: var(--color-accent);
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.04em;
+  }
+
+  .lesson-module-link {
+    font-family: var(--font-ui);
+    color: var(--color-primary);
+    font-size: 0.95rem;
+  }
+
+  .lesson-navigation-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .lesson-navigation-card {
+    display: grid;
+    gap: 0.6rem;
+    padding: 1.35rem 1.45rem;
+    border-radius: 1.15rem;
+    border: 1px solid rgba(24, 34, 48, 0.08);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(247, 242, 232, 0.92));
+    box-shadow: var(--shadow-sm);
+    transition:
+      transform var(--transition-base),
+      box-shadow var(--transition-base),
+      border-color var(--transition-base),
+      background var(--transition-base);
+  }
+
+  .lesson-navigation-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(52, 116, 93, 0.18);
+    text-decoration: none;
+  }
+
+  .lesson-navigation-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .lesson-navigation-arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 999px;
+    background: rgba(52, 116, 93, 0.1);
+    color: var(--color-primary);
+    font-family: var(--font-ui);
+    font-size: 0.96rem;
+    font-weight: var(--font-weight-semibold);
+    flex-shrink: 0;
+  }
+
+  .lesson-navigation-card strong {
+    color: var(--color-primary-dark);
+    font-size: 1.14rem;
+    line-height: 1.35;
+    text-wrap: balance;
+  }
+
+  .lesson-navigation-card span:last-child {
+    color: var(--color-text-secondary);
+    line-height: 1.68;
+  }
+
+  .lesson-navigation-label {
+    color: var(--color-accent);
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .lesson-navigation-card.previous {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(243, 239, 231, 0.94));
+  }
+
+  .lesson-navigation-card.next {
+    background: linear-gradient(145deg, rgba(245, 251, 247, 0.96), rgba(255, 248, 240, 0.94));
+  }
+
+  .lesson-navigation-card.fallback {
+    background: linear-gradient(145deg, rgba(248, 245, 239, 0.96), rgba(255, 255, 255, 0.92));
+  }
+
+  @media (max-width: 768px) {
+    .lesson-navigation-header {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .lesson-navigation-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .lesson-navigation-card {
+      padding: 1.15rem 1.2rem;
+    }
+  }
+
+  @media print {
+    .lesson-navigation-shell {
+      display: none !important;
+    }
+  }
+</style>

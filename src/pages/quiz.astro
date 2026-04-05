@@ -4,7 +4,7 @@ import { curriculumModules, sortLessonEntries } from '../lib/course';
 import { loadLessons } from '../lib/lesson-files';
 import { buildQuizForLesson } from '../lib/quiz';
 
-const allLessons = sortLessonEntries(loadLessons());
+const allLessons = sortLessonEntries(await loadLessons());
 
 const modules = curriculumModules.map((module) => {
   const lessons = allLessons
