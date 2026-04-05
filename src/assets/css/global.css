@@ -151,6 +151,19 @@ p {
   color: var(--color-text-secondary);
 }
 
+.page-subheading {
+  margin: 0;
+  max-width: 40rem;
+  font-size: clamp(1.08rem, 1rem + 0.34vw, 1.22rem);
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  text-wrap: balance;
+}
+
+.page-subheading--centered {
+  margin-inline: auto;
+}
+
 button,
 input,
 textarea,
@@ -234,6 +247,12 @@ th {
 
 @page {
   margin: 0.6in;
+}
+
+@media (max-width: 768px) {
+  .page-subheading {
+    font-size: 1rem;
+  }
 }
 
 @media print {

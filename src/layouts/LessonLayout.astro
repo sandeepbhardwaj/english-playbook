@@ -34,7 +34,7 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
 
           <div class="lesson-hero-content">
             <h1>{title}</h1>
-            <p class="lesson-focus-copy">{focus}</p>
+            <p class="lesson-focus-copy page-subheading">{focus}</p>
           </div>
 
           <div class="lesson-meta">
@@ -269,11 +269,6 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
     }
 
     .lesson-focus-copy {
-      margin: 0;
-      font-size: clamp(1.08rem, 1rem + 0.34vw, 1.22rem);
-      line-height: 1.8;
-      color: var(--color-text-secondary);
-      text-wrap: balance;
       max-width: 40rem;
     }
 

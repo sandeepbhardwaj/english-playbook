@@ -13,9 +13,11 @@ interface Props {
   structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
 }
 
+const brandSubtitle = 'Structured lessons, focused quizzes, clear progress';
+
 const {
   title = 'English Grammar Atlas',
-  description = 'Master English grammar from foundations to advanced proficiency',
+  description = brandSubtitle,
   canonical = Astro.url.href,
   ogImage = '/site-og.png?v=20260405',
   ogType = 'website',
@@ -53,7 +55,7 @@ const schemaItems = [
     '@type': 'WebSite',
     name: 'English Grammar Atlas',
     url: siteUrl,
-    description: 'Structured English grammar lessons, quizzes, and roadmap-based study flow.',
+    description: brandSubtitle,
   },
   {
     '@context': 'https://schema.org',
@@ -128,7 +130,7 @@ const schemaItems = [
               <span class="site-brand-mark">GA</span>
               <span class="site-brand-copy">
                 <strong>English Grammar Atlas</strong>
-                <span>Lessons, quizzes, and roadmap</span>
+                <span class="site-brand-subtitle">{brandSubtitle}</span>
               </span>
             </a>
             <nav class="site-nav site-nav-desktop" aria-label="Primary">
@@ -177,12 +179,12 @@ const schemaItems = [
         <div class="container">
           <div class="footer-grid">
             <div>
-              <h4 class="footer-title">Study English with structure</h4>
+              <h4 class="footer-title">English Grammar Atlas</h4>
               <p class="footer-copy">
                 Grammar lessons, lesson-specific quizzes, and a roadmap that keeps the
                 whole course connected.
               </p>
-              <p class="footer-meta">Built for self-paced grammar practice.</p>
+              <p class="footer-meta">{brandSubtitle}</p>
             </div>
             <div>
               <h4 class="footer-title">Explore</h4>
