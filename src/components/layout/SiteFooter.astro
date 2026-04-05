@@ -1,0 +1,42 @@
+---
+import { FOOTER_EXPLORE_LINKS, FOOTER_START_LINKS } from '../../lib/site';
+
+interface Props {
+  brandSubtitle: string;
+}
+
+const { brandSubtitle } = Astro.props;
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4 class="footer-title">English Grammar Atlas</h4>
+        <p class="footer-copy">
+          Grammar lessons, lesson-specific quizzes, and a roadmap that keeps the
+          whole course connected.
+        </p>
+        <p class="footer-meta">{brandSubtitle}</p>
+      </div>
+
+      <div>
+        <h4 class="footer-title">Explore</h4>
+        <ul class="footer-links">
+          {FOOTER_EXPLORE_LINKS.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="footer-title">Start Here</h4>
+        <ul class="footer-links">
+          {FOOTER_START_LINKS.map((item) => (
+            <li><a href={item.href}>{item.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>

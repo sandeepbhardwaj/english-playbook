@@ -1,0 +1,15 @@
+---
+interface Props {
+  subtitle: string;
+}
+
+const { subtitle } = Astro.props;
+---
+
+<a href="/" class="site-brand" aria-label="English Grammar Atlas home">
+  <span class="site-brand-mark">GA</span>
+  <span class="site-brand-copy">
+    <strong>English Grammar Atlas</strong>
+    <span class="site-brand-subtitle">{subtitle}</span>
+  </span>
+</a>

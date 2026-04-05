@@ -1,0 +1,41 @@
+---
+import SiteBrand from './SiteBrand.astro';
+import SiteNavigationLinks from './SiteNavigationLinks.astro';
+import type { ActiveNavigationItem } from '../../lib/site';
+
+interface Props {
+  brandSubtitle: string;
+  navigation: ActiveNavigationItem[];
+}
+
+const { brandSubtitle, navigation } = Astro.props;
+---
+
+<header class="header">
+  <div class="container">
+    <div class="flex-between site-header-row">
+      <SiteBrand subtitle={brandSubtitle} />
+
+      <nav class="site-nav site-nav-desktop" aria-label="Primary">
+        <SiteNavigationLinks items={navigation} />
+      </nav>
+
+      <button
+        type="button"
+        class="site-nav-toggle"
+        aria-label="Toggle navigation"
+        aria-controls="mobile-nav"
+        aria-expanded="false"
+        data-mobile-nav-toggle
+      >
+        <span class="site-nav-toggle-bar"></span>
+        <span class="site-nav-toggle-bar"></span>
+        <span class="site-nav-toggle-bar"></span>
+      </button>
+    </div>
+
+    <nav id="mobile-nav" class="site-nav-mobile-panel" aria-label="Primary" data-mobile-nav>
+      <SiteNavigationLinks items={navigation} />
+    </nav>
+  </div>
+</header>
