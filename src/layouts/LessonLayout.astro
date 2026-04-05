@@ -26,7 +26,10 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
         <div class="lesson-hero-shell">
           <div class="lesson-hero-topline">
             <p class="lesson-kicker">Lesson in {module}</p>
-            <a href={`/modules/${moduleId}`} class="lesson-hero-module-link">Open module overview</a>
+            <div class="lesson-hero-actions">
+              <a href={`/modules/${moduleId}`} class="lesson-hero-module-link">Open module overview</a>
+              <button type="button" class="lesson-hero-print" data-lesson-print-trigger>Print lesson</button>
+            </div>
           </div>
 
           <div class="lesson-hero-content">
@@ -274,7 +277,16 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
       max-width: 40rem;
     }
 
-    .lesson-hero-module-link {
+    .lesson-hero-actions {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .lesson-hero-module-link,
+    .lesson-hero-print {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -284,6 +296,7 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
       background: rgba(255, 255, 255, 0.76);
       color: var(--color-primary-dark);
       font-family: var(--font-ui);
+      font-size: 0.95rem;
       font-weight: var(--font-weight-semibold);
       text-decoration: none;
       transition:
@@ -294,11 +307,21 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.74);
     }
 
-    .lesson-hero-module-link:hover {
+    .lesson-hero-print {
+      cursor: pointer;
+    }
+
+    .lesson-hero-module-link:hover,
+    .lesson-hero-print:hover {
       transform: translateY(-1px);
       background: white;
       box-shadow: var(--shadow-sm);
       text-decoration: none;
+    }
+
+    .lesson-hero-print:focus-visible {
+      outline: 2px solid rgba(52, 116, 93, 0.28);
+      outline-offset: 3px;
     }
 
     .lesson-content {
@@ -777,6 +800,10 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
         padding-right: 0;
       }
 
+      .lesson-hero-actions {
+        justify-content: flex-start;
+      }
+
       .lesson-hero-content h1 {
         max-width: none;
         font-size: clamp(2.2rem, 8vw, 3rem);
@@ -847,6 +874,116 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
 
       .lesson-markdown--chaptered .lesson-labeled-list-ol > li {
         padding-left: 2.7rem;
+      }
+    }
+
+    @media print {
+      .lesson {
+        background: white;
+      }
+
+      .lesson-hero {
+        padding: 0 0 1rem;
+        margin-bottom: 1rem;
+        background: none;
+      }
+
+      .lesson-hero-shell {
+        display: block;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+      }
+
+      .lesson-hero-shell::after,
+      .lesson-hero-actions,
+      .lesson-navigation-shell,
+      .lesson-next-steps {
+        display: none !important;
+      }
+
+      .lesson-hero-topline {
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .lesson-kicker {
+        margin-bottom: 0.4rem;
+      }
+
+      .lesson-hero-content h1 {
+        max-width: none;
+        font-size: 24pt;
+      }
+
+      .lesson-focus-copy {
+        max-width: none;
+      }
+
+      .lesson-meta {
+        margin-top: 1rem;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.5rem;
+        padding: 0;
+        border: none;
+        background: none;
+        box-shadow: none;
+        backdrop-filter: none;
+      }
+
+      .lesson-meta-item {
+        padding: 0.7rem 0.8rem;
+        background: none;
+        border: 1px solid var(--color-border);
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .content-prose {
+        max-width: none;
+        font-size: 11pt;
+        line-height: 1.6;
+      }
+
+      .lesson-markdown--chaptered {
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: none;
+        box-shadow: none;
+      }
+
+      .lesson-markdown--chaptered .lesson-heading-chapter,
+      .lesson-markdown--chaptered .lesson-heading-section,
+      .lesson-markdown--chaptered .lesson-heading-example,
+      .lesson-markdown--chaptered .lesson-example-list,
+      .lesson-markdown--chaptered .lesson-labeled-list,
+      .lesson-markdown--chaptered .lesson-labeled-list-ol > li,
+      .content-prose blockquote,
+      .content-prose pre {
+        background: none;
+        box-shadow: none;
+      }
+
+      .lesson-markdown--chaptered .lesson-heading-chapter,
+      .lesson-markdown--chaptered .lesson-heading-section {
+        border-radius: 0;
+      }
+
+      .content-prose h2,
+      .content-prose h3,
+      .content-prose h4,
+      .lesson-markdown--chaptered .lesson-heading,
+      .content-prose blockquote,
+      .content-prose pre,
+      .content-prose table,
+      .content-prose li,
+      .lesson-markdown--chaptered .lesson-example-list,
+      .lesson-markdown--chaptered .lesson-labeled-list,
+      .lesson-markdown--chaptered .lesson-labeled-list-ol > li {
+        break-inside: avoid;
       }
     }
 
@@ -990,7 +1127,14 @@ const { title, slug, module, moduleId, duration, focus, level, previousLesson, n
   </style>
 
   <script is:inline>
+    const lessonPrintButton = document.querySelector('[data-lesson-print-trigger]');
     const lessonProgressRoot = document.querySelector('[data-lesson-progress]');
+
+    if (lessonPrintButton instanceof HTMLButtonElement) {
+      lessonPrintButton.addEventListener('click', () => {
+        window.print();
+      });
+    }
 
     if (lessonProgressRoot instanceof HTMLElement) {
       const slug = lessonProgressRoot.dataset.lessonSlug || '';
