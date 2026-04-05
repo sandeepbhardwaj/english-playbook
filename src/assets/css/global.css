@@ -231,3 +231,77 @@ th {
   background-color: var(--color-surface);
   font-weight: var(--font-weight-semibold);
 }
+
+@page {
+  margin: 0.6in;
+}
+
+@media print {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body {
+    background: white !important;
+    color: var(--color-text);
+    font-size: 11pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .header,
+  .footer,
+  .back-to-top,
+  .site-nav-mobile-panel,
+  .site-nav-toggle,
+  .site-nav-desktop,
+  .btn {
+    display: none !important;
+  }
+
+  .layout,
+  .layout-main,
+  .main-content,
+  .container {
+    display: block;
+  }
+
+  .main-content,
+  .container {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+  }
+
+  a,
+  a:visited {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  p,
+  li,
+  blockquote,
+  td,
+  th {
+    color: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid-page;
+  }
+
+  blockquote,
+  pre,
+  table,
+  img,
+  svg {
+    break-inside: avoid;
+  }
+}

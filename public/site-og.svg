@@ -17,15 +17,10 @@
     <tspan x="122" dy="0">Structured Lessons,</tspan>
     <tspan x="122" dy="88">Quizzes, and Study Flow</tspan>
   </text>
-  <text x="122" y="523" fill="#51645B" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="34">
-    Learn grammar with a connected curriculum, lesson practice, and a review dashboard.
+  <text x="122" y="510" fill="#51645B" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="28">
+    <tspan x="122" dy="0">Learn grammar with a connected curriculum, lesson practice,</tspan>
+    <tspan x="122" dy="34">and a review dashboard.</tspan>
   </text>
-
-  <rect x="862" y="388" width="192" height="58" rx="29" fill="#F3ECE1" stroke="#E1D3C0"/>
-  <text x="900" y="425" fill="#355046" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="24" font-weight="700">21 lessons</text>
-
-  <rect x="842" y="461" width="212" height="58" rx="29" fill="#E6F0EB" stroke="#D0E3DA"/>
-  <text x="872" y="498" fill="#355046" font-family="'Trebuchet MS', Verdana, sans-serif" font-size="24" font-weight="700">6 modules</text>
 
   <defs>
     <linearGradient id="bg" x1="121" y1="66" x2="1073" y2="579" gradientUnits="userSpaceOnUse">
